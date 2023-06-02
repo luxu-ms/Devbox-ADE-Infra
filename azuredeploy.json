@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.17.1.54307",
-      "templateHash": "18138443917097215746"
+      "templateHash": "8953546640315834968"
     }
   },
   "parameters": {
@@ -508,7 +508,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.17.1.54307",
-              "templateHash": "9160196421522530844"
+              "templateHash": "5451323780215200384"
             }
           },
           "parameters": {
@@ -827,6 +827,7 @@
               "apiVersion": "2023-01-01-preview",
               "name": "[format('{0}/{1}', parameters('projectName'), variables('devceterSettings').envMapping[copyIndex()].name)]",
               "properties": {
+                "status": "Enabled",
                 "creatorRoleAssignment": {
                   "roles": {
                     "[format('{0}', variables('ownerRoleDefinitioinId'))]": {}

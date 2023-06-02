@@ -195,6 +195,7 @@ resource projectEnvironmentTypes 'Microsoft.DevCenter/projects/environmentTypes@
   name: env.name
   parent: project
   properties: {
+    status: 'Enabled'
     creatorRoleAssignment: {
       roles: {
       '${ownerRoleDefinitioinId}': {}
