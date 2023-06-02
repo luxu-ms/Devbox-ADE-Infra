@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.17.1.54307",
-      "templateHash": "3028751722819568830"
+      "templateHash": "6761906086071316345"
     }
   },
   "parameters": {
@@ -508,7 +508,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.17.1.54307",
-              "templateHash": "6578529826310605971"
+              "templateHash": "455314135516164011"
             }
           },
           "parameters": {
@@ -970,7 +970,7 @@
                     "value": "[variables('ownerRoleDefinitioinId')]"
                   },
                   "principalType": {
-                    "value": "[parameters('principalType')]"
+                    "value": "ServicePrincipal"
                   }
                 },
                 "template": {

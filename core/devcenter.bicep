@@ -105,12 +105,13 @@ resource devcenter 'Microsoft.DevCenter/devcenters@2023-01-01-preview' = {
   }
 }
 
+// Dev Center need this managed identity with owner permission on subscription level
 module assignRole 'security/role.bicep' = {
   name: 'assignOwner'
   params: {
     principalId: managedIdentity.properties.principalId
     roleDefinitionId: ownerRoleDefinitioinId
-    principalType: principalType
+    principalType: 'ServicePrincipal'
   }
 }
 
