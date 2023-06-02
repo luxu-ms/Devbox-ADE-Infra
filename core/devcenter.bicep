@@ -49,8 +49,6 @@ var storage = {
   '1024gb': 'ssd_1024gb'
 }
 
-var environmentTypes = ['Dev', 'Test', 'PreProd', 'Prod']
-
 resource managedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2022-01-31-preview' = {
   name: managedIdentityName
   location: location
@@ -64,6 +62,7 @@ resource computeGallery 'Microsoft.Compute/galleries@2022-03-03' = {
 }
 
 resource imageDefinition 'Microsoft.Compute/galleries/images@2022-03-03' = {
+  parent: computeGallery
   name: imageDefinitionName
   location: location
   properties: {
@@ -97,11 +96,13 @@ resource devcenter 'Microsoft.DevCenter/devcenters@2023-01-01-preview' = {
   }
 }
 
-resource envTypes 'Microsoft.DevCenter/devcenters/environmentTypes@2023-01-01-preview' = [for env in environmentTypes: {
-  name: env
+resource envTypes 'Microsoft.DevCenter/devcenters/environmentTypes@2023-01-01-preview' = [for env in devceterSettings.envMapping: {
+  parent: devcenter
+  name: env.name
 }]
 
 resource catalogs 'Microsoft.DevCenter/devcenters/catalogs@2023-01-01-preview' = {
+  parent: devcenter
   name: catalogName
   properties: {
      gitHub: {
@@ -176,26 +177,26 @@ resource project 'Microsoft.DevCenter/projects@2022-11-11-preview' = {
 resource projectEnvironmentTypes 'Microsoft.DevCenter/projects/environmentTypes@2023-01-01-preview' = [ for env in devceterSettings.envMapping: {
   name: env.name
   parent: project
-   properties: {
-     creatorRoleAssignment: {
-       roles: {
-        '${ownerRoleDefinitioinId}': {}
-       }
-     }
-      deploymentTargetId: !empty(env.deploymentTargetId) ? '/subscriptions/${env.deploymentTargetId}' : subscription().id
-      userRoleAssignments: {
-        '${managedIdentity.id}': {
-          roles: {
-            '${ownerRoleDefinitioinId}': {}
-          }
+  properties: {
+    creatorRoleAssignment: {
+      roles: {
+      '${ownerRoleDefinitioinId}': {}
+      }
+    }
+    deploymentTargetId: !empty(env.deploymentTargetId) ? '/subscriptions/${env.deploymentTargetId}' : subscription().id
+    userRoleAssignments: {
+      '${managedIdentity.id}': {
+        roles: {
+          '${ownerRoleDefinitioinId}': {}
         }
       }
-   }
-   identity: {
+    }
+  }
+  identity: {
     type:  'UserAssigned'
-     userAssignedIdentities: {
+    userAssignedIdentities: {
       '${managedIdentity.id}': {}
-     }
+    }
   }
 }]
 

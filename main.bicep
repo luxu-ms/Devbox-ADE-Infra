@@ -32,10 +32,11 @@ param principalId string = ''
 param principalType string = 'User'
 
 param keyvaultName string = ''
-param keyvaultSecreatName string = 'repo-pat-secret'
+param keyvaultSecretName string = 'repo-pat-secret'
 
+@description('The personal access token of Github/ADO repo')
 @secure()
-param keyvaultSecretValue string = ''
+param keyvaultSecretValue string
 
 param galleryName string = ''
 param imageDefinitionName string = 'OpenAIImage'
@@ -81,7 +82,7 @@ module keyvaultSecret 'core/security/keyvault-secret.bicep' = {
   name: 'keyvaultSecret'
   params: {
     keyVaultName: kvName
-    name: keyvaultSecreatName
+    name: keyvaultSecretName
     secretValue: keyvaultSecretValue
   }
 }

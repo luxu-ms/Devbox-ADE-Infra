@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.17.1.54307",
-      "templateHash": "8484954783158618778"
+      "templateHash": "12542166929370556125"
     }
   },
   "parameters": {
@@ -90,13 +90,15 @@
       "type": "string",
       "defaultValue": ""
     },
-    "keyvaultSecreatName": {
+    "keyvaultSecretName": {
       "type": "string",
       "defaultValue": "repo-pat-secret"
     },
     "keyvaultSecretValue": {
       "type": "securestring",
-      "defaultValue": ""
+      "metadata": {
+        "description": "The personal access token of Github/ADO repo"
+      }
     },
     "galleryName": {
       "type": "string",
@@ -362,7 +364,7 @@
             "value": "[variables('kvName')]"
           },
           "name": {
-            "value": "[parameters('keyvaultSecreatName')]"
+            "value": "[parameters('keyvaultSecretName')]"
           },
           "secretValue": {
             "value": "[parameters('keyvaultSecretValue')]"
@@ -500,7 +502,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.17.1.54307",
-              "templateHash": "1723572266512378753"
+              "templateHash": "11247079736118484997"
             }
           },
           "parameters": {
@@ -612,6 +614,14 @@
                 {
                   "name": "Test",
                   "deploymentTargetId": ""
+                },
+                {
+                  "name": "PreProd",
+                  "deploymentTargetId": ""
+                },
+                {
+                  "name": "Prod",
+                  "deploymentTargetId": ""
                 }
               ]
             },
@@ -631,13 +641,7 @@
               "256gb": "ssd_256gb",
               "512gb": "ssd_512gb",
               "1024gb": "ssd_1024gb"
-            },
-            "environmentTypes": [
-              "Dev",
-              "Test",
-              "PreProd",
-              "Prod"
-            ]
+            }
           },
           "resources": [
             {
@@ -677,7 +681,7 @@
             {
               "type": "Microsoft.Compute/galleries/images",
               "apiVersion": "2022-03-03",
-              "name": "[parameters('imageDefinitionName')]",
+              "name": "[format('{0}/{1}', parameters('galleryName'), parameters('imageDefinitionName'))]",
               "location": "[parameters('location')]",
               "properties": {
                 "hyperVGeneration": "V2",
@@ -695,7 +699,10 @@
                 },
                 "osState": "Generalized",
                 "osType": "Windows"
-              }
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Compute/galleries', parameters('galleryName'))]"
+              ]
             },
             {
               "type": "Microsoft.DevCenter/devcenters",
@@ -716,16 +723,19 @@
             {
               "copy": {
                 "name": "envTypes",
-                "count": "[length(variables('environmentTypes'))]"
+                "count": "[length(variables('devceterSettings').envMapping)]"
               },
               "type": "Microsoft.DevCenter/devcenters/environmentTypes",
               "apiVersion": "2023-01-01-preview",
-              "name": "[variables('environmentTypes')[copyIndex()]]"
+              "name": "[format('{0}/{1}', parameters('devcenterName'), variables('devceterSettings').envMapping[copyIndex()].name)]",
+              "dependsOn": [
+                "[resourceId('Microsoft.DevCenter/devcenters', parameters('devcenterName'))]"
+              ]
             },
             {
               "type": "Microsoft.DevCenter/devcenters/catalogs",
               "apiVersion": "2023-01-01-preview",
-              "name": "[parameters('catalogName')]",
+              "name": "[format('{0}/{1}', parameters('devcenterName'), parameters('catalogName'))]",
               "properties": {
                 "gitHub": {
                   "branch": "[parameters('repositoryBranch')]",
@@ -733,7 +743,10 @@
                   "secretIdentifier": "[parameters('secretIdentifier')]",
                   "uri": "[parameters('repositoryUrl')]"
                 }
-              }
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.DevCenter/devcenters', parameters('devcenterName'))]"
+              ]
             },
             {
               "type": "Microsoft.DevCenter/networkConnections",
