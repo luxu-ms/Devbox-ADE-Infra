@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.17.1.54307",
-      "templateHash": "8953546640315834968"
+      "templateHash": "6865933893383456339"
     }
   },
   "parameters": {
@@ -377,7 +377,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.17.1.54307",
-              "templateHash": "12695083494365461312"
+              "templateHash": "7554980374654762810"
             }
           },
           "parameters": {
@@ -434,7 +434,7 @@
           "outputs": {
             "secretIdentifier": {
               "type": "string",
-              "value": "[reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('name')), '2022-07-01').secretUri]"
+              "value": "[reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('name')), '2022-07-01').secretUriWithVersion]"
             }
           }
         }
@@ -508,7 +508,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.17.1.54307",
-              "templateHash": "5451323780215200384"
+              "templateHash": "13401111929385410358"
             }
           },
           "parameters": {
@@ -835,7 +835,7 @@
                 },
                 "deploymentTargetId": "[if(not(empty(variables('devceterSettings').envMapping[copyIndex()].deploymentTargetId)), format('/subscriptions/{0}', variables('devceterSettings').envMapping[copyIndex()].deploymentTargetId), subscription().id)]",
                 "userRoleAssignments": {
-                  "[format('{0}', resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('managedIdentityName')))]": {
+                  "[format('{0}', reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('managedIdentityName')), '2022-01-31-preview').principalId)]": {
                     "roles": {
                       "[format('{0}', variables('ownerRoleDefinitioinId'))]": {}
                     }
@@ -964,7 +964,7 @@
                 "mode": "Incremental",
                 "parameters": {
                   "principalId": {
-                    "value": "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('managedIdentityName'))]"
+                    "value": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('managedIdentityName')), '2022-01-31-preview').principalId]"
                   },
                   "roleDefinitionId": {
                     "value": "[variables('ownerRoleDefinitioinId')]"

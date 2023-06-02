@@ -108,7 +108,7 @@ resource devcenter 'Microsoft.DevCenter/devcenters@2023-01-01-preview' = {
 module assignRole 'security/role.bicep' = {
   name: 'assignOwner'
   params: {
-    principalId: managedIdentity.id
+    principalId: managedIdentity.properties.principalId
     roleDefinitionId: ownerRoleDefinitioinId
   }
 }
@@ -203,7 +203,7 @@ resource projectEnvironmentTypes 'Microsoft.DevCenter/projects/environmentTypes@
     }
     deploymentTargetId: !empty(env.deploymentTargetId) ? '/subscriptions/${env.deploymentTargetId}' : subscription().id
     userRoleAssignments: {
-      '${managedIdentity.id}': {
+      '${managedIdentity.properties.principalId}': {
         roles: {
           '${ownerRoleDefinitioinId}': {}
         }
