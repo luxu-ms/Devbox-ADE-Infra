@@ -69,7 +69,7 @@ module vnet 'core/vnet.bicep' = if(empty(existingSubnetId)) {
 }
 
 module keyvault 'core/security/keyvault.bicep' = {
-  name: 'keyvault'
+  name: kvName
   params: {
     location: location
     name: kvName
@@ -81,7 +81,7 @@ module keyvault 'core/security/keyvault.bicep' = {
 module keyvaultSecret 'core/security/keyvault-secret.bicep' = {
   name: 'keyvaultSecret'
   params: {
-    keyVaultName: kvName
+    keyVaultName: keyvault.name
     name: keyvaultSecretName
     secretValue: keyvaultSecretValue
   }

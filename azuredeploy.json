@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.17.1.54307",
-      "templateHash": "12542166929370556125"
+      "templateHash": "16636022104888723828"
     }
   },
   "parameters": {
@@ -273,7 +273,7 @@
     {
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2022-09-01",
-      "name": "keyvault",
+      "name": "[variables('kvName')]",
       "properties": {
         "expressionEvaluationOptions": {
           "scope": "inner"
@@ -438,7 +438,10 @@
             }
           }
         }
-      }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Resources/deployments', variables('kvName'))]"
+      ]
     },
     {
       "type": "Microsoft.Resources/deployments",
