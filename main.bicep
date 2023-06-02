@@ -14,7 +14,7 @@ param existingSubnetId string = ''
 param location string = resourceGroup().location
 
 @description('The name of the Virtual Network e.g. vnet-dcprj-devbox-test-eastus')
-param vnetName string = 'vnet-${projectName}-${location}'
+param vnetName string = ''
 
 @description('the subnet name of Dev Box e.g. default')
 param subnetName string = 'default'

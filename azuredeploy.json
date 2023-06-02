@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.17.1.54307",
-      "templateHash": "6865933893383456339"
+      "templateHash": "23925971587861313"
     }
   },
   "parameters": {
@@ -46,7 +46,7 @@
     },
     "vnetName": {
       "type": "string",
-      "defaultValue": "[format('vnet-{0}-{1}', parameters('projectName'), parameters('location'))]",
+      "defaultValue": "",
       "metadata": {
         "description": "The name of the Virtual Network e.g. vnet-dcprj-devbox-test-eastus"
       }
