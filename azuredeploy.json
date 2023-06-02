@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.17.1.54307",
-      "templateHash": "12749694599354723306"
+      "templateHash": "18138443917097215746"
     }
   },
   "parameters": {
@@ -496,6 +496,9 @@
           "managedIdentityName": "[if(not(empty(parameters('managedIdentityName'))), createObject('value', parameters('managedIdentityName')), createObject('value', format('{0}{1}', variables('abbrs').managedIdentityUserAssignedIdentities, variables('resourceToken'))))]",
           "catalogItemRootPath": {
             "value": "[parameters('catalogItemRootPath')]"
+          },
+          "keyvaultName": {
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', variables('kvName')), '2022-09-01').outputs.name.value]"
           }
         },
         "template": {
@@ -505,7 +508,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.17.1.54307",
-              "templateHash": "11247079736118484997"
+              "templateHash": "9160196421522530844"
             }
           },
           "parameters": {
@@ -545,6 +548,9 @@
               "defaultValue": "[resourceGroup().location]"
             },
             "managedIdentityName": {
+              "type": "string"
+            },
+            "keyvaultName": {
               "type": "string"
             },
             "galleryName": {
@@ -875,6 +881,141 @@
               "dependsOn": [
                 "[resourceId('Microsoft.DevCenter/projects', parameters('projectName'))]"
               ]
+            },
+            {
+              "type": "Microsoft.Resources/deployments",
+              "apiVersion": "2022-09-01",
+              "name": "keyvaultAccess",
+              "properties": {
+                "expressionEvaluationOptions": {
+                  "scope": "inner"
+                },
+                "mode": "Incremental",
+                "parameters": {
+                  "keyVaultName": {
+                    "value": "[parameters('keyvaultName')]"
+                  },
+                  "principalId": {
+                    "value": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('managedIdentityName')), '2022-01-31-preview').principalId]"
+                  }
+                },
+                "template": {
+                  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                  "contentVersion": "1.0.0.0",
+                  "metadata": {
+                    "_generator": {
+                      "name": "bicep",
+                      "version": "0.17.1.54307",
+                      "templateHash": "18301876310392488097"
+                    }
+                  },
+                  "parameters": {
+                    "name": {
+                      "type": "string",
+                      "defaultValue": "add"
+                    },
+                    "keyVaultName": {
+                      "type": "string"
+                    },
+                    "permissions": {
+                      "type": "object",
+                      "defaultValue": {
+                        "secrets": [
+                          "get",
+                          "list"
+                        ]
+                      }
+                    },
+                    "principalId": {
+                      "type": "string"
+                    }
+                  },
+                  "resources": [
+                    {
+                      "type": "Microsoft.KeyVault/vaults/accessPolicies",
+                      "apiVersion": "2022-07-01",
+                      "name": "[format('{0}/{1}', parameters('keyVaultName'), parameters('name'))]",
+                      "properties": {
+                        "accessPolicies": [
+                          {
+                            "objectId": "[parameters('principalId')]",
+                            "tenantId": "[subscription().tenantId]",
+                            "permissions": "[parameters('permissions')]"
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('managedIdentityName'))]"
+              ]
+            },
+            {
+              "type": "Microsoft.Resources/deployments",
+              "apiVersion": "2022-09-01",
+              "name": "assignOwner",
+              "properties": {
+                "expressionEvaluationOptions": {
+                  "scope": "inner"
+                },
+                "mode": "Incremental",
+                "parameters": {
+                  "principalId": {
+                    "value": "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('managedIdentityName'))]"
+                  },
+                  "roleDefinitionId": {
+                    "value": "[variables('ownerRoleDefinitioinId')]"
+                  }
+                },
+                "template": {
+                  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                  "contentVersion": "1.0.0.0",
+                  "metadata": {
+                    "_generator": {
+                      "name": "bicep",
+                      "version": "0.17.1.54307",
+                      "templateHash": "397682960356993593"
+                    }
+                  },
+                  "parameters": {
+                    "principalId": {
+                      "type": "string"
+                    },
+                    "principalType": {
+                      "type": "string",
+                      "defaultValue": "ServicePrincipal",
+                      "allowedValues": [
+                        "Device",
+                        "ForeignGroup",
+                        "Group",
+                        "ServicePrincipal",
+                        "User"
+                      ]
+                    },
+                    "roleDefinitionId": {
+                      "type": "string"
+                    }
+                  },
+                  "resources": [
+                    {
+                      "condition": "[not(empty(parameters('principalId')))]",
+                      "type": "Microsoft.Authorization/roleAssignments",
+                      "apiVersion": "2022-04-01",
+                      "name": "[guid(subscription().id, resourceGroup().id, parameters('principalId'), parameters('roleDefinitionId'))]",
+                      "properties": {
+                        "principalId": "[parameters('principalId')]",
+                        "principalType": "[parameters('principalType')]",
+                        "roleDefinitionId": "[resourceId('Microsoft.Authorization/roleDefinitions', parameters('roleDefinitionId'))]"
+                      }
+                    }
+                  ]
+                }
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('managedIdentityName'))]"
+              ]
             }
           ],
           "outputs": {
@@ -912,6 +1053,7 @@
         }
       },
       "dependsOn": [
+        "[resourceId('Microsoft.Resources/deployments', variables('kvName'))]",
         "[resourceId('Microsoft.Resources/deployments', 'keyvaultSecret')]",
         "[resourceId('Microsoft.Resources/deployments', 'vnet')]"
       ]

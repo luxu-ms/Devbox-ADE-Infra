@@ -10,6 +10,7 @@ param repositoryBranch string = 'main'
 param catalogItemRootPath string
 param location string = resourceGroup().location
 param managedIdentityName string
+param keyvaultName string
 param galleryName string
 param imageDefinitionName string
 param imageOffer string
@@ -55,6 +56,14 @@ resource managedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2022-
   tags: tags
 }
 
+module keyvaultAccess 'security/keyvault-access.bicep' = {
+  name: 'keyvaultAccess'
+  params: {
+    keyVaultName: keyvaultName
+    principalId: managedIdentity.properties.principalId
+  }
+}
+
 resource computeGallery 'Microsoft.Compute/galleries@2022-03-03' = {
   name: galleryName
   location: location
@@ -93,6 +102,14 @@ resource devcenter 'Microsoft.DevCenter/devcenters@2023-01-01-preview' = {
      userAssignedIdentities: {
       '${managedIdentity.id}': {}
      }
+  }
+}
+
+module assignRole 'security/role.bicep' = {
+  name: 'assignOwner'
+  params: {
+    principalId: managedIdentity.id
+    roleDefinitionId: ownerRoleDefinitioinId
   }
 }
 

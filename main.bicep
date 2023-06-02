@@ -108,6 +108,7 @@ module devcenter 'core/devcenter.bicep' = {
     imageSku: imageSku
     managedIdentityName: !empty(managedIdentityName) ? managedIdentityName : '${abbrs.managedIdentityUserAssignedIdentities}${resourceToken}'
     catalogItemRootPath: catalogItemRootPath
+    keyvaultName: keyvault.outputs.name
   }
 }
 
