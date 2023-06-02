@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.17.1.54307",
-      "templateHash": "17120077561993942575"
+      "templateHash": "12749694599354723306"
     }
   },
   "parameters": {
@@ -377,7 +377,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.17.1.54307",
-              "templateHash": "3842699053699912250"
+              "templateHash": "12695083494365461312"
             }
           },
           "parameters": {
@@ -434,7 +434,7 @@
           "outputs": {
             "secretIdentifier": {
               "type": "string",
-              "value": "[resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('name'))]"
+              "value": "[reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('name')), '2022-07-01').secretUri]"
             }
           }
         }
