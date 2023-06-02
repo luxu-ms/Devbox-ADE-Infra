@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.17.1.54307",
-      "templateHash": "16692764946344842326"
+      "templateHash": "8484954783158618778"
     }
   },
   "parameters": {
@@ -99,7 +99,8 @@
       "defaultValue": ""
     },
     "galleryName": {
-      "type": "string"
+      "type": "string",
+      "defaultValue": ""
     },
     "imageDefinitionName": {
       "type": "string",
@@ -117,8 +118,13 @@
       "type": "string",
       "defaultValue": "win11-22h2-ent-cpc-m365-test"
     },
+    "catalogItemRootPath": {
+      "type": "string",
+      "defaultValue": "/Environments"
+    },
     "managedIdentityName": {
-      "type": "string"
+      "type": "string",
+      "defaultValue": ""
     },
     "repositoryUrl": {
       "type": "string",
@@ -137,7 +143,9 @@
       "devcenter": "dc-",
       "devcenterProject": "dcprj-",
       "devcenterNetworkingResourceGroup": "ni-",
-      "keyvault": "kv-"
+      "keyvault": "kv-",
+      "computeGalleries": "gal",
+      "managedIdentityUserAssignedIdentities": "id-"
     },
     "abbrs": "[variables('$fxv#0')]",
     "resourceToken": "[toLower(uniqueString(resourceGroup().id, parameters('location')))]",
@@ -467,9 +475,7 @@
           "secretIdentifier": {
             "value": "[reference(resourceId('Microsoft.Resources/deployments', 'keyvaultSecret'), '2022-09-01').outputs.secretIdentifier.value]"
           },
-          "galleryName": {
-            "value": "[parameters('galleryName')]"
-          },
+          "galleryName": "[if(not(empty(parameters('galleryName'))), createObject('value', parameters('galleryName')), createObject('value', format('{0}{1}', variables('abbrs').computeGalleries, variables('resourceToken'))))]",
           "imageDefinitionName": {
             "value": "[parameters('imageDefinitionName')]"
           },
@@ -482,8 +488,9 @@
           "imageSku": {
             "value": "[parameters('imageSku')]"
           },
-          "managedIdentityName": {
-            "value": "[parameters('managedIdentityName')]"
+          "managedIdentityName": "[if(not(empty(parameters('managedIdentityName'))), createObject('value', parameters('managedIdentityName')), createObject('value', format('{0}{1}', variables('abbrs').managedIdentityUserAssignedIdentities, variables('resourceToken'))))]",
+          "catalogItemRootPath": {
+            "value": "[parameters('catalogItemRootPath')]"
           }
         },
         "template": {
@@ -493,7 +500,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.17.1.54307",
-              "templateHash": "1402822974462298616"
+              "templateHash": "1723572266512378753"
             }
           },
           "parameters": {
@@ -526,8 +533,7 @@
               "defaultValue": "main"
             },
             "catalogItemRootPath": {
-              "type": "string",
-              "defaultValue": "/Environments"
+              "type": "string"
             },
             "location": {
               "type": "string",
