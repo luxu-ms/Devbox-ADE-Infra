@@ -110,6 +110,7 @@ module assignRole 'security/role.bicep' = {
   params: {
     principalId: managedIdentity.properties.principalId
     roleDefinitionId: ownerRoleDefinitioinId
+    principalType: principalType
   }
 }
 

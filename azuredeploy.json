@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.17.1.54307",
-      "templateHash": "14680346006808011549"
+      "templateHash": "3028751722819568830"
     }
   },
   "parameters": {
@@ -508,7 +508,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.17.1.54307",
-              "templateHash": "13401111929385410358"
+              "templateHash": "6578529826310605971"
             }
           },
           "parameters": {
@@ -968,6 +968,9 @@
                   },
                   "roleDefinitionId": {
                     "value": "[variables('ownerRoleDefinitioinId')]"
+                  },
+                  "principalType": {
+                    "value": "[parameters('principalType')]"
                   }
                 },
                 "template": {
@@ -977,7 +980,7 @@
                     "_generator": {
                       "name": "bicep",
                       "version": "0.17.1.54307",
-                      "templateHash": "397682960356993593"
+                      "templateHash": "12421174772772428734"
                     }
                   },
                   "parameters": {
@@ -1008,7 +1011,7 @@
                       "properties": {
                         "principalId": "[parameters('principalId')]",
                         "principalType": "[parameters('principalType')]",
-                        "roleDefinitionId": "[resourceId('Microsoft.Authorization/roleDefinitions', parameters('roleDefinitionId'))]"
+                        "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', parameters('roleDefinitionId'))]"
                       }
                     }
                   ]
