@@ -47,7 +47,7 @@ param imageSku string = 'win11-22h2-ent-cpc-m365-test'
 param catalogItemRootPath string = '/Environments'
 param managedIdentityName string = ''
 
-param repositoryUrl string = 'https://github.com/luxu-ms/azure-search-openai-demo.git'
+param repositoryUrl string = 'https://github.com/luxu-ms/deployment-environments.git'
 
 param tags object = {}
 
