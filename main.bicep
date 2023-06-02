@@ -1,11 +1,11 @@
 @description('The name of Dev Center e.g. dc-devbox-test')
-param devcenterName string = 'dc-devbox-test'
+param devcenterName string = ''
 
 @description('The name of Network Connection e.g. con-devbox-test')
-param networkConnectionName string = 'con-devbox-test'
+param networkConnectionName string = ''
 
 @description('The name of Dev Center project e.g. dcprj-devbox-test')
-param projectName string = 'dcprj-devbox-test'
+param projectName string = ''
 
 @description('The subnet resource id if the user wants to use existing subnet')
 param existingSubnetId string = ''

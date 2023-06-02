@@ -5,27 +5,27 @@
     "_generator": {
       "name": "bicep",
       "version": "0.17.1.54307",
-      "templateHash": "16636022104888723828"
+      "templateHash": "17120077561993942575"
     }
   },
   "parameters": {
     "devcenterName": {
       "type": "string",
-      "defaultValue": "dc-devbox-test",
+      "defaultValue": "",
       "metadata": {
         "description": "The name of Dev Center e.g. dc-devbox-test"
       }
     },
     "networkConnectionName": {
       "type": "string",
-      "defaultValue": "con-devbox-test",
+      "defaultValue": "",
       "metadata": {
         "description": "The name of Network Connection e.g. con-devbox-test"
       }
     },
     "projectName": {
       "type": "string",
-      "defaultValue": "dcprj-devbox-test",
+      "defaultValue": "",
       "metadata": {
         "description": "The name of Dev Center project e.g. dcprj-devbox-test"
       }
