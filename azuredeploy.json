@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.17.1.54307",
-      "templateHash": "1913972755663349955"
+      "templateHash": "5046726426319613362"
     }
   },
   "parameters": {
@@ -508,7 +508,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.17.1.54307",
-              "templateHash": "4873685304441056355"
+              "templateHash": "6569836831301061107"
             }
           },
           "parameters": {
@@ -637,6 +637,9 @@
             "devboxRoleDefinitionId": "45d50f46-0b78-4001-a660-4198cbe8cd05",
             "adeRoledefinitioinId": "18e40d4e-8d2e-438d-97e1-9528336e149c",
             "ownerRoleDefinitioinId": "8e3af657-a8ff-443c-a75c-2fe8c4bcb635",
+            "readerRoleDefinitionId": "acdd72a7-3385-48ef-bd42-f606fba81ae7",
+            "windows365ApplicationId": "0af06dc6-e4b5-4f28-818e-e78e62d137a5",
+            "contributorRoleDefinitionId": "b24988ac-6180-42a0-ab88-20f7382dd24c",
             "devceterSettings": "[variables('$fxv#0')]",
             "image": {
               "win11-ent-base": "microsoftwindowsdesktop_windows-ent-cpc_win11-21h2-ent-cpc-os",
@@ -727,6 +730,20 @@
               },
               "dependsOn": [
                 "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('managedIdentityName'))]"
+              ]
+            },
+            {
+              "type": "Microsoft.DevCenter/devcenters/galleries",
+              "apiVersion": "2023-01-01-preview",
+              "name": "[format('{0}/{1}', parameters('devcenterName'), parameters('galleryName'))]",
+              "properties": {
+                "galleryResourceId": "[resourceId('Microsoft.Compute/galleries', parameters('galleryName'))]"
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Compute/galleries', parameters('galleryName'))]",
+                "[extensionResourceId(resourceId('Microsoft.Compute/galleries', parameters('galleryName')), 'Microsoft.Authorization/roleAssignments', guid(subscription().id, resourceGroup().id, resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('managedIdentityName')), variables('contributorRoleDefinitionId')))]",
+                "[resourceId('Microsoft.DevCenter/devcenters', parameters('devcenterName'))]",
+                "[extensionResourceId(resourceId('Microsoft.Compute/galleries', parameters('galleryName')), 'Microsoft.Authorization/roleAssignments', guid(subscription().id, resourceGroup().id, variables('windows365ApplicationId'), variables('readerRoleDefinitionId')))]"
               ]
             },
             {
@@ -851,6 +868,35 @@
               "dependsOn": [
                 "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('managedIdentityName'))]",
                 "[resourceId('Microsoft.DevCenter/projects', parameters('projectName'))]"
+              ]
+            },
+            {
+              "type": "Microsoft.Authorization/roleAssignments",
+              "apiVersion": "2022-04-01",
+              "scope": "[format('Microsoft.Compute/galleries/{0}', parameters('galleryName'))]",
+              "name": "[guid(subscription().id, resourceGroup().id, variables('windows365ApplicationId'), variables('readerRoleDefinitionId'))]",
+              "properties": {
+                "principalId": "[variables('windows365ApplicationId')]",
+                "principalType": "ServicePrincipal",
+                "roleDefinitionId": "[resourceId('Microsoft.Authorization/roleDefinitions', variables('readerRoleDefinitionId'))]"
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Compute/galleries', parameters('galleryName'))]"
+              ]
+            },
+            {
+              "type": "Microsoft.Authorization/roleAssignments",
+              "apiVersion": "2022-04-01",
+              "scope": "[format('Microsoft.Compute/galleries/{0}', parameters('galleryName'))]",
+              "name": "[guid(subscription().id, resourceGroup().id, resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('managedIdentityName')), variables('contributorRoleDefinitionId'))]",
+              "properties": {
+                "principalId": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('managedIdentityName')), '2022-01-31-preview').principalId]",
+                "principalType": "ServicePrincipal",
+                "roleDefinitionId": "[resourceId('Microsoft.Authorization/roleDefinitions', variables('contributorRoleDefinitionId'))]"
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Compute/galleries', parameters('galleryName'))]",
+                "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('managedIdentityName'))]"
               ]
             },
             {

@@ -31,6 +31,9 @@ param catalogName string = 'test-catalog'
 var devboxRoleDefinitionId = '45d50f46-0b78-4001-a660-4198cbe8cd05'
 var adeRoledefinitioinId = '18e40d4e-8d2e-438d-97e1-9528336e149c'
 var ownerRoleDefinitioinId = '8e3af657-a8ff-443c-a75c-2fe8c4bcb635'
+var readerRoleDefinitionId = 'acdd72a7-3385-48ef-bd42-f606fba81ae7'
+var windows365ApplicationId = '0af06dc6-e4b5-4f28-818e-e78e62d137a5'
+var contributorRoleDefinitionId = 'b24988ac-6180-42a0-ab88-20f7382dd24c'
 
 var devceterSettings = loadJsonContent('./devcenter-settings.json')
 
@@ -103,6 +106,18 @@ resource devcenter 'Microsoft.DevCenter/devcenters@2023-01-01-preview' = {
       '${managedIdentity.id}': {}
      }
   }
+}
+
+resource devcenterGallery 'Microsoft.DevCenter/devcenters/galleries@2023-01-01-preview' = {
+  name: galleryName
+  parent: devcenter
+  properties: {
+    galleryResourceId: computeGallery.id
+  }
+  dependsOn: [
+    readGalleryRole
+    contirbutorGalleryRole
+  ]
 }
 
 // Dev Center need this managed identity with owner permission on subscription level
@@ -220,6 +235,28 @@ resource projectEnvironmentTypes 'Microsoft.DevCenter/projects/environmentTypes@
     }
   }
 }]
+
+// -------------------  Assign permission for Azure Compute Gallery Start ------------------- //
+resource readGalleryRole 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(subscription().id, resourceGroup().id, windows365ApplicationId, readerRoleDefinitionId)
+  scope: computeGallery
+  properties: {
+    principalId: windows365ApplicationId
+    principalType: 'ServicePrincipal'
+    roleDefinitionId: resourceId('Microsoft.Authorization/roleDefinitions', readerRoleDefinitionId)
+  }
+}
+
+resource contirbutorGalleryRole 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(subscription().id, resourceGroup().id, managedIdentity.id, contributorRoleDefinitionId)
+  scope: computeGallery
+  properties: {
+    principalId: managedIdentity.properties.principalId
+    principalType: 'ServicePrincipal'
+    roleDefinitionId: resourceId('Microsoft.Authorization/roleDefinitions', contributorRoleDefinitionId)
+  }
+}
+// -------------------  Assign permission for Azure Compute Gallery End ------------------- //
 
 resource devboxRole 'Microsoft.Authorization/roleAssignments@2022-04-01' = if(!empty(principalId)) {
   name: guid(subscription().id, resourceGroup().id, principalId, devboxRoleDefinitionId)
