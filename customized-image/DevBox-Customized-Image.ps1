@@ -124,6 +124,8 @@ if($null -eq $imageDefinition){
 
 $templateFilePath = "aib-template.json"
 
+Copy-Item "aib-template-base.json" -Destination $templateFilePath -Force
+
 (Get-Content -path $templateFilePath -Raw ) -replace '<subscriptionID>',$subscriptionID | Set-Content -Path $templateFilePath 
 (Get-Content -path $templateFilePath -Raw ) -replace '<rgName>',$imageResourceGroup | Set-Content -Path $templateFilePath 
 (Get-Content -path $templateFilePath -Raw ) -replace '<runOutputName>',$runOutputName | Set-Content -Path $templateFilePath  
