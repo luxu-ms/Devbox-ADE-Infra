@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.17.1.54307",
-      "templateHash": "5525725615441778998"
+      "templateHash": "7922586478821721020"
     }
   },
   "parameters": {
@@ -610,7 +610,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.17.1.54307",
-              "templateHash": "4877830875478875007"
+              "templateHash": "17946308315156714585"
             }
           },
           "parameters": {
@@ -658,7 +658,9 @@
                 "inline": [
                   "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))",
                   "choco install -y python3",
-                  "choco install -y nodejs"
+                  "choco install -y nodejs",
+                  "$vscode_extension_dir='C:/temp/extensions';New-Item $vscode_extension_dir -ItemType Directory -Force; [Environment]::SetEnvironmentVariable('VSCODE_EXTENSIONS', $vscode_extension_dir, 'Machine')",
+                  "code --isntall-extension github.copilot"
                 ]
               }
             ]
@@ -891,7 +893,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.17.1.54307",
-              "templateHash": "4254876055416706513"
+              "templateHash": "17228262095382833732"
             }
           },
           "parameters": {
@@ -1030,6 +1032,8 @@
             "READER_ROLE": "acdd72a7-3385-48ef-bd42-f606fba81ae7",
             "WINDOWS365_PRINCIPALID": "8eec7c09-06ae-48e9-aafd-9fb31a5d5175",
             "devceterSettings": "[variables('$fxv#0')]",
+            "customizedImageDefinition": "[variables('devceterSettings').customizedImageDevboxdefinitions[0]]",
+            "queryTemplateProgress": "[take(format('{0}-{1}-query', parameters('imageDefinitionName'), parameters('guidId')), 64)]",
             "image": {
               "win11-ent-base": "microsoftwindowsdesktop_windows-ent-cpc_win11-21h2-ent-cpc-os",
               "win11-ent-m365": "microsoftwindowsdesktop_windows-ent-cpc_win11-21h2-ent-cpc-m365",
@@ -1042,9 +1046,7 @@
               "256gb": "ssd_256gb",
               "512gb": "ssd_512gb",
               "1024gb": "ssd_1024gb"
-            },
-            "customizedImageDefinition": "[variables('devceterSettings').customizedImageDevboxdefinitions[0]]",
-            "queryTemplateProgress": "[take(format('{0}-{1}-query', parameters('imageDefinitionName'), parameters('guidId')), 64)]"
+            }
           },
           "resources": [
             {

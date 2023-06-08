@@ -21,6 +21,8 @@ var customizedCommand = [{
     'Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString(\'https://community.chocolatey.org/install.ps1\'))'
     'choco install -y python3'
     'choco install -y nodejs'
+    '$vscode_extension_dir=\'C:/temp/extensions\';New-Item $vscode_extension_dir -ItemType Directory -Force; [Environment]::SetEnvironmentVariable(\'VSCODE_EXTENSIONS\', $vscode_extension_dir, \'Machine\')'
+    'code --isntall-extension github.copilot'
   ]
 }]
 
