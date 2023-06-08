@@ -92,7 +92,7 @@ module vnet 'core/vnet.bicep' = if(empty(existingSubnetId)) {
 }
 
 module keyvault 'core/security/keyvault.bicep' = {
-  name: 'keyvault'
+  name: kvName
   params: {
     location: location
     name: kvName
@@ -104,7 +104,7 @@ module keyvault 'core/security/keyvault.bicep' = {
 module keyvaultSecret 'core/security/keyvault-secret.bicep' = {
   name: 'keyvaultSecret'
   params: {
-    keyVaultName: keyvault.name
+    keyVaultName: keyvault.outputs.name
     name: adeKeyvaultSecretName
     secretValue: adeKeyvaultSecretValue
   }
@@ -119,13 +119,13 @@ resource managedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2022-
 module keyvaultAccess 'core/security/keyvault-access.bicep' = {
   name: 'keyvaultAccess'
   params: {
-    keyVaultName: keyvault.name
+    keyVaultName: keyvault.outputs.name
     principalId: managedIdentity.properties.principalId
   }
 }
 
 module gallery 'core/gallery.bicep' = {
-  name: 'gallery'
+  name: galName
   params: {
     galleryName: galName
     location: location

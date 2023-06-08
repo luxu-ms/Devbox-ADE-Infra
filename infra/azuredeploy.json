@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.17.1.54307",
-      "templateHash": "900199003335917999"
+      "templateHash": "16142393218955089146"
     }
   },
   "parameters": {
@@ -321,7 +321,7 @@
     {
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2022-09-01",
-      "name": "keyvault",
+      "name": "[variables('kvName')]",
       "properties": {
         "expressionEvaluationOptions": {
           "scope": "inner"
@@ -409,7 +409,7 @@
         "mode": "Incremental",
         "parameters": {
           "keyVaultName": {
-            "value": "keyvault"
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', variables('kvName')), '2022-09-01').outputs.name.value]"
           },
           "name": {
             "value": "[parameters('adeKeyvaultSecretName')]"
@@ -488,7 +488,7 @@
         }
       },
       "dependsOn": [
-        "[resourceId('Microsoft.Resources/deployments', 'keyvault')]"
+        "[resourceId('Microsoft.Resources/deployments', variables('kvName'))]"
       ]
     },
     {
@@ -502,7 +502,7 @@
         "mode": "Incremental",
         "parameters": {
           "keyVaultName": {
-            "value": "keyvault"
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', variables('kvName')), '2022-09-01').outputs.name.value]"
           },
           "principalId": {
             "value": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('idName')), '2022-01-31-preview').principalId]"
@@ -558,14 +558,14 @@
         }
       },
       "dependsOn": [
-        "[resourceId('Microsoft.Resources/deployments', 'keyvault')]",
+        "[resourceId('Microsoft.Resources/deployments', variables('kvName'))]",
         "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('idName'))]"
       ]
     },
     {
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2022-09-01",
-      "name": "gallery",
+      "name": "[variables('galName')]",
       "properties": {
         "expressionEvaluationOptions": {
           "scope": "inner"
@@ -866,7 +866,7 @@
             "value": "[reference(resourceId('Microsoft.Resources/deployments', 'keyvaultSecret'), '2022-09-01').outputs.secretIdentifier.value]"
           },
           "galleryName": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'gallery'), '2022-09-01').outputs.name.value]"
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', variables('galName')), '2022-09-01').outputs.name.value]"
           },
           "managedIdentityName": {
             "value": "[variables('idName')]"
@@ -1410,7 +1410,7 @@
         }
       },
       "dependsOn": [
-        "[resourceId('Microsoft.Resources/deployments', 'gallery')]",
+        "[resourceId('Microsoft.Resources/deployments', variables('galName'))]",
         "[resourceId('Microsoft.Resources/deployments', 'keyvaultSecret')]",
         "[resourceId('Microsoft.Resources/deployments', 'vnet')]"
       ]
