@@ -5,22 +5,22 @@
     "_generator": {
       "name": "bicep",
       "version": "0.17.1.54307",
-      "templateHash": "5046726426319613362"
+      "templateHash": "900199003335917999"
     }
   },
   "parameters": {
+    "location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]",
+      "metadata": {
+        "description": "Primary location for all resources e.g. eastus"
+      }
+    },
     "devcenterName": {
       "type": "string",
       "defaultValue": "",
       "metadata": {
         "description": "The name of Dev Center e.g. dc-devbox-test"
-      }
-    },
-    "networkConnectionName": {
-      "type": "string",
-      "defaultValue": "",
-      "metadata": {
-        "description": "The name of Network Connection e.g. con-devbox-test"
       }
     },
     "projectName": {
@@ -30,6 +30,20 @@
         "description": "The name of Dev Center project e.g. dcprj-devbox-test"
       }
     },
+    "networkConnectionName": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "The name of Network Connection e.g. con-devbox-test"
+      }
+    },
+    "userIdentityName": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "The name of Dev Center user identity"
+      }
+    },
     "existingSubnetId": {
       "type": "string",
       "defaultValue": "",
@@ -37,104 +51,129 @@
         "description": "The subnet resource id if the user wants to use existing subnet"
       }
     },
-    "location": {
-      "type": "string",
-      "defaultValue": "[resourceGroup().location]",
-      "metadata": {
-        "description": "Primary location for all resources e.g. eastus"
-      }
-    },
-    "vnetName": {
+    "networkVnetName": {
       "type": "string",
       "defaultValue": "",
       "metadata": {
         "description": "The name of the Virtual Network e.g. vnet-dcprj-devbox-test-eastus"
       }
     },
-    "subnetName": {
+    "networkSubnetName": {
       "type": "string",
       "defaultValue": "default",
       "metadata": {
         "description": "the subnet name of Dev Box e.g. default"
       }
     },
-    "vnetAddressPrefixes": {
+    "networkVnetAddressPrefixes": {
       "type": "string",
       "defaultValue": "10.4.0.0/16",
       "metadata": {
         "description": "The vnet address prefixes of Dev Box e.g. 10.4.0.0/16"
       }
     },
-    "subnetAddressPrefixes": {
+    "networkSubnetAddressPrefixes": {
       "type": "string",
       "defaultValue": "10.4.0.0/24",
       "metadata": {
         "description": "The subnet address prefixes of Dev Box e.g. 10.4.0.0/24"
       }
     },
-    "principalId": {
+    "userPrincipalId": {
       "type": "string",
       "defaultValue": "",
       "metadata": {
-        "description": "The user or group id that will be granted to Devcenter Dev Box User role"
+        "description": "The user or group id that will be granted to Devcenter Dev Box User and Deployment Environments User role"
       }
     },
-    "principalType": {
+    "userPrincipalType": {
       "type": "string",
       "defaultValue": "User",
+      "allowedValues": [
+        "Group",
+        "User"
+      ],
       "metadata": {
-        "description": "The type of principal id: User, Group or ServicePrincipal"
+        "description": "The type of principal id: User or Group"
       }
     },
-    "keyvaultName": {
+    "imageGalleryName": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "The name of Azure Compute Gallery"
+      }
+    },
+    "imageDefinitionName": {
+      "type": "string",
+      "defaultValue": "OpenAIImage",
+      "metadata": {
+        "description": "The name of Azure Compute Gallery image definition"
+      }
+    },
+    "imageTemplateName": {
+      "type": "string",
+      "defaultValue": "OpenAIImageTemplate",
+      "metadata": {
+        "description": "The name of image template for customized image"
+      }
+    },
+    "imageOffer": {
+      "type": "string",
+      "defaultValue": "visualstudioplustools",
+      "metadata": {
+        "description": "The name of image offer"
+      }
+    },
+    "imagePublisher": {
+      "type": "string",
+      "defaultValue": "microsoftvisualstudio",
+      "metadata": {
+        "description": "The name of image publisher"
+      }
+    },
+    "imageSku": {
+      "type": "string",
+      "defaultValue": "vs-2022-ent-general-win11-m365-gen2",
+      "metadata": {
+        "description": "The name of image sku"
+      }
+    },
+    "adeKeyvaultName": {
       "type": "string",
       "defaultValue": ""
     },
-    "keyvaultSecretName": {
+    "adeKeyvaultSecretName": {
       "type": "string",
       "defaultValue": "repo-pat-secret"
     },
-    "keyvaultSecretValue": {
+    "adeKeyvaultSecretValue": {
       "type": "securestring",
       "metadata": {
         "description": "The personal access token of Github/ADO repo"
       }
     },
-    "galleryName": {
+    "adeCatalogRepositoryUrl": {
       "type": "string",
-      "defaultValue": ""
+      "defaultValue": "https://github.com/luxu-ms/deployment-environments.git",
+      "metadata": {
+        "description": "The catalog repository URL of ADE templates"
+      }
     },
-    "imageDefinitionName": {
+    "adeCatalogItemRootPath": {
       "type": "string",
-      "defaultValue": "OpenAIImage"
-    },
-    "imageOffer": {
-      "type": "string",
-      "defaultValue": "windows-ent-cpc"
-    },
-    "imagePublisher": {
-      "type": "string",
-      "defaultValue": "microsoftwindowsdesktop"
-    },
-    "imageSku": {
-      "type": "string",
-      "defaultValue": "win11-22h2-ent-cpc-m365-test"
-    },
-    "catalogItemRootPath": {
-      "type": "string",
-      "defaultValue": "/Environments"
-    },
-    "managedIdentityName": {
-      "type": "string",
-      "defaultValue": ""
-    },
-    "repositoryUrl": {
-      "type": "string",
-      "defaultValue": "https://github.com/luxu-ms/deployment-environments.git"
+      "defaultValue": "/Environments",
+      "metadata": {
+        "description": "The root path of catalog repository including ADE templates"
+      }
     },
     "tags": {
       "type": "object",
       "defaultValue": {}
+    },
+    "guidId": {
+      "type": "string",
+      "defaultValue": "[newGuid()]"
     }
   },
   "variables": {
@@ -152,9 +191,18 @@
     "abbrs": "[variables('$fxv#0')]",
     "resourceToken": "[toLower(uniqueString(resourceGroup().id, parameters('location')))]",
     "ncName": "[if(not(empty(parameters('networkConnectionName'))), parameters('networkConnectionName'), format('{0}{1}', variables('abbrs').networkConnections, variables('resourceToken')))]",
-    "kvName": "[if(not(empty(parameters('keyvaultName'))), parameters('keyvaultName'), format('{0}{1}', variables('abbrs').keyvault, variables('resourceToken')))]"
+    "kvName": "[if(not(empty(parameters('adeKeyvaultName'))), parameters('adeKeyvaultName'), format('{0}{1}', variables('abbrs').keyvault, variables('resourceToken')))]",
+    "galName": "[if(not(empty(parameters('imageGalleryName'))), parameters('imageGalleryName'), format('{0}{1}', variables('abbrs').computeGalleries, variables('resourceToken')))]",
+    "idName": "[if(not(empty(parameters('userIdentityName'))), parameters('userIdentityName'), format('{0}{1}', variables('abbrs').managedIdentityUserAssignedIdentities, variables('resourceToken')))]"
   },
   "resources": [
+    {
+      "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
+      "apiVersion": "2022-01-31-preview",
+      "name": "[variables('idName')]",
+      "location": "[parameters('location')]",
+      "tags": "[parameters('tags')]"
+    },
     {
       "condition": "[empty(parameters('existingSubnetId'))]",
       "type": "Microsoft.Resources/deployments",
@@ -173,13 +221,13 @@
             "value": "[parameters('tags')]"
           },
           "vnetAddressPrefixes": {
-            "value": "[parameters('vnetAddressPrefixes')]"
+            "value": "[parameters('networkVnetAddressPrefixes')]"
           },
-          "vnetName": "[if(not(empty(parameters('vnetName'))), createObject('value', parameters('vnetName')), createObject('value', format('{0}{1}', variables('abbrs').networkVirtualNetworks, variables('resourceToken'))))]",
+          "vnetName": "[if(not(empty(parameters('networkVnetName'))), createObject('value', parameters('networkVnetName')), createObject('value', format('{0}{1}', variables('abbrs').networkVirtualNetworks, variables('resourceToken'))))]",
           "subnetAddressPrefixes": {
-            "value": "[parameters('subnetAddressPrefixes')]"
+            "value": "[parameters('networkSubnetAddressPrefixes')]"
           },
-          "subnetName": "[if(not(empty(parameters('subnetName'))), createObject('value', parameters('subnetName')), createObject('value', format('{0}{1}', variables('abbrs').networkVirtualNetworksSubnets, variables('resourceToken'))))]"
+          "subnetName": "[if(not(empty(parameters('networkSubnetName'))), createObject('value', parameters('networkSubnetName')), createObject('value', format('{0}{1}', variables('abbrs').networkVirtualNetworksSubnets, variables('resourceToken'))))]"
         },
         "template": {
           "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
@@ -273,7 +321,7 @@
     {
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2022-09-01",
-      "name": "[variables('kvName')]",
+      "name": "keyvault",
       "properties": {
         "expressionEvaluationOptions": {
           "scope": "inner"
@@ -287,7 +335,7 @@
             "value": "[variables('kvName')]"
           },
           "principalId": {
-            "value": "[parameters('principalId')]"
+            "value": "[parameters('userPrincipalId')]"
           },
           "tags": {
             "value": "[parameters('tags')]"
@@ -361,13 +409,13 @@
         "mode": "Incremental",
         "parameters": {
           "keyVaultName": {
-            "value": "[variables('kvName')]"
+            "value": "keyvault"
           },
           "name": {
-            "value": "[parameters('keyvaultSecretName')]"
+            "value": "[parameters('adeKeyvaultSecretName')]"
           },
           "secretValue": {
-            "value": "[parameters('keyvaultSecretValue')]"
+            "value": "[parameters('adeKeyvaultSecretValue')]"
           }
         },
         "template": {
@@ -440,8 +488,345 @@
         }
       },
       "dependsOn": [
-        "[resourceId('Microsoft.Resources/deployments', variables('kvName'))]"
+        "[resourceId('Microsoft.Resources/deployments', 'keyvault')]"
       ]
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2022-09-01",
+      "name": "keyvaultAccess",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "keyVaultName": {
+            "value": "keyvault"
+          },
+          "principalId": {
+            "value": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('idName')), '2022-01-31-preview').principalId]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.17.1.54307",
+              "templateHash": "18301876310392488097"
+            }
+          },
+          "parameters": {
+            "name": {
+              "type": "string",
+              "defaultValue": "add"
+            },
+            "keyVaultName": {
+              "type": "string"
+            },
+            "permissions": {
+              "type": "object",
+              "defaultValue": {
+                "secrets": [
+                  "get",
+                  "list"
+                ]
+              }
+            },
+            "principalId": {
+              "type": "string"
+            }
+          },
+          "resources": [
+            {
+              "type": "Microsoft.KeyVault/vaults/accessPolicies",
+              "apiVersion": "2022-07-01",
+              "name": "[format('{0}/{1}', parameters('keyVaultName'), parameters('name'))]",
+              "properties": {
+                "accessPolicies": [
+                  {
+                    "objectId": "[parameters('principalId')]",
+                    "tenantId": "[subscription().tenantId]",
+                    "permissions": "[parameters('permissions')]"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Resources/deployments', 'keyvault')]",
+        "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('idName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "apiVersion": "2022-09-01",
+      "name": "gallery",
+      "properties": {
+        "expressionEvaluationOptions": {
+          "scope": "inner"
+        },
+        "mode": "Incremental",
+        "parameters": {
+          "galleryName": {
+            "value": "[variables('galName')]"
+          },
+          "location": {
+            "value": "[parameters('location')]"
+          },
+          "tags": {
+            "value": "[parameters('tags')]"
+          },
+          "imageDefinitionName": {
+            "value": "[parameters('imageDefinitionName')]"
+          },
+          "imageOffer": {
+            "value": "[parameters('imageOffer')]"
+          },
+          "imagePublisher": {
+            "value": "[parameters('imagePublisher')]"
+          },
+          "imageSku": {
+            "value": "[parameters('imageSku')]"
+          },
+          "imageTemplateName": {
+            "value": "[parameters('imageTemplateName')]"
+          },
+          "templateIdentityName": {
+            "value": "[format('{0}tpl-{1}', variables('abbrs').managedIdentityUserAssignedIdentities, variables('resourceToken'))]"
+          },
+          "guidId": {
+            "value": "[parameters('guidId')]"
+          }
+        },
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "metadata": {
+            "_generator": {
+              "name": "bicep",
+              "version": "0.17.1.54307",
+              "templateHash": "4877830875478875007"
+            }
+          },
+          "parameters": {
+            "galleryName": {
+              "type": "string"
+            },
+            "imageDefinitionName": {
+              "type": "string"
+            },
+            "imageOffer": {
+              "type": "string"
+            },
+            "imagePublisher": {
+              "type": "string"
+            },
+            "imageSku": {
+              "type": "string"
+            },
+            "imageTemplateName": {
+              "type": "string"
+            },
+            "templateIdentityName": {
+              "type": "string"
+            },
+            "location": {
+              "type": "string",
+              "defaultValue": "[resourceGroup().location]"
+            },
+            "tags": {
+              "type": "object",
+              "defaultValue": {}
+            },
+            "guidId": {
+              "type": "string"
+            }
+          },
+          "variables": {
+            "templateRoleDefinitionName": "[guid(resourceGroup().id)]",
+            "imageBuildName": "[take(format('{0}-{1}-buid', parameters('imageDefinitionName'), parameters('guidId')), 64)]",
+            "buildCommand": "[format('Invoke-AzResourceAction -ResourceName \"{0}\" -ResourceGroupName \"{1}\" -ResourceType \"Microsoft.VirtualMachineImages/imageTemplates\" -ApiVersion \"2020-02-14\" -Action Run -Force', parameters('imageTemplateName'), resourceGroup().name)]",
+            "customizedCommand": [
+              {
+                "type": "PowerShell",
+                "name": "Install Choco and other tools",
+                "inline": [
+                  "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))",
+                  "choco install -y python3",
+                  "choco install -y nodejs"
+                ]
+              }
+            ]
+          },
+          "resources": [
+            {
+              "type": "Microsoft.Compute/galleries",
+              "apiVersion": "2022-03-03",
+              "name": "[parameters('galleryName')]",
+              "location": "[parameters('location')]",
+              "tags": "[parameters('tags')]"
+            },
+            {
+              "type": "Microsoft.Compute/galleries/images",
+              "apiVersion": "2022-03-03",
+              "name": "[format('{0}/{1}', parameters('galleryName'), parameters('imageDefinitionName'))]",
+              "location": "[parameters('location')]",
+              "properties": {
+                "hyperVGeneration": "V2",
+                "architecture": "x64",
+                "features": [
+                  {
+                    "name": "SecurityType",
+                    "value": "TrustedLaunch"
+                  }
+                ],
+                "identifier": {
+                  "offer": "[parameters('imageOffer')]",
+                  "publisher": "[parameters('imagePublisher')]",
+                  "sku": "[parameters('imageSku')]"
+                },
+                "osState": "Generalized",
+                "osType": "Windows"
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Compute/galleries', parameters('galleryName'))]"
+              ]
+            },
+            {
+              "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
+              "apiVersion": "2022-01-31-preview",
+              "name": "[parameters('templateIdentityName')]",
+              "location": "[parameters('location')]"
+            },
+            {
+              "type": "Microsoft.VirtualMachineImages/imageTemplates",
+              "apiVersion": "2022-02-14",
+              "name": "[parameters('imageTemplateName')]",
+              "location": "[parameters('location')]",
+              "identity": {
+                "type": "UserAssigned",
+                "userAssignedIdentities": {
+                  "[format('{0}', resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('templateIdentityName')))]": {}
+                }
+              },
+              "properties": {
+                "buildTimeoutInMinutes": 100,
+                "vmProfile": {
+                  "vmSize": "Standard_DS2_v2",
+                  "osDiskSizeGB": 127
+                },
+                "source": {
+                  "type": "PlatformImage",
+                  "publisher": "[parameters('imagePublisher')]",
+                  "offer": "[parameters('imageOffer')]",
+                  "sku": "[parameters('imageSku')]",
+                  "version": "Latest"
+                },
+                "customize": "[variables('customizedCommand')]",
+                "distribute": [
+                  {
+                    "type": "SharedImage",
+                    "galleryImageId": "[resourceId('Microsoft.Compute/galleries/images', parameters('galleryName'), parameters('imageDefinitionName'))]",
+                    "runOutputName": "[format('{0}_Output', parameters('imageDefinitionName'))]",
+                    "replicationRegions": "[array(parameters('location'))]"
+                  }
+                ]
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.Compute/galleries/images', parameters('galleryName'), parameters('imageDefinitionName'))]",
+                "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('templateIdentityName'))]",
+                "[resourceId('Microsoft.Authorization/roleAssignments', guid(resourceGroup().id, format('{0}', resourceId('Microsoft.Authorization/roleDefinitions', variables('templateRoleDefinitionName'))), resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('templateIdentityName'))))]"
+              ]
+            },
+            {
+              "type": "Microsoft.Authorization/roleDefinitions",
+              "apiVersion": "2022-04-01",
+              "name": "[variables('templateRoleDefinitionName')]",
+              "properties": {
+                "roleName": "[variables('templateRoleDefinitionName')]",
+                "description": "Image Builder access to create resources for the image build, you should delete or split out as appropriate",
+                "type": "customRole",
+                "permissions": [
+                  {
+                    "actions": [
+                      "Microsoft.Compute/galleries/read",
+                      "Microsoft.Compute/galleries/images/read",
+                      "Microsoft.Compute/galleries/images/versions/read",
+                      "Microsoft.Compute/galleries/images/versions/write",
+                      "Microsoft.Compute/images/write",
+                      "Microsoft.Compute/images/read",
+                      "Microsoft.Compute/images/delete",
+                      "Microsoft.Storage/storageAccounts/blobServices/containers/read",
+                      "Microsoft.Storage/storageAccounts/blobServices/containers/write",
+                      "Microsoft.Resources/deployments/read",
+                      "Microsoft.Resources/deploymentScripts/read",
+                      "Microsoft.Resources/deploymentScripts/write",
+                      "Microsoft.VirtualMachineImages/imageTemplates/run/action",
+                      "Microsoft.ContainerInstance/containerGroups/read",
+                      "Microsoft.ContainerInstance/containerGroups/write",
+                      "Microsoft.ContainerInstance/containerGroups/start/action"
+                    ]
+                  }
+                ],
+                "assignableScopes": [
+                  "[resourceGroup().id]"
+                ]
+              }
+            },
+            {
+              "type": "Microsoft.Authorization/roleAssignments",
+              "apiVersion": "2022-04-01",
+              "name": "[guid(resourceGroup().id, format('{0}', resourceId('Microsoft.Authorization/roleDefinitions', variables('templateRoleDefinitionName'))), resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('templateIdentityName')))]",
+              "properties": {
+                "roleDefinitionId": "[resourceId('Microsoft.Authorization/roleDefinitions', variables('templateRoleDefinitionName'))]",
+                "principalId": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('templateIdentityName')), '2022-01-31-preview').principalId]",
+                "principalType": "ServicePrincipal"
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('templateIdentityName'))]",
+                "[resourceId('Microsoft.Authorization/roleDefinitions', variables('templateRoleDefinitionName'))]"
+              ]
+            },
+            {
+              "type": "Microsoft.Resources/deploymentScripts",
+              "apiVersion": "2020-10-01",
+              "name": "[variables('imageBuildName')]",
+              "location": "[parameters('location')]",
+              "kind": "AzurePowerShell",
+              "identity": {
+                "type": "UserAssigned",
+                "userAssignedIdentities": {
+                  "[format('{0}', resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('templateIdentityName')))]": {}
+                }
+              },
+              "properties": {
+                "forceUpdateTag": "[parameters('guidId')]",
+                "azPowerShellVersion": "8.3",
+                "scriptContent": "[variables('buildCommand')]",
+                "timeout": "PT2H",
+                "cleanupPreference": "OnSuccess",
+                "retentionInterval": "P1D"
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.VirtualMachineImages/imageTemplates', parameters('imageTemplateName'))]",
+                "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('templateIdentityName'))]",
+                "[resourceId('Microsoft.Authorization/roleAssignments', guid(resourceGroup().id, format('{0}', resourceId('Microsoft.Authorization/roleDefinitions', variables('templateRoleDefinitionName'))), resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('templateIdentityName'))))]"
+              ]
+            }
+          ],
+          "outputs": {
+            "name": {
+              "type": "string",
+              "value": "[parameters('galleryName')]"
+            }
+          }
+        }
+      }
     },
     {
       "type": "Microsoft.Resources/deployments",
@@ -469,36 +854,31 @@
             "value": "[format('{0}{1}-{2}', variables('abbrs').devcenterNetworkingResourceGroup, variables('ncName'), parameters('location'))]"
           },
           "principalId": {
-            "value": "[parameters('principalId')]"
+            "value": "[parameters('userPrincipalId')]"
           },
           "principalType": {
-            "value": "[parameters('principalType')]"
+            "value": "[parameters('userPrincipalType')]"
           },
           "repositoryUrl": {
-            "value": "[parameters('repositoryUrl')]"
+            "value": "[parameters('adeCatalogRepositoryUrl')]"
           },
           "secretIdentifier": {
             "value": "[reference(resourceId('Microsoft.Resources/deployments', 'keyvaultSecret'), '2022-09-01').outputs.secretIdentifier.value]"
           },
-          "galleryName": "[if(not(empty(parameters('galleryName'))), createObject('value', parameters('galleryName')), createObject('value', format('{0}{1}', variables('abbrs').computeGalleries, variables('resourceToken'))))]",
+          "galleryName": {
+            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'gallery'), '2022-09-01').outputs.name.value]"
+          },
+          "managedIdentityName": {
+            "value": "[variables('idName')]"
+          },
+          "catalogItemRootPath": {
+            "value": "[parameters('adeCatalogItemRootPath')]"
+          },
           "imageDefinitionName": {
             "value": "[parameters('imageDefinitionName')]"
           },
-          "imageOffer": {
-            "value": "[parameters('imageOffer')]"
-          },
-          "imagePublisher": {
-            "value": "[parameters('imagePublisher')]"
-          },
-          "imageSku": {
-            "value": "[parameters('imageSku')]"
-          },
-          "managedIdentityName": "[if(not(empty(parameters('managedIdentityName'))), createObject('value', parameters('managedIdentityName')), createObject('value', format('{0}{1}', variables('abbrs').managedIdentityUserAssignedIdentities, variables('resourceToken'))))]",
-          "catalogItemRootPath": {
-            "value": "[parameters('catalogItemRootPath')]"
-          },
-          "keyvaultName": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', variables('kvName')), '2022-09-01').outputs.name.value]"
+          "imageTemplateName": {
+            "value": "[parameters('imageTemplateName')]"
           }
         },
         "template": {
@@ -508,7 +888,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.17.1.54307",
-              "templateHash": "6569836831301061107"
+              "templateHash": "15893317830588464589"
             }
           },
           "parameters": {
@@ -550,22 +930,13 @@
             "managedIdentityName": {
               "type": "string"
             },
-            "keyvaultName": {
-              "type": "string"
-            },
             "galleryName": {
               "type": "string"
             },
             "imageDefinitionName": {
               "type": "string"
             },
-            "imageOffer": {
-              "type": "string"
-            },
-            "imagePublisher": {
-              "type": "string"
-            },
-            "imageSku": {
+            "imageTemplateName": {
               "type": "string"
             },
             "tags": {
@@ -588,7 +959,7 @@
           },
           "variables": {
             "$fxv#0": {
-              "definitions": [
+              "builtinImageDevboxDefinitions": [
                 {
                   "name": "win11-vs2022-vscode",
                   "image": "win11-ent-vs2022",
@@ -599,7 +970,7 @@
                   "name": "win11-m365",
                   "image": "win11-ent-m365",
                   "compute": "8-vcpu-32gb-mem",
-                  "storage": "256gb"
+                  "storage": "512gb"
                 },
                 {
                   "name": "win11-base",
@@ -608,10 +979,22 @@
                   "storage": "256gb"
                 }
               ],
+              "customizedImageDevboxdefinitions": [
+                {
+                  "name": "win11-vs2022-vscode-openai",
+                  "compute": "8-vcpu-32gb-mem",
+                  "storage": "512gb"
+                }
+              ],
               "pools": [
                 {
                   "name": "win11-vs2022-vscode-pool",
                   "definition": "win11-vs2022-vscode",
+                  "administrator": "Enabled"
+                },
+                {
+                  "name": "win11-vs2022-vscode-openai-pool",
+                  "definition": "win11-vs2022-vscode-openai",
                   "administrator": "Enabled"
                 }
               ],
@@ -634,12 +1017,12 @@
                 }
               ]
             },
-            "devboxRoleDefinitionId": "45d50f46-0b78-4001-a660-4198cbe8cd05",
-            "adeRoledefinitioinId": "18e40d4e-8d2e-438d-97e1-9528336e149c",
-            "ownerRoleDefinitioinId": "8e3af657-a8ff-443c-a75c-2fe8c4bcb635",
-            "readerRoleDefinitionId": "acdd72a7-3385-48ef-bd42-f606fba81ae7",
-            "windows365ApplicationId": "0af06dc6-e4b5-4f28-818e-e78e62d137a5",
-            "contributorRoleDefinitionId": "b24988ac-6180-42a0-ab88-20f7382dd24c",
+            "DEVCENTER_DEVBOX_USER_ROLE": "45d50f46-0b78-4001-a660-4198cbe8cd05",
+            "DEPLOYMENT_ENVIRONMENTS_USER_ROLE": "18e40d4e-8d2e-438d-97e1-9528336e149c",
+            "OWNER_ROLE": "8e3af657-a8ff-443c-a75c-2fe8c4bcb635",
+            "CONTRIBUTOR_ROLE": "b24988ac-6180-42a0-ab88-20f7382dd24c",
+            "READER_ROLE": "acdd72a7-3385-48ef-bd42-f606fba81ae7",
+            "WINDOWS365_PRINCIPALID": "8eec7c09-06ae-48e9-aafd-9fb31a5d5175",
             "devceterSettings": "[variables('$fxv#0')]",
             "image": {
               "win11-ent-base": "microsoftwindowsdesktop_windows-ent-cpc_win11-21h2-ent-cpc-os",
@@ -653,7 +1036,8 @@
               "256gb": "ssd_256gb",
               "512gb": "ssd_512gb",
               "1024gb": "ssd_1024gb"
-            }
+            },
+            "customizedImageDefinition": "[variables('devceterSettings').customizedImageDevboxdefinitions[0]]"
           },
           "resources": [
             {
@@ -677,46 +1061,6 @@
               ]
             },
             {
-              "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
-              "apiVersion": "2022-01-31-preview",
-              "name": "[parameters('managedIdentityName')]",
-              "location": "[parameters('location')]",
-              "tags": "[parameters('tags')]"
-            },
-            {
-              "type": "Microsoft.Compute/galleries",
-              "apiVersion": "2022-03-03",
-              "name": "[parameters('galleryName')]",
-              "location": "[parameters('location')]",
-              "tags": "[parameters('tags')]"
-            },
-            {
-              "type": "Microsoft.Compute/galleries/images",
-              "apiVersion": "2022-03-03",
-              "name": "[format('{0}/{1}', parameters('galleryName'), parameters('imageDefinitionName'))]",
-              "location": "[parameters('location')]",
-              "properties": {
-                "hyperVGeneration": "V2",
-                "architecture": "x64",
-                "features": [
-                  {
-                    "name": "SecurityType",
-                    "value": "TrustedLaunch"
-                  }
-                ],
-                "identifier": {
-                  "offer": "[parameters('imageOffer')]",
-                  "publisher": "[parameters('imagePublisher')]",
-                  "sku": "[parameters('imageSku')]"
-                },
-                "osState": "Generalized",
-                "osType": "Windows"
-              },
-              "dependsOn": [
-                "[resourceId('Microsoft.Compute/galleries', parameters('galleryName'))]"
-              ]
-            },
-            {
               "type": "Microsoft.DevCenter/devcenters",
               "apiVersion": "2023-01-01-preview",
               "name": "[parameters('devcenterName')]",
@@ -727,10 +1071,29 @@
                 "userAssignedIdentities": {
                   "[format('{0}', resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('managedIdentityName')))]": {}
                 }
-              },
-              "dependsOn": [
-                "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('managedIdentityName'))]"
-              ]
+              }
+            },
+            {
+              "type": "Microsoft.Authorization/roleAssignments",
+              "apiVersion": "2022-04-01",
+              "scope": "[format('Microsoft.Compute/galleries/{0}', parameters('galleryName'))]",
+              "name": "[guid(subscription().id, resourceGroup().id, resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('managedIdentityName')), variables('CONTRIBUTOR_ROLE'))]",
+              "properties": {
+                "principalId": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('managedIdentityName')), '2022-01-31-preview').principalId]",
+                "principalType": "ServicePrincipal",
+                "roleDefinitionId": "[resourceId('Microsoft.Authorization/roleDefinitions', variables('CONTRIBUTOR_ROLE'))]"
+              }
+            },
+            {
+              "type": "Microsoft.Authorization/roleAssignments",
+              "apiVersion": "2022-04-01",
+              "scope": "[format('Microsoft.Compute/galleries/{0}', parameters('galleryName'))]",
+              "name": "[guid(subscription().id, resourceGroup().id, variables('WINDOWS365_PRINCIPALID'), variables('READER_ROLE'))]",
+              "properties": {
+                "principalId": "[variables('WINDOWS365_PRINCIPALID')]",
+                "principalType": "ServicePrincipal",
+                "roleDefinitionId": "[resourceId('Microsoft.Authorization/roleDefinitions', variables('READER_ROLE'))]"
+              }
             },
             {
               "type": "Microsoft.DevCenter/devcenters/galleries",
@@ -740,10 +1103,9 @@
                 "galleryResourceId": "[resourceId('Microsoft.Compute/galleries', parameters('galleryName'))]"
               },
               "dependsOn": [
-                "[resourceId('Microsoft.Compute/galleries', parameters('galleryName'))]",
-                "[extensionResourceId(resourceId('Microsoft.Compute/galleries', parameters('galleryName')), 'Microsoft.Authorization/roleAssignments', guid(subscription().id, resourceGroup().id, resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('managedIdentityName')), variables('contributorRoleDefinitionId')))]",
+                "[extensionResourceId(resourceId('Microsoft.Compute/galleries', parameters('galleryName')), 'Microsoft.Authorization/roleAssignments', guid(subscription().id, resourceGroup().id, resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('managedIdentityName')), variables('CONTRIBUTOR_ROLE')))]",
                 "[resourceId('Microsoft.DevCenter/devcenters', parameters('devcenterName'))]",
-                "[extensionResourceId(resourceId('Microsoft.Compute/galleries', parameters('galleryName')), 'Microsoft.Authorization/roleAssignments', guid(subscription().id, resourceGroup().id, variables('windows365ApplicationId'), variables('readerRoleDefinitionId')))]"
+                "[extensionResourceId(resourceId('Microsoft.Compute/galleries', parameters('galleryName')), 'Microsoft.Authorization/roleAssignments', guid(subscription().id, resourceGroup().id, variables('WINDOWS365_PRINCIPALID'), variables('READER_ROLE')))]"
               ]
             },
             {
@@ -799,26 +1161,67 @@
               ]
             },
             {
+              "type": "Microsoft.Resources/deploymentScripts",
+              "apiVersion": "2020-10-01",
+              "name": "[format('{0}-query', parameters('imageTemplateName'))]",
+              "location": "[parameters('location')]",
+              "kind": "AzurePowerShell",
+              "identity": {
+                "type": "UserAssigned",
+                "userAssignedIdentities": {
+                  "[format('{0}', resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('managedIdentityName')))]": {}
+                }
+              },
+              "properties": {
+                "azPowerShellVersion": "8.3",
+                "scriptContent": "[format('Connect-AzAccount -Identity; ''Az.ImageBuilder'', ''Az.ManagedServiceIdentity'' | ForEach-Object {{Install-Module -Name $_ -AllowPrerelease -Force}}; while ((Get-AzImageBuilderTemplate -ImageTemplateName {0} -ResourceGroupName {1}).LastRunStatusRunState -ne ''Succeeded'' ) {{ Start-Sleep -Seconds 30 }}', parameters('imageTemplateName'), resourceGroup().name)]",
+                "timeout": "PT2H",
+                "cleanupPreference": "OnSuccess",
+                "retentionInterval": "P1D"
+              }
+            },
+            {
               "copy": {
-                "name": "devboxDefinitions",
-                "count": "[length(variables('devceterSettings').definitions)]"
+                "name": "builtinImageDevboxDefinitions",
+                "count": "[length(variables('devceterSettings').builtinImageDevboxDefinitions)]"
               },
               "type": "Microsoft.DevCenter/devcenters/devboxdefinitions",
               "apiVersion": "2022-11-11-preview",
-              "name": "[format('{0}/{1}', parameters('devcenterName'), variables('devceterSettings').definitions[copyIndex()].name)]",
+              "name": "[format('{0}/{1}', parameters('devcenterName'), variables('devceterSettings').builtinImageDevboxDefinitions[copyIndex()].name)]",
               "location": "[parameters('location')]",
               "properties": {
                 "imageReference": {
-                  "id": "[format('{0}/galleries/default/images/{1}', resourceId('Microsoft.DevCenter/devcenters', parameters('devcenterName')), variables('image')[variables('devceterSettings').definitions[copyIndex()].image])]"
+                  "id": "[format('{0}/galleries/default/images/{1}', resourceId('Microsoft.DevCenter/devcenters', parameters('devcenterName')), variables('image')[variables('devceterSettings').builtinImageDevboxDefinitions[copyIndex()].image])]"
                 },
                 "sku": {
-                  "name": "[variables('compute')[variables('devceterSettings').definitions[copyIndex()].compute]]"
+                  "name": "[variables('compute')[variables('devceterSettings').builtinImageDevboxDefinitions[copyIndex()].compute]]"
                 },
-                "osStorageType": "[variables('storage')[variables('devceterSettings').definitions[copyIndex()].storage]]"
+                "osStorageType": "[variables('storage')[variables('devceterSettings').builtinImageDevboxDefinitions[copyIndex()].storage]]"
               },
               "dependsOn": [
                 "[resourceId('Microsoft.DevCenter/devcenters/attachednetworks', parameters('devcenterName'), parameters('networkConnectionName'))]",
                 "[resourceId('Microsoft.DevCenter/devcenters', parameters('devcenterName'))]"
+              ]
+            },
+            {
+              "type": "Microsoft.DevCenter/devcenters/devboxdefinitions",
+              "apiVersion": "2022-11-11-preview",
+              "name": "[format('{0}/{1}', parameters('devcenterName'), variables('customizedImageDefinition').name)]",
+              "location": "[parameters('location')]",
+              "properties": {
+                "imageReference": {
+                  "id": "[resourceId('Microsoft.DevCenter/devcenters/galleries/images', parameters('devcenterName'), parameters('galleryName'), parameters('imageDefinitionName'))]"
+                },
+                "sku": {
+                  "name": "[variables('compute')[variables('customizedImageDefinition').compute]]"
+                },
+                "osStorageType": "[variables('storage')[variables('customizedImageDefinition').storage]]"
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.DevCenter/devcenters/attachednetworks', parameters('devcenterName'), parameters('networkConnectionName'))]",
+                "[resourceId('Microsoft.DevCenter/devcenters', parameters('devcenterName'))]",
+                "[resourceId('Microsoft.DevCenter/devcenters/galleries', parameters('devcenterName'), parameters('galleryName'))]",
+                "[resourceId('Microsoft.Resources/deploymentScripts', format('{0}-query', parameters('imageTemplateName')))]"
               ]
             },
             {
@@ -831,7 +1234,8 @@
               },
               "tags": "[parameters('tags')]",
               "dependsOn": [
-                "devboxDefinitions",
+                "builtinImageDevboxDefinitions",
+                "[resourceId('Microsoft.DevCenter/devcenters/devboxdefinitions', parameters('devcenterName'), variables('customizedImageDefinition').name)]",
                 "[resourceId('Microsoft.DevCenter/devcenters', parameters('devcenterName'))]"
               ]
             },
@@ -847,14 +1251,14 @@
                 "status": "Enabled",
                 "creatorRoleAssignment": {
                   "roles": {
-                    "[format('{0}', variables('ownerRoleDefinitioinId'))]": {}
+                    "[format('{0}', variables('OWNER_ROLE'))]": {}
                   }
                 },
                 "deploymentTargetId": "[if(not(empty(variables('devceterSettings').envMapping[copyIndex()].deploymentTargetId)), format('/subscriptions/{0}', variables('devceterSettings').envMapping[copyIndex()].deploymentTargetId), subscription().id)]",
                 "userRoleAssignments": {
                   "[format('{0}', reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('managedIdentityName')), '2022-01-31-preview').principalId)]": {
                     "roles": {
-                      "[format('{0}', variables('ownerRoleDefinitioinId'))]": {}
+                      "[format('{0}', variables('OWNER_ROLE'))]": {}
                     }
                   }
                 }
@@ -866,37 +1270,7 @@
                 }
               },
               "dependsOn": [
-                "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('managedIdentityName'))]",
                 "[resourceId('Microsoft.DevCenter/projects', parameters('projectName'))]"
-              ]
-            },
-            {
-              "type": "Microsoft.Authorization/roleAssignments",
-              "apiVersion": "2022-04-01",
-              "scope": "[format('Microsoft.Compute/galleries/{0}', parameters('galleryName'))]",
-              "name": "[guid(subscription().id, resourceGroup().id, variables('windows365ApplicationId'), variables('readerRoleDefinitionId'))]",
-              "properties": {
-                "principalId": "[variables('windows365ApplicationId')]",
-                "principalType": "ServicePrincipal",
-                "roleDefinitionId": "[resourceId('Microsoft.Authorization/roleDefinitions', variables('readerRoleDefinitionId'))]"
-              },
-              "dependsOn": [
-                "[resourceId('Microsoft.Compute/galleries', parameters('galleryName'))]"
-              ]
-            },
-            {
-              "type": "Microsoft.Authorization/roleAssignments",
-              "apiVersion": "2022-04-01",
-              "scope": "[format('Microsoft.Compute/galleries/{0}', parameters('galleryName'))]",
-              "name": "[guid(subscription().id, resourceGroup().id, resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('managedIdentityName')), variables('contributorRoleDefinitionId'))]",
-              "properties": {
-                "principalId": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('managedIdentityName')), '2022-01-31-preview').principalId]",
-                "principalType": "ServicePrincipal",
-                "roleDefinitionId": "[resourceId('Microsoft.Authorization/roleDefinitions', variables('contributorRoleDefinitionId'))]"
-              },
-              "dependsOn": [
-                "[resourceId('Microsoft.Compute/galleries', parameters('galleryName'))]",
-                "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('managedIdentityName'))]"
               ]
             },
             {
@@ -904,11 +1278,11 @@
               "type": "Microsoft.Authorization/roleAssignments",
               "apiVersion": "2022-04-01",
               "scope": "[format('Microsoft.DevCenter/projects/{0}', parameters('projectName'))]",
-              "name": "[guid(subscription().id, resourceGroup().id, parameters('principalId'), variables('devboxRoleDefinitionId'))]",
+              "name": "[guid(subscription().id, resourceGroup().id, parameters('principalId'), variables('DEVCENTER_DEVBOX_USER_ROLE'))]",
               "properties": {
                 "principalId": "[parameters('principalId')]",
                 "principalType": "[parameters('principalType')]",
-                "roleDefinitionId": "[resourceId('Microsoft.Authorization/roleDefinitions', variables('devboxRoleDefinitionId'))]"
+                "roleDefinitionId": "[resourceId('Microsoft.Authorization/roleDefinitions', variables('DEVCENTER_DEVBOX_USER_ROLE'))]"
               },
               "dependsOn": [
                 "[resourceId('Microsoft.DevCenter/projects', parameters('projectName'))]"
@@ -919,84 +1293,14 @@
               "type": "Microsoft.Authorization/roleAssignments",
               "apiVersion": "2022-04-01",
               "scope": "[format('Microsoft.DevCenter/projects/{0}', parameters('projectName'))]",
-              "name": "[guid(subscription().id, resourceGroup().id, parameters('principalId'), variables('adeRoledefinitioinId'))]",
+              "name": "[guid(subscription().id, resourceGroup().id, parameters('principalId'), variables('DEPLOYMENT_ENVIRONMENTS_USER_ROLE'))]",
               "properties": {
                 "principalId": "[parameters('principalId')]",
                 "principalType": "[parameters('principalType')]",
-                "roleDefinitionId": "[resourceId('Microsoft.Authorization/roleDefinitions', variables('adeRoledefinitioinId'))]"
+                "roleDefinitionId": "[resourceId('Microsoft.Authorization/roleDefinitions', variables('DEPLOYMENT_ENVIRONMENTS_USER_ROLE'))]"
               },
               "dependsOn": [
                 "[resourceId('Microsoft.DevCenter/projects', parameters('projectName'))]"
-              ]
-            },
-            {
-              "type": "Microsoft.Resources/deployments",
-              "apiVersion": "2022-09-01",
-              "name": "keyvaultAccess",
-              "properties": {
-                "expressionEvaluationOptions": {
-                  "scope": "inner"
-                },
-                "mode": "Incremental",
-                "parameters": {
-                  "keyVaultName": {
-                    "value": "[parameters('keyvaultName')]"
-                  },
-                  "principalId": {
-                    "value": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('managedIdentityName')), '2022-01-31-preview').principalId]"
-                  }
-                },
-                "template": {
-                  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
-                  "contentVersion": "1.0.0.0",
-                  "metadata": {
-                    "_generator": {
-                      "name": "bicep",
-                      "version": "0.17.1.54307",
-                      "templateHash": "18301876310392488097"
-                    }
-                  },
-                  "parameters": {
-                    "name": {
-                      "type": "string",
-                      "defaultValue": "add"
-                    },
-                    "keyVaultName": {
-                      "type": "string"
-                    },
-                    "permissions": {
-                      "type": "object",
-                      "defaultValue": {
-                        "secrets": [
-                          "get",
-                          "list"
-                        ]
-                      }
-                    },
-                    "principalId": {
-                      "type": "string"
-                    }
-                  },
-                  "resources": [
-                    {
-                      "type": "Microsoft.KeyVault/vaults/accessPolicies",
-                      "apiVersion": "2022-07-01",
-                      "name": "[format('{0}/{1}', parameters('keyVaultName'), parameters('name'))]",
-                      "properties": {
-                        "accessPolicies": [
-                          {
-                            "objectId": "[parameters('principalId')]",
-                            "tenantId": "[subscription().tenantId]",
-                            "permissions": "[parameters('permissions')]"
-                          }
-                        ]
-                      }
-                    }
-                  ]
-                }
-              },
-              "dependsOn": [
-                "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('managedIdentityName'))]"
               ]
             },
             {
@@ -1015,7 +1319,7 @@
                     "value": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('managedIdentityName')), '2022-01-31-preview').principalId]"
                   },
                   "roleDefinitionId": {
-                    "value": "[variables('ownerRoleDefinitioinId')]"
+                    "value": "[variables('OWNER_ROLE')]"
                   },
                   "principalType": {
                     "value": "ServicePrincipal"
@@ -1064,10 +1368,7 @@
                     }
                   ]
                 }
-              },
-              "dependsOn": [
-                "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('managedIdentityName'))]"
-              ]
+              }
             }
           ],
           "outputs": {
@@ -1075,14 +1376,18 @@
               "type": "string",
               "value": "[parameters('devcenterName')]"
             },
-            "definitions": {
+            "builtinImageDevboxDefinitions": {
               "type": "array",
               "copy": {
-                "count": "[length(variables('devceterSettings').definitions)]",
+                "count": "[length(variables('devceterSettings').builtinImageDevboxDefinitions)]",
                 "input": {
-                  "name": "[variables('devceterSettings').definitions[copyIndex()].name]"
+                  "name": "[variables('devceterSettings').builtinImageDevboxDefinitions[copyIndex()].name]"
                 }
               }
+            },
+            "customizedImageDevboxDefinitions": {
+              "type": "string",
+              "value": "[variables('customizedImageDefinition').name]"
             },
             "networkConnectionName": {
               "type": "string",
@@ -1105,21 +1410,13 @@
         }
       },
       "dependsOn": [
-        "[resourceId('Microsoft.Resources/deployments', variables('kvName'))]",
+        "[resourceId('Microsoft.Resources/deployments', 'gallery')]",
         "[resourceId('Microsoft.Resources/deployments', 'keyvaultSecret')]",
         "[resourceId('Microsoft.Resources/deployments', 'vnet')]"
       ]
     }
   ],
   "outputs": {
-    "vnetName": {
-      "type": "string",
-      "value": "[if(empty(parameters('existingSubnetId')), reference(resourceId('Microsoft.Resources/deployments', 'vnet'), '2022-09-01').outputs.vnetName.value, '')]"
-    },
-    "subnetName": {
-      "type": "string",
-      "value": "[if(empty(parameters('existingSubnetId')), reference(resourceId('Microsoft.Resources/deployments', 'vnet'), '2022-09-01').outputs.subnetName.value, '')]"
-    },
     "devcetnerName": {
       "type": "string",
       "value": "[reference(resourceId('Microsoft.Resources/deployments', 'devcenter'), '2022-09-01').outputs.devcenterName.value]"
@@ -1132,9 +1429,21 @@
       "type": "string",
       "value": "[reference(resourceId('Microsoft.Resources/deployments', 'devcenter'), '2022-09-01').outputs.networkConnectionName.value]"
     },
-    "definitions": {
+    "vnetName": {
+      "type": "string",
+      "value": "[if(empty(parameters('existingSubnetId')), reference(resourceId('Microsoft.Resources/deployments', 'vnet'), '2022-09-01').outputs.vnetName.value, '')]"
+    },
+    "subnetName": {
+      "type": "string",
+      "value": "[if(empty(parameters('existingSubnetId')), reference(resourceId('Microsoft.Resources/deployments', 'vnet'), '2022-09-01').outputs.subnetName.value, '')]"
+    },
+    "builtinImageDevboxDefinitions": {
       "type": "array",
-      "value": "[reference(resourceId('Microsoft.Resources/deployments', 'devcenter'), '2022-09-01').outputs.definitions.value]"
+      "value": "[reference(resourceId('Microsoft.Resources/deployments', 'devcenter'), '2022-09-01').outputs.builtinImageDevboxDefinitions.value]"
+    },
+    "customizedImageDevboxDefinitions": {
+      "type": "string",
+      "value": "[reference(resourceId('Microsoft.Resources/deployments', 'devcenter'), '2022-09-01').outputs.customizedImageDevboxDefinitions.value]"
     },
     "pools": {
       "type": "array",

@@ -21,7 +21,6 @@ param tags object = {}
   'User'
 ])
 param principalType string = 'User'
-param customizedImageDevboxDefnition string = 'win11-vs2022-vscode-openai'
 param catalogName string = 'test-catalog'
 
 // DevCenter Dev Box User role 
@@ -290,7 +289,7 @@ resource adeRole 'Microsoft.Authorization/roleAssignments@2022-04-01' = if(!empt
 
 output devcenterName string = devcenter.name
 
-output builtinImageDevboxDefinitions array = [for (definition, i) in devceterSettings.definitions: {
+output builtinImageDevboxDefinitions array = [for (definition, i) in devceterSettings.builtinImageDevboxDefinitions: {
   name: builtinImageDevboxDefinitions[i].name
 }]
 output customizedImageDevboxDefinitions string = customizedImageDevboxDefinitions.name
