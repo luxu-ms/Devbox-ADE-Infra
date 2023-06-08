@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.17.1.54307",
-      "templateHash": "16142393218955089146"
+      "templateHash": "5525725615441778998"
     }
   },
   "parameters": {
@@ -879,6 +879,9 @@
           },
           "imageTemplateName": {
             "value": "[parameters('imageTemplateName')]"
+          },
+          "guidId": {
+            "value": "[parameters('guidId')]"
           }
         },
         "template": {
@@ -888,7 +891,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.17.1.54307",
-              "templateHash": "15893317830588464589"
+              "templateHash": "4254876055416706513"
             }
           },
           "parameters": {
@@ -955,6 +958,9 @@
             "catalogName": {
               "type": "string",
               "defaultValue": "test-catalog"
+            },
+            "guidId": {
+              "type": "string"
             }
           },
           "variables": {
@@ -1037,7 +1043,8 @@
               "512gb": "ssd_512gb",
               "1024gb": "ssd_1024gb"
             },
-            "customizedImageDefinition": "[variables('devceterSettings').customizedImageDevboxdefinitions[0]]"
+            "customizedImageDefinition": "[variables('devceterSettings').customizedImageDevboxdefinitions[0]]",
+            "queryTemplateProgress": "[take(format('{0}-{1}-query', parameters('imageDefinitionName'), parameters('guidId')), 64)]"
           },
           "resources": [
             {
@@ -1163,7 +1170,7 @@
             {
               "type": "Microsoft.Resources/deploymentScripts",
               "apiVersion": "2020-10-01",
-              "name": "[format('{0}-query', parameters('imageTemplateName'))]",
+              "name": "[variables('queryTemplateProgress')]",
               "location": "[parameters('location')]",
               "kind": "AzurePowerShell",
               "identity": {
@@ -1221,7 +1228,7 @@
                 "[resourceId('Microsoft.DevCenter/devcenters/attachednetworks', parameters('devcenterName'), parameters('networkConnectionName'))]",
                 "[resourceId('Microsoft.DevCenter/devcenters', parameters('devcenterName'))]",
                 "[resourceId('Microsoft.DevCenter/devcenters/galleries', parameters('devcenterName'), parameters('galleryName'))]",
-                "[resourceId('Microsoft.Resources/deploymentScripts', format('{0}-query', parameters('imageTemplateName')))]"
+                "[resourceId('Microsoft.Resources/deploymentScripts', variables('queryTemplateProgress'))]"
               ]
             },
             {

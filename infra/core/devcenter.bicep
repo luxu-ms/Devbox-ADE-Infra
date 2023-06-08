@@ -22,6 +22,7 @@ param tags object = {}
 ])
 param principalType string = 'User'
 param catalogName string = 'test-catalog'
+param guidId string
 
 // DevCenter Dev Box User role 
 var DEVCENTER_DEVBOX_USER_ROLE = '45d50f46-0b78-4001-a660-4198cbe8cd05'
@@ -36,6 +37,8 @@ var READER_ROLE = 'acdd72a7-3385-48ef-bd42-f606fba81ae7'
 var WINDOWS365_PRINCIPALID = '8eec7c09-06ae-48e9-aafd-9fb31a5d5175'
 
 var devceterSettings = loadJsonContent('./devcenter-settings.json')
+var customizedImageDefinition = devceterSettings.customizedImageDevboxdefinitions[0]
+var queryTemplateProgress = take('${imageDefinitionName}-${guidId}-query',64)
 
 var image = {
   'win11-ent-base': 'microsoftwindowsdesktop_windows-ent-cpc_win11-21h2-ent-cpc-os'
@@ -52,8 +55,6 @@ var storage = {
   '512gb': 'ssd_512gb'
   '1024gb': 'ssd_1024gb'
 }
-
-var customizedImageDefinition = devceterSettings.customizedImageDevboxdefinitions[0]
 
 resource managedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2022-01-31-preview' existing = {
   name: managedIdentityName
@@ -161,7 +162,7 @@ resource dcGalleryImage 'Microsoft.DevCenter/devcenters/galleries/images@2022-11
 }
 
 resource imageTemplateBuild 'Microsoft.Resources/deploymentScripts@2020-10-01' = {
-  name: '${imageTemplateName}-query'
+  name: queryTemplateProgress
   location: location
   kind: 'AzurePowerShell'
   identity: {

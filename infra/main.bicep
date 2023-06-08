@@ -159,6 +159,7 @@ module devcenter 'core/devcenter.bicep' = {
     catalogItemRootPath: adeCatalogItemRootPath
     imageDefinitionName: imageDefinitionName
     imageTemplateName: imageTemplateName
+    guidId: guidId
   }
 }
 
