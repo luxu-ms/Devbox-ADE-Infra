@@ -10,12 +10,9 @@ param repositoryBranch string = 'main'
 param catalogItemRootPath string
 param location string = resourceGroup().location
 param managedIdentityName string
-param keyvaultName string
 param galleryName string
 param imageDefinitionName string
-param imageOffer string
-param imagePublisher string
-param imageSku string
+param imageTemplateName string
 param tags object = {}
 
 @allowed([
@@ -24,16 +21,20 @@ param tags object = {}
   'User'
 ])
 param principalType string = 'User'
-
+param customizedImageDevboxDefnition string = 'win11-vs2022-vscode-openai'
 param catalogName string = 'test-catalog'
 
-// DevCenter Dev Box User role definition id
-var devboxRoleDefinitionId = '45d50f46-0b78-4001-a660-4198cbe8cd05'
-var adeRoledefinitioinId = '18e40d4e-8d2e-438d-97e1-9528336e149c'
-var ownerRoleDefinitioinId = '8e3af657-a8ff-443c-a75c-2fe8c4bcb635'
-var readerRoleDefinitionId = 'acdd72a7-3385-48ef-bd42-f606fba81ae7'
-var windows365ApplicationId = '0af06dc6-e4b5-4f28-818e-e78e62d137a5'
-var contributorRoleDefinitionId = 'b24988ac-6180-42a0-ab88-20f7382dd24c'
+// DevCenter Dev Box User role 
+var DEVCENTER_DEVBOX_USER_ROLE = '45d50f46-0b78-4001-a660-4198cbe8cd05'
+
+// ADE Deployment Envirnment User role
+var DEPLOYMENT_ENVIRONMENTS_USER_ROLE = '18e40d4e-8d2e-438d-97e1-9528336e149c'
+
+var OWNER_ROLE = '8e3af657-a8ff-443c-a75c-2fe8c4bcb635'
+var CONTRIBUTOR_ROLE = 'b24988ac-6180-42a0-ab88-20f7382dd24c'
+var READER_ROLE = 'acdd72a7-3385-48ef-bd42-f606fba81ae7'
+// Used when Dev Center associate with Azure Compute Gallery
+var WINDOWS365_PRINCIPALID = '8eec7c09-06ae-48e9-aafd-9fb31a5d5175'
 
 var devceterSettings = loadJsonContent('./devcenter-settings.json')
 
@@ -53,47 +54,10 @@ var storage = {
   '1024gb': 'ssd_1024gb'
 }
 
-resource managedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2022-01-31-preview' = {
+var customizedImageDefinition = devceterSettings.customizedImageDevboxdefinitions[0]
+
+resource managedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2022-01-31-preview' existing = {
   name: managedIdentityName
-  location: location
-  tags: tags
-}
-
-module keyvaultAccess 'security/keyvault-access.bicep' = {
-  name: 'keyvaultAccess'
-  params: {
-    keyVaultName: keyvaultName
-    principalId: managedIdentity.properties.principalId
-  }
-}
-
-resource computeGallery 'Microsoft.Compute/galleries@2022-03-03' = {
-  name: galleryName
-  location: location
-  tags: tags
-}
-
-resource imageDefinition 'Microsoft.Compute/galleries/images@2022-03-03' = {
-  parent: computeGallery
-  name: imageDefinitionName
-  location: location
-  properties: {
-    hyperVGeneration: 'V2'
-    architecture: 'x64'
-    features: [
-      {
-          name: 'SecurityType'
-          value: 'TrustedLaunch'
-      }
-    ]
-    identifier: {
-      offer: imageOffer
-      publisher: imagePublisher
-      sku: imageSku
-    }
-    osState: 'Generalized'
-    osType: 'Windows'
-  }
 }
 
 resource devcenter 'Microsoft.DevCenter/devcenters@2023-01-01-preview' = {
@@ -105,6 +69,30 @@ resource devcenter 'Microsoft.DevCenter/devcenters@2023-01-01-preview' = {
      userAssignedIdentities: {
       '${managedIdentity.id}': {}
      }
+  }
+}
+
+resource computeGallery 'Microsoft.Compute/galleries@2022-03-03' existing = {
+  name: galleryName
+}
+
+resource contirbutorGalleryRole 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(subscription().id, resourceGroup().id, managedIdentity.id, CONTRIBUTOR_ROLE)
+  scope: computeGallery
+  properties: {
+    principalId: managedIdentity.properties.principalId
+    principalType: 'ServicePrincipal'
+    roleDefinitionId: resourceId('Microsoft.Authorization/roleDefinitions', CONTRIBUTOR_ROLE)
+  }
+}
+
+resource readGalleryRole 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(subscription().id, resourceGroup().id, WINDOWS365_PRINCIPALID, READER_ROLE)
+  scope: computeGallery
+  properties: {
+    principalId: WINDOWS365_PRINCIPALID
+    principalType: 'ServicePrincipal'
+    roleDefinitionId: resourceId('Microsoft.Authorization/roleDefinitions', READER_ROLE)
   }
 }
 
@@ -126,7 +114,7 @@ module assignRole 'security/role.bicep' = {
   scope: subscription()
   params: {
     principalId: managedIdentity.properties.principalId
-    roleDefinitionId: ownerRoleDefinitioinId
+    roleDefinitionId: OWNER_ROLE
     principalType: 'ServicePrincipal'
   }
 }
@@ -168,7 +156,31 @@ resource attachedNetworks 'Microsoft.DevCenter/devcenters/attachednetworks@2023-
   }
 }
 
-resource devboxDefinitions 'Microsoft.DevCenter/devcenters/devboxdefinitions@2022-11-11-preview' = [for definition in devceterSettings.definitions: {
+resource dcGalleryImage 'Microsoft.DevCenter/devcenters/galleries/images@2022-11-11-preview' existing = {
+  name: imageDefinitionName
+  parent: devcenterGallery
+}
+
+resource imageTemplateBuild 'Microsoft.Resources/deploymentScripts@2020-10-01' = {
+  name: '${imageTemplateName}-query'
+  location: location
+  kind: 'AzurePowerShell'
+  identity: {
+    type: 'UserAssigned'
+    userAssignedIdentities: {
+      '${managedIdentity.id}': {}
+    }
+  }
+  properties: {
+    azPowerShellVersion: '8.3'
+    scriptContent: 'Connect-AzAccount -Identity; \'Az.ImageBuilder\', \'Az.ManagedServiceIdentity\' | ForEach-Object {Install-Module -Name $_ -AllowPrerelease -Force}; while ((Get-AzImageBuilderTemplate -ImageTemplateName ${imageTemplateName} -ResourceGroupName ${resourceGroup().name}).LastRunStatusRunState -ne \'Succeeded\' ) { Start-Sleep -Seconds 30 }'  
+    timeout: 'PT2H'
+    cleanupPreference: 'OnSuccess'
+    retentionInterval: 'P1D'
+  }
+}
+
+resource builtinImageDevboxDefinitions 'Microsoft.DevCenter/devcenters/devboxdefinitions@2022-11-11-preview' = [for definition in devceterSettings.builtinImageDevboxDefinitions: {
   parent: devcenter
   name: definition.name
   location: location
@@ -185,6 +197,25 @@ resource devboxDefinitions 'Microsoft.DevCenter/devcenters/devboxdefinitions@202
     attachedNetworks
   ]
 }]
+
+resource customizedImageDevboxDefinitions 'Microsoft.DevCenter/devcenters/devboxdefinitions@2022-11-11-preview' = {
+  parent: devcenter
+  name: customizedImageDefinition.name
+  location: location
+  properties: {
+    imageReference: {
+      id: dcGalleryImage.id
+    }
+    sku: {
+      name: compute[customizedImageDefinition.compute]
+    }
+    osStorageType: storage[customizedImageDefinition.storage]
+  }
+  dependsOn: [
+    attachedNetworks
+    imageTemplateBuild
+  ]
+}
 
 resource project 'Microsoft.DevCenter/projects@2022-11-11-preview' = {
   name: projectName
@@ -204,7 +235,8 @@ resource project 'Microsoft.DevCenter/projects@2022-11-11-preview' = {
     }
   }]
   dependsOn: [
-    devboxDefinitions
+    builtinImageDevboxDefinitions
+    customizedImageDevboxDefinitions
   ]
   tags: tags
 }
@@ -216,14 +248,14 @@ resource projectEnvironmentTypes 'Microsoft.DevCenter/projects/environmentTypes@
     status: 'Enabled'
     creatorRoleAssignment: {
       roles: {
-      '${ownerRoleDefinitioinId}': {}
+      '${OWNER_ROLE}': {}
       }
     }
     deploymentTargetId: !empty(env.deploymentTargetId) ? '/subscriptions/${env.deploymentTargetId}' : subscription().id
     userRoleAssignments: {
       '${managedIdentity.properties.principalId}': {
         roles: {
-          '${ownerRoleDefinitioinId}': {}
+          '${OWNER_ROLE}': {}
         }
       }
     }
@@ -236,53 +268,32 @@ resource projectEnvironmentTypes 'Microsoft.DevCenter/projects/environmentTypes@
   }
 }]
 
-// -------------------  Assign permission for Azure Compute Gallery Start ------------------- //
-resource readGalleryRole 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
-  name: guid(subscription().id, resourceGroup().id, windows365ApplicationId, readerRoleDefinitionId)
-  scope: computeGallery
-  properties: {
-    principalId: windows365ApplicationId
-    principalType: 'ServicePrincipal'
-    roleDefinitionId: resourceId('Microsoft.Authorization/roleDefinitions', readerRoleDefinitionId)
-  }
-}
-
-resource contirbutorGalleryRole 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
-  name: guid(subscription().id, resourceGroup().id, managedIdentity.id, contributorRoleDefinitionId)
-  scope: computeGallery
-  properties: {
-    principalId: managedIdentity.properties.principalId
-    principalType: 'ServicePrincipal'
-    roleDefinitionId: resourceId('Microsoft.Authorization/roleDefinitions', contributorRoleDefinitionId)
-  }
-}
-// -------------------  Assign permission for Azure Compute Gallery End ------------------- //
-
 resource devboxRole 'Microsoft.Authorization/roleAssignments@2022-04-01' = if(!empty(principalId)) {
-  name: guid(subscription().id, resourceGroup().id, principalId, devboxRoleDefinitionId)
+  name: guid(subscription().id, resourceGroup().id, principalId, DEVCENTER_DEVBOX_USER_ROLE)
   scope: project
   properties: {
     principalId: principalId
     principalType: principalType
-    roleDefinitionId: resourceId('Microsoft.Authorization/roleDefinitions', devboxRoleDefinitionId)
+    roleDefinitionId: resourceId('Microsoft.Authorization/roleDefinitions', DEVCENTER_DEVBOX_USER_ROLE)
   }
 }
 
 resource adeRole 'Microsoft.Authorization/roleAssignments@2022-04-01' = if(!empty(principalId)) {
-  name: guid(subscription().id, resourceGroup().id, principalId, adeRoledefinitioinId)
+  name: guid(subscription().id, resourceGroup().id, principalId, DEPLOYMENT_ENVIRONMENTS_USER_ROLE)
   scope: project
   properties: {
     principalId: principalId
     principalType: principalType
-    roleDefinitionId: resourceId('Microsoft.Authorization/roleDefinitions', adeRoledefinitioinId)
+    roleDefinitionId: resourceId('Microsoft.Authorization/roleDefinitions', DEPLOYMENT_ENVIRONMENTS_USER_ROLE)
   }
 }
 
 output devcenterName string = devcenter.name
 
-output definitions array = [for (definition, i) in devceterSettings.definitions: {
-  name: devboxDefinitions[i].name
+output builtinImageDevboxDefinitions array = [for (definition, i) in devceterSettings.definitions: {
+  name: builtinImageDevboxDefinitions[i].name
 }]
+output customizedImageDevboxDefinitions string = customizedImageDevboxDefinitions.name
 
 output networkConnectionName string = networkConnection.name
 
