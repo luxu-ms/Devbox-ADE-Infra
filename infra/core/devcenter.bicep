@@ -4,16 +4,11 @@ param networkingResourceGroupName string
 param subnetId string
 param projectName string
 param principalId string
-param secretIdentifier string
-param repositoryUrl string
-param repositoryBranch string = 'main'
-param catalogItemRootPath string
 param location string = resourceGroup().location
 param managedIdentityName string
 param galleryName string
 param imageDefinitionName string
 param imageTemplateName string
-param tags object = {}
 
 @allowed([
   'Group'
@@ -21,14 +16,10 @@ param tags object = {}
   'User'
 ])
 param principalType string = 'User'
-param catalogName string = 'test-catalog'
 param guidId string
 
 // DevCenter Dev Box User role 
 var DEVCENTER_DEVBOX_USER_ROLE = '45d50f46-0b78-4001-a660-4198cbe8cd05'
-
-// ADE Deployment Envirnment User role
-var DEPLOYMENT_ENVIRONMENTS_USER_ROLE = '18e40d4e-8d2e-438d-97e1-9528336e149c'
 
 var OWNER_ROLE = '8e3af657-a8ff-443c-a75c-2fe8c4bcb635'
 var CONTRIBUTOR_ROLE = 'b24988ac-6180-42a0-ab88-20f7382dd24c'
@@ -63,7 +54,6 @@ resource managedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2022-
 resource devcenter 'Microsoft.DevCenter/devcenters@2023-01-01-preview' = {
   name: devcenterName
   location: location
-  tags: tags
   identity: {
     type:  'UserAssigned'
      userAssignedIdentities: {
@@ -108,34 +98,10 @@ resource devcenterGallery 'Microsoft.DevCenter/devcenters/galleries@2023-01-01-p
   ]
 }
 
-// Dev Center need this managed identity with owner permission on subscription level
-module assignRole 'security/role.bicep' = {
-  name: 'assignOwner'
-  scope: subscription()
-  params: {
-    principalId: managedIdentity.properties.principalId
-    roleDefinitionId: OWNER_ROLE
-    principalType: 'ServicePrincipal'
-  }
-}
-
 resource envTypes 'Microsoft.DevCenter/devcenters/environmentTypes@2023-01-01-preview' = [for env in devceterSettings.envMapping: {
   parent: devcenter
   name: env.name
 }]
-
-resource catalogs 'Microsoft.DevCenter/devcenters/catalogs@2023-01-01-preview' = {
-  parent: devcenter
-  name: catalogName
-  properties: {
-     gitHub: {
-       branch: repositoryBranch
-       path: catalogItemRootPath
-       secretIdentifier: secretIdentifier
-       uri: repositoryUrl
-     }
-  }
-}
 
 resource networkConnection 'Microsoft.DevCenter/networkConnections@2023-01-01-preview' = {
   name: networkConnectionName
@@ -145,7 +111,6 @@ resource networkConnection 'Microsoft.DevCenter/networkConnections@2023-01-01-pr
     subnetId: subnetId
     networkingResourceGroupName: networkingResourceGroupName
   }
-  tags: tags
 }
 
 resource attachedNetworks 'Microsoft.DevCenter/devcenters/attachednetworks@2023-01-01-preview' = {
@@ -238,7 +203,6 @@ resource project 'Microsoft.DevCenter/projects@2022-11-11-preview' = {
     builtinImageDevboxDefinitions
     customizedImageDevboxDefinitions
   ]
-  tags: tags
 }
 
 resource projectEnvironmentTypes 'Microsoft.DevCenter/projects/environmentTypes@2023-01-01-preview' = [ for env in devceterSettings.envMapping: {
@@ -275,16 +239,6 @@ resource devboxRole 'Microsoft.Authorization/roleAssignments@2022-04-01' = if(!e
     principalId: principalId
     principalType: principalType
     roleDefinitionId: resourceId('Microsoft.Authorization/roleDefinitions', DEVCENTER_DEVBOX_USER_ROLE)
-  }
-}
-
-resource adeRole 'Microsoft.Authorization/roleAssignments@2022-04-01' = if(!empty(principalId)) {
-  name: guid(subscription().id, resourceGroup().id, principalId, DEPLOYMENT_ENVIRONMENTS_USER_ROLE)
-  scope: project
-  properties: {
-    principalId: principalId
-    principalType: principalType
-    roleDefinitionId: resourceId('Microsoft.Authorization/roleDefinitions', DEPLOYMENT_ENVIRONMENTS_USER_ROLE)
   }
 }
 

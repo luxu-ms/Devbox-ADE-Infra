@@ -56,26 +56,12 @@ param imagePublisher string = 'microsoftvisualstudio'
 @description('The name of image sku')
 param imageSku string = 'vs-2022-ent-general-win11-m365-gen2'
 
-param adeKeyvaultName string = ''
-param adeKeyvaultSecretName string = 'repo-pat-secret'
-
-@description('The personal access token of Github/ADO repo')
-@secure()
-param adeKeyvaultSecretValue string
-
-@description('The catalog repository URL of ADE templates')
-param adeCatalogRepositoryUrl string = 'https://github.com/luxu-ms/deployment-environments.git'
-
-@description('The root path of catalog repository including ADE templates')
-param adeCatalogItemRootPath string = '/Environments'
-
 param tags object = {}
 param guidId string = newGuid()
 
 var abbrs = loadJsonContent('./abbreviations.json')
 var resourceToken = toLower(uniqueString(resourceGroup().id, location))
 var ncName = !empty(networkConnectionName) ? networkConnectionName : '${abbrs.networkConnections}${resourceToken}'
-var kvName = !empty(adeKeyvaultName) ? adeKeyvaultName : '${abbrs.keyvault}${resourceToken}'
 var galName = !empty(imageGalleryName) ? imageGalleryName : '${abbrs.computeGalleries}${resourceToken}'
 var idName = !empty(userIdentityName) ? userIdentityName : '${abbrs.managedIdentityUserAssignedIdentities}${resourceToken}'
 
@@ -91,37 +77,10 @@ module vnet 'core/vnet.bicep' = if(empty(existingSubnetId)) {
   }
 }
 
-module keyvault 'core/security/keyvault.bicep' = {
-  name: kvName
-  params: {
-    location: location
-    name: kvName
-    principalId: userPrincipalId
-    tags: tags
-  }
-}
-
-module keyvaultSecret 'core/security/keyvault-secret.bicep' = {
-  name: 'keyvaultSecret'
-  params: {
-    keyVaultName: keyvault.outputs.name
-    name: adeKeyvaultSecretName
-    secretValue: adeKeyvaultSecretValue
-  }
-}
-
 resource managedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2022-01-31-preview' = {
   name: idName
   location: location
   tags: tags
-}
-
-module keyvaultAccess 'core/security/keyvault-access.bicep' = {
-  name: 'keyvaultAccess'
-  params: {
-    keyVaultName: keyvault.outputs.name
-    principalId: managedIdentity.properties.principalId
-  }
 }
 
 module gallery 'core/gallery.bicep' = {
@@ -144,7 +103,6 @@ module devcenter 'core/devcenter.bicep' = {
   name: 'devcenter'
   params: {
     location: location
-    tags: tags
     devcenterName: !empty(devcenterName) ? devcenterName : '${abbrs.devcenter}${resourceToken}'
     subnetId: !empty(existingSubnetId) ? existingSubnetId : vnet.outputs.subnetId
     networkConnectionName: ncName
@@ -152,11 +110,8 @@ module devcenter 'core/devcenter.bicep' = {
     networkingResourceGroupName: '${abbrs.devcenterNetworkingResourceGroup}${ncName}-${location}'
     principalId: userPrincipalId
     principalType: userPrincipalType
-    repositoryUrl: adeCatalogRepositoryUrl
-    secretIdentifier: keyvaultSecret.outputs.secretIdentifier
     galleryName: gallery.outputs.name
     managedIdentityName: idName
-    catalogItemRootPath: adeCatalogItemRootPath
     imageDefinitionName: imageDefinitionName
     imageTemplateName: imageTemplateName
     guidId: guidId

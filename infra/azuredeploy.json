@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.17.1.54307",
-      "templateHash": "9592375081954127651"
+      "templateHash": "8504320071913257795"
     }
   },
   "parameters": {
@@ -139,34 +139,6 @@
         "description": "The name of image sku"
       }
     },
-    "adeKeyvaultName": {
-      "type": "string",
-      "defaultValue": ""
-    },
-    "adeKeyvaultSecretName": {
-      "type": "string",
-      "defaultValue": "repo-pat-secret"
-    },
-    "adeKeyvaultSecretValue": {
-      "type": "securestring",
-      "metadata": {
-        "description": "The personal access token of Github/ADO repo"
-      }
-    },
-    "adeCatalogRepositoryUrl": {
-      "type": "string",
-      "defaultValue": "https://github.com/luxu-ms/deployment-environments.git",
-      "metadata": {
-        "description": "The catalog repository URL of ADE templates"
-      }
-    },
-    "adeCatalogItemRootPath": {
-      "type": "string",
-      "defaultValue": "/Environments",
-      "metadata": {
-        "description": "The root path of catalog repository including ADE templates"
-      }
-    },
     "tags": {
       "type": "object",
       "defaultValue": {}
@@ -191,7 +163,6 @@
     "abbrs": "[variables('$fxv#0')]",
     "resourceToken": "[toLower(uniqueString(resourceGroup().id, parameters('location')))]",
     "ncName": "[if(not(empty(parameters('networkConnectionName'))), parameters('networkConnectionName'), format('{0}{1}', variables('abbrs').networkConnections, variables('resourceToken')))]",
-    "kvName": "[if(not(empty(parameters('adeKeyvaultName'))), parameters('adeKeyvaultName'), format('{0}{1}', variables('abbrs').keyvault, variables('resourceToken')))]",
     "galName": "[if(not(empty(parameters('imageGalleryName'))), parameters('imageGalleryName'), format('{0}{1}', variables('abbrs').computeGalleries, variables('resourceToken')))]",
     "idName": "[if(not(empty(parameters('userIdentityName'))), parameters('userIdentityName'), format('{0}{1}', variables('abbrs').managedIdentityUserAssignedIdentities, variables('resourceToken')))]"
   },
@@ -321,250 +292,6 @@
     {
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2022-09-01",
-      "name": "[variables('kvName')]",
-      "properties": {
-        "expressionEvaluationOptions": {
-          "scope": "inner"
-        },
-        "mode": "Incremental",
-        "parameters": {
-          "location": {
-            "value": "[parameters('location')]"
-          },
-          "name": {
-            "value": "[variables('kvName')]"
-          },
-          "principalId": {
-            "value": "[parameters('userPrincipalId')]"
-          },
-          "tags": {
-            "value": "[parameters('tags')]"
-          }
-        },
-        "template": {
-          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
-          "contentVersion": "1.0.0.0",
-          "metadata": {
-            "_generator": {
-              "name": "bicep",
-              "version": "0.17.1.54307",
-              "templateHash": "15428045515587502988"
-            }
-          },
-          "parameters": {
-            "name": {
-              "type": "string"
-            },
-            "location": {
-              "type": "string",
-              "defaultValue": "[resourceGroup().location]"
-            },
-            "tags": {
-              "type": "object",
-              "defaultValue": {}
-            },
-            "principalId": {
-              "type": "string",
-              "defaultValue": ""
-            }
-          },
-          "resources": [
-            {
-              "type": "Microsoft.KeyVault/vaults",
-              "apiVersion": "2022-07-01",
-              "name": "[parameters('name')]",
-              "location": "[parameters('location')]",
-              "tags": "[parameters('tags')]",
-              "properties": {
-                "tenantId": "[subscription().tenantId]",
-                "sku": {
-                  "family": "A",
-                  "name": "standard"
-                },
-                "accessPolicies": "[if(not(empty(parameters('principalId'))), createArray(createObject('objectId', parameters('principalId'), 'permissions', createObject('secrets', createArray('get', 'list')), 'tenantId', subscription().tenantId)), createArray())]"
-              }
-            }
-          ],
-          "outputs": {
-            "endpoint": {
-              "type": "string",
-              "value": "[reference(resourceId('Microsoft.KeyVault/vaults', parameters('name')), '2022-07-01').vaultUri]"
-            },
-            "name": {
-              "type": "string",
-              "value": "[parameters('name')]"
-            }
-          }
-        }
-      }
-    },
-    {
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2022-09-01",
-      "name": "keyvaultSecret",
-      "properties": {
-        "expressionEvaluationOptions": {
-          "scope": "inner"
-        },
-        "mode": "Incremental",
-        "parameters": {
-          "keyVaultName": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', variables('kvName')), '2022-09-01').outputs.name.value]"
-          },
-          "name": {
-            "value": "[parameters('adeKeyvaultSecretName')]"
-          },
-          "secretValue": {
-            "value": "[parameters('adeKeyvaultSecretValue')]"
-          }
-        },
-        "template": {
-          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
-          "contentVersion": "1.0.0.0",
-          "metadata": {
-            "_generator": {
-              "name": "bicep",
-              "version": "0.17.1.54307",
-              "templateHash": "7554980374654762810"
-            }
-          },
-          "parameters": {
-            "name": {
-              "type": "string"
-            },
-            "tags": {
-              "type": "object",
-              "defaultValue": {}
-            },
-            "keyVaultName": {
-              "type": "string"
-            },
-            "contentType": {
-              "type": "string",
-              "defaultValue": "string"
-            },
-            "secretValue": {
-              "type": "securestring",
-              "metadata": {
-                "description": "The value of the secret. Provide only derived values like blob storage access, but do not hard code any secrets in your templates"
-              }
-            },
-            "enabled": {
-              "type": "bool",
-              "defaultValue": true
-            },
-            "exp": {
-              "type": "int",
-              "defaultValue": 0
-            },
-            "nbf": {
-              "type": "int",
-              "defaultValue": 0
-            }
-          },
-          "resources": [
-            {
-              "type": "Microsoft.KeyVault/vaults/secrets",
-              "apiVersion": "2022-07-01",
-              "name": "[format('{0}/{1}', parameters('keyVaultName'), parameters('name'))]",
-              "tags": "[parameters('tags')]",
-              "properties": {
-                "attributes": {
-                  "enabled": "[parameters('enabled')]",
-                  "exp": "[parameters('exp')]",
-                  "nbf": "[parameters('nbf')]"
-                },
-                "contentType": "[parameters('contentType')]",
-                "value": "[parameters('secretValue')]"
-              }
-            }
-          ],
-          "outputs": {
-            "secretIdentifier": {
-              "type": "string",
-              "value": "[reference(resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), parameters('name')), '2022-07-01').secretUriWithVersion]"
-            }
-          }
-        }
-      },
-      "dependsOn": [
-        "[resourceId('Microsoft.Resources/deployments', variables('kvName'))]"
-      ]
-    },
-    {
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2022-09-01",
-      "name": "keyvaultAccess",
-      "properties": {
-        "expressionEvaluationOptions": {
-          "scope": "inner"
-        },
-        "mode": "Incremental",
-        "parameters": {
-          "keyVaultName": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', variables('kvName')), '2022-09-01').outputs.name.value]"
-          },
-          "principalId": {
-            "value": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('idName')), '2022-01-31-preview').principalId]"
-          }
-        },
-        "template": {
-          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
-          "contentVersion": "1.0.0.0",
-          "metadata": {
-            "_generator": {
-              "name": "bicep",
-              "version": "0.17.1.54307",
-              "templateHash": "18301876310392488097"
-            }
-          },
-          "parameters": {
-            "name": {
-              "type": "string",
-              "defaultValue": "add"
-            },
-            "keyVaultName": {
-              "type": "string"
-            },
-            "permissions": {
-              "type": "object",
-              "defaultValue": {
-                "secrets": [
-                  "get",
-                  "list"
-                ]
-              }
-            },
-            "principalId": {
-              "type": "string"
-            }
-          },
-          "resources": [
-            {
-              "type": "Microsoft.KeyVault/vaults/accessPolicies",
-              "apiVersion": "2022-07-01",
-              "name": "[format('{0}/{1}', parameters('keyVaultName'), parameters('name'))]",
-              "properties": {
-                "accessPolicies": [
-                  {
-                    "objectId": "[parameters('principalId')]",
-                    "tenantId": "[subscription().tenantId]",
-                    "permissions": "[parameters('permissions')]"
-                  }
-                ]
-              }
-            }
-          ]
-        }
-      },
-      "dependsOn": [
-        "[resourceId('Microsoft.Resources/deployments', variables('kvName'))]",
-        "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('idName'))]"
-      ]
-    },
-    {
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2022-09-01",
       "name": "[variables('galName')]",
       "properties": {
         "expressionEvaluationOptions": {
@@ -610,7 +337,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.17.1.54307",
-              "templateHash": "17946308315156714585"
+              "templateHash": "14096196524977039166"
             }
           },
           "parameters": {
@@ -659,8 +386,8 @@
                   "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))",
                   "choco install -y python3",
                   "choco install -y nodejs",
-                  "$vscode_extension_dir='C:/temp/extensions';New-Item $vscode_extension_dir -ItemType Directory -Force; [Environment]::SetEnvironmentVariable('VSCODE_EXTENSIONS', $vscode_extension_dir, 'Machine')",
-                  "code --isntall-extension github.copilot"
+                  "$vscode_extension_dir='C:\\temp\\extensions';New-Item $vscode_extension_dir -ItemType Directory -Force; [Environment]::SetEnvironmentVariable('VSCODE_EXTENSIONS', $vscode_extension_dir, 'Machine')",
+                  "code --install-extension github.copilot"
                 ]
               }
             ]
@@ -843,9 +570,6 @@
           "location": {
             "value": "[parameters('location')]"
           },
-          "tags": {
-            "value": "[parameters('tags')]"
-          },
           "devcenterName": "[if(not(empty(parameters('devcenterName'))), createObject('value', parameters('devcenterName')), createObject('value', format('{0}{1}', variables('abbrs').devcenter, variables('resourceToken'))))]",
           "subnetId": "[if(not(empty(parameters('existingSubnetId'))), createObject('value', parameters('existingSubnetId')), createObject('value', reference(resourceId('Microsoft.Resources/deployments', 'vnet'), '2022-09-01').outputs.subnetId.value))]",
           "networkConnectionName": {
@@ -861,20 +585,11 @@
           "principalType": {
             "value": "[parameters('userPrincipalType')]"
           },
-          "repositoryUrl": {
-            "value": "[parameters('adeCatalogRepositoryUrl')]"
-          },
-          "secretIdentifier": {
-            "value": "[reference(resourceId('Microsoft.Resources/deployments', 'keyvaultSecret'), '2022-09-01').outputs.secretIdentifier.value]"
-          },
           "galleryName": {
             "value": "[reference(resourceId('Microsoft.Resources/deployments', variables('galName')), '2022-09-01').outputs.name.value]"
           },
           "managedIdentityName": {
             "value": "[variables('idName')]"
-          },
-          "catalogItemRootPath": {
-            "value": "[parameters('adeCatalogItemRootPath')]"
           },
           "imageDefinitionName": {
             "value": "[parameters('imageDefinitionName')]"
@@ -893,7 +608,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.17.1.54307",
-              "templateHash": "14524483436753553377"
+              "templateHash": "3438971374985511893"
             }
           },
           "parameters": {
@@ -915,19 +630,6 @@
             "principalId": {
               "type": "string"
             },
-            "secretIdentifier": {
-              "type": "string"
-            },
-            "repositoryUrl": {
-              "type": "string"
-            },
-            "repositoryBranch": {
-              "type": "string",
-              "defaultValue": "main"
-            },
-            "catalogItemRootPath": {
-              "type": "string"
-            },
             "location": {
               "type": "string",
               "defaultValue": "[resourceGroup().location]"
@@ -944,10 +646,6 @@
             "imageTemplateName": {
               "type": "string"
             },
-            "tags": {
-              "type": "object",
-              "defaultValue": {}
-            },
             "principalType": {
               "type": "string",
               "defaultValue": "User",
@@ -956,10 +654,6 @@
                 "ServicePrincipal",
                 "User"
               ]
-            },
-            "catalogName": {
-              "type": "string",
-              "defaultValue": "test-catalog"
             },
             "guidId": {
               "type": "string"
@@ -1026,7 +720,6 @@
               ]
             },
             "DEVCENTER_DEVBOX_USER_ROLE": "45d50f46-0b78-4001-a660-4198cbe8cd05",
-            "DEPLOYMENT_ENVIRONMENTS_USER_ROLE": "18e40d4e-8d2e-438d-97e1-9528336e149c",
             "OWNER_ROLE": "8e3af657-a8ff-443c-a75c-2fe8c4bcb635",
             "CONTRIBUTOR_ROLE": "b24988ac-6180-42a0-ab88-20f7382dd24c",
             "READER_ROLE": "acdd72a7-3385-48ef-bd42-f606fba81ae7",
@@ -1074,7 +767,6 @@
               "apiVersion": "2023-01-01-preview",
               "name": "[parameters('devcenterName')]",
               "location": "[parameters('location')]",
-              "tags": "[parameters('tags')]",
               "identity": {
                 "type": "UserAssigned",
                 "userAssignedIdentities": {
@@ -1130,22 +822,6 @@
               ]
             },
             {
-              "type": "Microsoft.DevCenter/devcenters/catalogs",
-              "apiVersion": "2023-01-01-preview",
-              "name": "[format('{0}/{1}', parameters('devcenterName'), parameters('catalogName'))]",
-              "properties": {
-                "gitHub": {
-                  "branch": "[parameters('repositoryBranch')]",
-                  "path": "[parameters('catalogItemRootPath')]",
-                  "secretIdentifier": "[parameters('secretIdentifier')]",
-                  "uri": "[parameters('repositoryUrl')]"
-                }
-              },
-              "dependsOn": [
-                "[resourceId('Microsoft.DevCenter/devcenters', parameters('devcenterName'))]"
-              ]
-            },
-            {
               "type": "Microsoft.DevCenter/networkConnections",
               "apiVersion": "2023-01-01-preview",
               "name": "[parameters('networkConnectionName')]",
@@ -1154,8 +830,7 @@
                 "domainJoinType": "AzureADJoin",
                 "subnetId": "[parameters('subnetId')]",
                 "networkingResourceGroupName": "[parameters('networkingResourceGroupName')]"
-              },
-              "tags": "[parameters('tags')]"
+              }
             },
             {
               "type": "Microsoft.DevCenter/devcenters/attachednetworks",
@@ -1241,7 +916,6 @@
               "properties": {
                 "devCenterId": "[resourceId('Microsoft.DevCenter/devcenters', parameters('devcenterName'))]"
               },
-              "tags": "[parameters('tags')]",
               "dependsOn": [
                 "builtinImageDevboxDefinitions",
                 "[resourceId('Microsoft.DevCenter/devcenters/devboxdefinitions', parameters('devcenterName'), variables('customizedImageDefinition').name)]",
@@ -1296,88 +970,6 @@
               "dependsOn": [
                 "[resourceId('Microsoft.DevCenter/projects', parameters('projectName'))]"
               ]
-            },
-            {
-              "condition": "[not(empty(parameters('principalId')))]",
-              "type": "Microsoft.Authorization/roleAssignments",
-              "apiVersion": "2022-04-01",
-              "scope": "[format('Microsoft.DevCenter/projects/{0}', parameters('projectName'))]",
-              "name": "[guid(subscription().id, resourceGroup().id, parameters('principalId'), variables('DEPLOYMENT_ENVIRONMENTS_USER_ROLE'))]",
-              "properties": {
-                "principalId": "[parameters('principalId')]",
-                "principalType": "[parameters('principalType')]",
-                "roleDefinitionId": "[resourceId('Microsoft.Authorization/roleDefinitions', variables('DEPLOYMENT_ENVIRONMENTS_USER_ROLE'))]"
-              },
-              "dependsOn": [
-                "[resourceId('Microsoft.DevCenter/projects', parameters('projectName'))]"
-              ]
-            },
-            {
-              "type": "Microsoft.Resources/deployments",
-              "apiVersion": "2022-09-01",
-              "name": "assignOwner",
-              "subscriptionId": "[subscription().subscriptionId]",
-              "location": "[resourceGroup().location]",
-              "properties": {
-                "expressionEvaluationOptions": {
-                  "scope": "inner"
-                },
-                "mode": "Incremental",
-                "parameters": {
-                  "principalId": {
-                    "value": "[reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('managedIdentityName')), '2022-01-31-preview').principalId]"
-                  },
-                  "roleDefinitionId": {
-                    "value": "[variables('OWNER_ROLE')]"
-                  },
-                  "principalType": {
-                    "value": "ServicePrincipal"
-                  }
-                },
-                "template": {
-                  "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
-                  "contentVersion": "1.0.0.0",
-                  "metadata": {
-                    "_generator": {
-                      "name": "bicep",
-                      "version": "0.17.1.54307",
-                      "templateHash": "15641417107950418221"
-                    }
-                  },
-                  "parameters": {
-                    "principalId": {
-                      "type": "string"
-                    },
-                    "principalType": {
-                      "type": "string",
-                      "defaultValue": "ServicePrincipal",
-                      "allowedValues": [
-                        "Device",
-                        "ForeignGroup",
-                        "Group",
-                        "ServicePrincipal",
-                        "User"
-                      ]
-                    },
-                    "roleDefinitionId": {
-                      "type": "string"
-                    }
-                  },
-                  "resources": [
-                    {
-                      "condition": "[not(empty(parameters('principalId')))]",
-                      "type": "Microsoft.Authorization/roleAssignments",
-                      "apiVersion": "2022-04-01",
-                      "name": "[guid(subscription().id, parameters('principalId'), parameters('roleDefinitionId'))]",
-                      "properties": {
-                        "principalId": "[parameters('principalId')]",
-                        "principalType": "[parameters('principalType')]",
-                        "roleDefinitionId": "[subscriptionResourceId('Microsoft.Authorization/roleDefinitions', parameters('roleDefinitionId'))]"
-                      }
-                    }
-                  ]
-                }
-              }
             }
           ],
           "outputs": {
@@ -1420,7 +1012,6 @@
       },
       "dependsOn": [
         "[resourceId('Microsoft.Resources/deployments', variables('galName'))]",
-        "[resourceId('Microsoft.Resources/deployments', 'keyvaultSecret')]",
         "[resourceId('Microsoft.Resources/deployments', 'vnet')]"
       ]
     }
