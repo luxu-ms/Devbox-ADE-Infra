@@ -173,7 +173,7 @@ resource imageTemplateBuild 'Microsoft.Resources/deploymentScripts@2020-10-01' =
   }
   properties: {
     azPowerShellVersion: '8.3'
-    scriptContent: 'Connect-AzAccount -Identity; \'Az.ImageBuilder\', \'Az.ManagedServiceIdentity\' | ForEach-Object {Install-Module -Name $_ -AllowPrerelease -Force}; while ((Get-AzImageBuilderTemplate -ImageTemplateName ${imageTemplateName} -ResourceGroupName ${resourceGroup().name}).LastRunStatusRunState -ne \'Succeeded\' ) { Start-Sleep -Seconds 30 }'  
+    scriptContent: 'Connect-AzAccount -Identity; \'Az.ImageBuilder\', \'Az.ManagedServiceIdentity\' | ForEach-Object {Install-Module -Name $_ -AllowPrerelease -Force}; $status=\'Started\'; while ($status -ne \'Succeeded\' -and $status -ne \'Failed\' -and $status -ne \'Cancelled\') { Start-Sleep -Seconds 30;$status = (Get-AzImageBuilderTemplate -ImageTemplateName ${imageTemplateName} -ResourceGroupName ${resourceGroup().name}).LastRunStatusRunState}'
     timeout: 'PT2H'
     cleanupPreference: 'OnSuccess'
     retentionInterval: 'P1D'

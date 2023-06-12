@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.17.1.54307",
-      "templateHash": "7922586478821721020"
+      "templateHash": "9592375081954127651"
     }
   },
   "parameters": {
@@ -893,7 +893,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.17.1.54307",
-              "templateHash": "17228262095382833732"
+              "templateHash": "14524483436753553377"
             }
           },
           "parameters": {
@@ -1183,7 +1183,7 @@
               },
               "properties": {
                 "azPowerShellVersion": "8.3",
-                "scriptContent": "[format('Connect-AzAccount -Identity; ''Az.ImageBuilder'', ''Az.ManagedServiceIdentity'' | ForEach-Object {{Install-Module -Name $_ -AllowPrerelease -Force}}; while ((Get-AzImageBuilderTemplate -ImageTemplateName {0} -ResourceGroupName {1}).LastRunStatusRunState -ne ''Succeeded'' ) {{ Start-Sleep -Seconds 30 }}', parameters('imageTemplateName'), resourceGroup().name)]",
+                "scriptContent": "[format('Connect-AzAccount -Identity; ''Az.ImageBuilder'', ''Az.ManagedServiceIdentity'' | ForEach-Object {{Install-Module -Name $_ -AllowPrerelease -Force}}; $status=''Started''; while ($status -ne ''Succeeded'' -and $status -ne ''Failed'' -and $status -ne ''Cancelled'') {{ Start-Sleep -Seconds 30;$status = (Get-AzImageBuilderTemplate -ImageTemplateName {0} -ResourceGroupName {1}).LastRunStatusRunState}}', parameters('imageTemplateName'), resourceGroup().name)]",
                 "timeout": "PT2H",
                 "cleanupPreference": "OnSuccess",
                 "retentionInterval": "P1D"
