@@ -21,7 +21,6 @@ param guidId string
 // DevCenter Dev Box User role 
 var DEVCENTER_DEVBOX_USER_ROLE = '45d50f46-0b78-4001-a660-4198cbe8cd05'
 
-var OWNER_ROLE = '8e3af657-a8ff-443c-a75c-2fe8c4bcb635'
 var CONTRIBUTOR_ROLE = 'b24988ac-6180-42a0-ab88-20f7382dd24c'
 var READER_ROLE = 'acdd72a7-3385-48ef-bd42-f606fba81ae7'
 // Used when Dev Center associate with Azure Compute Gallery
@@ -97,11 +96,6 @@ resource devcenterGallery 'Microsoft.DevCenter/devcenters/galleries@2023-01-01-p
     contirbutorGalleryRole
   ]
 }
-
-resource envTypes 'Microsoft.DevCenter/devcenters/environmentTypes@2023-01-01-preview' = [for env in devceterSettings.envMapping: {
-  parent: devcenter
-  name: env.name
-}]
 
 resource networkConnection 'Microsoft.DevCenter/networkConnections@2023-01-01-preview' = {
   name: networkConnectionName
@@ -188,48 +182,39 @@ resource project 'Microsoft.DevCenter/projects@2022-11-11-preview' = {
   properties: {
     devCenterId: devcenter.id
   }
-  resource pools 'pools' = [for pool in devceterSettings.pools: {
-    name: pool.name
-    location: location
-    properties: {
-      devBoxDefinitionName: pool.definition
-      networkConnectionName: networkConnection.name
-      licenseType: 'Windows_Client'
-      localAdministrator: pool.administrator
-      
-    }
-  }]
-  dependsOn: [
-    builtinImageDevboxDefinitions
-    customizedImageDevboxDefinitions
-  ]
 }
 
-resource projectEnvironmentTypes 'Microsoft.DevCenter/projects/environmentTypes@2023-01-01-preview' = [ for env in devceterSettings.envMapping: {
-  name: env.name
+resource builtinPools 'Microsoft.DevCenter/projects/pools@2023-01-01-preview' = [for pool in devceterSettings.builtinImagePools: {
   parent: project
+  name: pool.name
+  location: location
   properties: {
-    status: 'Enabled'
-    creatorRoleAssignment: {
-      roles: {
-      '${OWNER_ROLE}': {}
-      }
-    }
-    deploymentTargetId: !empty(env.deploymentTargetId) ? '/subscriptions/${env.deploymentTargetId}' : subscription().id
-    userRoleAssignments: {
-      '${managedIdentity.properties.principalId}': {
-        roles: {
-          '${OWNER_ROLE}': {}
-        }
-      }
-    }
+    devBoxDefinitionName: pool.definition
+    networkConnectionName: networkConnection.name
+    licenseType: 'Windows_Client'
+    localAdministrator: pool.administrator
+    
   }
-  identity: {
-    type:  'UserAssigned'
-    userAssignedIdentities: {
-      '${managedIdentity.id}': {}
-    }
+  dependsOn: [
+    builtinImageDevboxDefinitions
+  ]
+}]
+
+resource customizedImagePools 'Microsoft.DevCenter/projects/pools@2023-01-01-preview' = [for pool in devceterSettings.customizedImagePools: {
+  parent: project
+  name: pool.name
+  location: location
+  properties: {
+    devBoxDefinitionName: pool.definition
+    networkConnectionName: networkConnection.name
+    licenseType: 'Windows_Client'
+    localAdministrator: pool.administrator
+    
   }
+  dependsOn: [
+    customizedImageDevboxDefinitions
+    imageTemplateBuild
+  ]
 }]
 
 resource devboxRole 'Microsoft.Authorization/roleAssignments@2022-04-01' = if(!empty(principalId)) {
@@ -253,6 +238,9 @@ output networkConnectionName string = networkConnection.name
 
 output projectName string = project.name
 
-output poolNames array = [for (pool, i) in devceterSettings.pools: {
-  name: project::pools[i].name
+output builtinImagePools array = [for (pool, i) in devceterSettings.builtinImagePools: {
+  name: builtinPools[i].name
+}]
+output customizedImagePools array = [for (pool, i) in devceterSettings.customizedImagePools: {
+  name: customizedImagePools[i].name
 }]

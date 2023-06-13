@@ -26,34 +26,18 @@
             "storage": "512gb"
         }
     ],
-    "pools": [
+    "builtinImagePools": [
         {
             "name": "win11-vs2022-vscode-pool",
             "definition": "win11-vs2022-vscode",
             "administrator": "Enabled"
-        },
+        }
+    ],
+    "customizedImagePools": [
         {
             "name": "win11-vs2022-vscode-openai-pool",
             "definition": "win11-vs2022-vscode-openai",
             "administrator": "Enabled"
-        }
-    ],
-    "envMapping": [
-        {
-            "name": "Dev",
-            "deploymentTargetId": ""
-        },
-        {
-            "name": "Test",
-            "deploymentTargetId": ""
-        },
-        {
-            "name": "PreProd",
-            "deploymentTargetId": ""
-        },
-        {
-            "name": "Prod",
-            "deploymentTargetId": ""
         }
     ]
 }

@@ -1,6 +1,3 @@
-@description('Primary location for all resources e.g. eastus')
-param location string = resourceGroup().location
-
 @description('The name of Dev Center e.g. dc-devbox-test')
 param devcenterName string = ''
 
@@ -56,7 +53,9 @@ param imagePublisher string = 'microsoftvisualstudio'
 @description('The name of image sku')
 param imageSku string = 'vs-2022-ent-general-win11-m365-gen2'
 
-param tags object = {}
+@description('Primary location for all resources e.g. eastus')
+param location string = resourceGroup().location
+
 param guidId string = newGuid()
 
 var abbrs = loadJsonContent('./abbreviations.json')
@@ -69,7 +68,6 @@ module vnet 'core/vnet.bicep' = if(empty(existingSubnetId)) {
   name: 'vnet'
   params: {
     location: location
-    tags: tags
     vnetAddressPrefixes: networkVnetAddressPrefixes
     vnetName: !empty(networkVnetName) ? networkVnetName : '${abbrs.networkVirtualNetworks}${resourceToken}'
     subnetAddressPrefixes: networkSubnetAddressPrefixes
@@ -80,7 +78,6 @@ module vnet 'core/vnet.bicep' = if(empty(existingSubnetId)) {
 resource managedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2022-01-31-preview' = {
   name: idName
   location: location
-  tags: tags
 }
 
 module gallery 'core/gallery.bicep' = {
@@ -88,7 +85,6 @@ module gallery 'core/gallery.bicep' = {
   params: {
     galleryName: galName
     location: location
-    tags: tags
     imageDefinitionName: imageDefinitionName
     imageOffer: imageOffer
     imagePublisher: imagePublisher
@@ -125,4 +121,5 @@ output vnetName string = empty(existingSubnetId) ? vnet.outputs.vnetName : ''
 output subnetName string = empty(existingSubnetId) ? vnet.outputs.subnetName : ''
 output builtinImageDevboxDefinitions array = devcenter.outputs.builtinImageDevboxDefinitions
 output customizedImageDevboxDefinitions string = devcenter.outputs.customizedImageDevboxDefinitions
-output pools array = devcenter.outputs.poolNames
+output builtinPools array = devcenter.outputs.builtinImagePools
+output customizedImagePools array = devcenter.outputs.customizedImagePools

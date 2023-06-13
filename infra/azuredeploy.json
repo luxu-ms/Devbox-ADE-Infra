@@ -5,17 +5,10 @@
     "_generator": {
       "name": "bicep",
       "version": "0.17.1.54307",
-      "templateHash": "8504320071913257795"
+      "templateHash": "10389268863520615597"
     }
   },
   "parameters": {
-    "location": {
-      "type": "string",
-      "defaultValue": "[resourceGroup().location]",
-      "metadata": {
-        "description": "Primary location for all resources e.g. eastus"
-      }
-    },
     "devcenterName": {
       "type": "string",
       "defaultValue": "",
@@ -139,9 +132,12 @@
         "description": "The name of image sku"
       }
     },
-    "tags": {
-      "type": "object",
-      "defaultValue": {}
+    "location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]",
+      "metadata": {
+        "description": "Primary location for all resources e.g. eastus"
+      }
     },
     "guidId": {
       "type": "string",
@@ -171,8 +167,7 @@
       "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
       "apiVersion": "2022-01-31-preview",
       "name": "[variables('idName')]",
-      "location": "[parameters('location')]",
-      "tags": "[parameters('tags')]"
+      "location": "[parameters('location')]"
     },
     {
       "condition": "[empty(parameters('existingSubnetId'))]",
@@ -187,9 +182,6 @@
         "parameters": {
           "location": {
             "value": "[parameters('location')]"
-          },
-          "tags": {
-            "value": "[parameters('tags')]"
           },
           "vnetAddressPrefixes": {
             "value": "[parameters('networkVnetAddressPrefixes')]"
@@ -207,7 +199,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.17.1.54307",
-              "templateHash": "18359028573741597679"
+              "templateHash": "14669898541231086278"
             }
           },
           "parameters": {
@@ -240,12 +232,6 @@
               "metadata": {
                 "description": "The location of the resource"
               }
-            },
-            "tags": {
-              "type": "object",
-              "metadata": {
-                "description": "The tags that will be associated to the Resources"
-              }
             }
           },
           "resources": [
@@ -268,8 +254,7 @@
                     }
                   }
                 ]
-              },
-              "tags": "[parameters('tags')]"
+              }
             }
           ],
           "outputs": {
@@ -304,9 +289,6 @@
           },
           "location": {
             "value": "[parameters('location')]"
-          },
-          "tags": {
-            "value": "[parameters('tags')]"
           },
           "imageDefinitionName": {
             "value": "[parameters('imageDefinitionName')]"
@@ -608,7 +590,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.17.1.54307",
-              "templateHash": "3438971374985511893"
+              "templateHash": "16910680669200853444"
             }
           },
           "parameters": {
@@ -688,12 +670,14 @@
                   "storage": "512gb"
                 }
               ],
-              "pools": [
+              "builtinImagePools": [
                 {
                   "name": "win11-vs2022-vscode-pool",
                   "definition": "win11-vs2022-vscode",
                   "administrator": "Enabled"
-                },
+                }
+              ],
+              "customizedImagePools": [
                 {
                   "name": "win11-vs2022-vscode-openai-pool",
                   "definition": "win11-vs2022-vscode-openai",
@@ -720,7 +704,6 @@
               ]
             },
             "DEVCENTER_DEVBOX_USER_ROLE": "45d50f46-0b78-4001-a660-4198cbe8cd05",
-            "OWNER_ROLE": "8e3af657-a8ff-443c-a75c-2fe8c4bcb635",
             "CONTRIBUTOR_ROLE": "b24988ac-6180-42a0-ab88-20f7382dd24c",
             "READER_ROLE": "acdd72a7-3385-48ef-bd42-f606fba81ae7",
             "WINDOWS365_PRINCIPALID": "8eec7c09-06ae-48e9-aafd-9fb31a5d5175",
@@ -742,26 +725,6 @@
             }
           },
           "resources": [
-            {
-              "copy": {
-                "name": "pools",
-                "count": "[length(variables('devceterSettings').pools)]"
-              },
-              "type": "Microsoft.DevCenter/projects/pools",
-              "apiVersion": "2022-11-11-preview",
-              "name": "[format('{0}/{1}', parameters('projectName'), variables('devceterSettings').pools[copyIndex()].name)]",
-              "location": "[parameters('location')]",
-              "properties": {
-                "devBoxDefinitionName": "[variables('devceterSettings').pools[copyIndex()].definition]",
-                "networkConnectionName": "[parameters('networkConnectionName')]",
-                "licenseType": "Windows_Client",
-                "localAdministrator": "[variables('devceterSettings').pools[copyIndex()].administrator]"
-              },
-              "dependsOn": [
-                "[resourceId('Microsoft.DevCenter/networkConnections', parameters('networkConnectionName'))]",
-                "[resourceId('Microsoft.DevCenter/projects', parameters('projectName'))]"
-              ]
-            },
             {
               "type": "Microsoft.DevCenter/devcenters",
               "apiVersion": "2023-01-01-preview",
@@ -807,18 +770,6 @@
                 "[extensionResourceId(resourceId('Microsoft.Compute/galleries', parameters('galleryName')), 'Microsoft.Authorization/roleAssignments', guid(subscription().id, resourceGroup().id, resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('managedIdentityName')), variables('CONTRIBUTOR_ROLE')))]",
                 "[resourceId('Microsoft.DevCenter/devcenters', parameters('devcenterName'))]",
                 "[extensionResourceId(resourceId('Microsoft.Compute/galleries', parameters('galleryName')), 'Microsoft.Authorization/roleAssignments', guid(subscription().id, resourceGroup().id, variables('WINDOWS365_PRINCIPALID'), variables('READER_ROLE')))]"
-              ]
-            },
-            {
-              "copy": {
-                "name": "envTypes",
-                "count": "[length(variables('devceterSettings').envMapping)]"
-              },
-              "type": "Microsoft.DevCenter/devcenters/environmentTypes",
-              "apiVersion": "2023-01-01-preview",
-              "name": "[format('{0}/{1}', parameters('devcenterName'), variables('devceterSettings').envMapping[copyIndex()].name)]",
-              "dependsOn": [
-                "[resourceId('Microsoft.DevCenter/devcenters', parameters('devcenterName'))]"
               ]
             },
             {
@@ -917,42 +868,49 @@
                 "devCenterId": "[resourceId('Microsoft.DevCenter/devcenters', parameters('devcenterName'))]"
               },
               "dependsOn": [
-                "builtinImageDevboxDefinitions",
-                "[resourceId('Microsoft.DevCenter/devcenters/devboxdefinitions', parameters('devcenterName'), variables('customizedImageDefinition').name)]",
                 "[resourceId('Microsoft.DevCenter/devcenters', parameters('devcenterName'))]"
               ]
             },
             {
               "copy": {
-                "name": "projectEnvironmentTypes",
-                "count": "[length(variables('devceterSettings').envMapping)]"
+                "name": "builtinPools",
+                "count": "[length(variables('devceterSettings').builtinImagePools)]"
               },
-              "type": "Microsoft.DevCenter/projects/environmentTypes",
+              "type": "Microsoft.DevCenter/projects/pools",
               "apiVersion": "2023-01-01-preview",
-              "name": "[format('{0}/{1}', parameters('projectName'), variables('devceterSettings').envMapping[copyIndex()].name)]",
+              "name": "[format('{0}/{1}', parameters('projectName'), variables('devceterSettings').builtinImagePools[copyIndex()].name)]",
+              "location": "[parameters('location')]",
               "properties": {
-                "status": "Enabled",
-                "creatorRoleAssignment": {
-                  "roles": {
-                    "[format('{0}', variables('OWNER_ROLE'))]": {}
-                  }
-                },
-                "deploymentTargetId": "[if(not(empty(variables('devceterSettings').envMapping[copyIndex()].deploymentTargetId)), format('/subscriptions/{0}', variables('devceterSettings').envMapping[copyIndex()].deploymentTargetId), subscription().id)]",
-                "userRoleAssignments": {
-                  "[format('{0}', reference(resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('managedIdentityName')), '2022-01-31-preview').principalId)]": {
-                    "roles": {
-                      "[format('{0}', variables('OWNER_ROLE'))]": {}
-                    }
-                  }
-                }
-              },
-              "identity": {
-                "type": "UserAssigned",
-                "userAssignedIdentities": {
-                  "[format('{0}', resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', parameters('managedIdentityName')))]": {}
-                }
+                "devBoxDefinitionName": "[variables('devceterSettings').builtinImagePools[copyIndex()].definition]",
+                "networkConnectionName": "[parameters('networkConnectionName')]",
+                "licenseType": "Windows_Client",
+                "localAdministrator": "[variables('devceterSettings').builtinImagePools[copyIndex()].administrator]"
               },
               "dependsOn": [
+                "builtinImageDevboxDefinitions",
+                "[resourceId('Microsoft.DevCenter/networkConnections', parameters('networkConnectionName'))]",
+                "[resourceId('Microsoft.DevCenter/projects', parameters('projectName'))]"
+              ]
+            },
+            {
+              "copy": {
+                "name": "customizedImagePools",
+                "count": "[length(variables('devceterSettings').customizedImagePools)]"
+              },
+              "type": "Microsoft.DevCenter/projects/pools",
+              "apiVersion": "2023-01-01-preview",
+              "name": "[format('{0}/{1}', parameters('projectName'), variables('devceterSettings').customizedImagePools[copyIndex()].name)]",
+              "location": "[parameters('location')]",
+              "properties": {
+                "devBoxDefinitionName": "[variables('devceterSettings').customizedImagePools[copyIndex()].definition]",
+                "networkConnectionName": "[parameters('networkConnectionName')]",
+                "licenseType": "Windows_Client",
+                "localAdministrator": "[variables('devceterSettings').customizedImagePools[copyIndex()].administrator]"
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.DevCenter/devcenters/devboxdefinitions', parameters('devcenterName'), variables('customizedImageDefinition').name)]",
+                "[resourceId('Microsoft.Resources/deploymentScripts', variables('queryTemplateProgress'))]",
+                "[resourceId('Microsoft.DevCenter/networkConnections', parameters('networkConnectionName'))]",
                 "[resourceId('Microsoft.DevCenter/projects', parameters('projectName'))]"
               ]
             },
@@ -998,12 +956,21 @@
               "type": "string",
               "value": "[parameters('projectName')]"
             },
-            "poolNames": {
+            "builtinImagePools": {
               "type": "array",
               "copy": {
-                "count": "[length(variables('devceterSettings').pools)]",
+                "count": "[length(variables('devceterSettings').builtinImagePools)]",
                 "input": {
-                  "name": "[variables('devceterSettings').pools[copyIndex()].name]"
+                  "name": "[variables('devceterSettings').builtinImagePools[copyIndex()].name]"
+                }
+              }
+            },
+            "customizedImagePools": {
+              "type": "array",
+              "copy": {
+                "count": "[length(variables('devceterSettings').customizedImagePools)]",
+                "input": {
+                  "name": "[variables('devceterSettings').customizedImagePools[copyIndex()].name]"
                 }
               }
             }
@@ -1045,9 +1012,13 @@
       "type": "string",
       "value": "[reference(resourceId('Microsoft.Resources/deployments', 'devcenter'), '2022-09-01').outputs.customizedImageDevboxDefinitions.value]"
     },
-    "pools": {
+    "builtinPools": {
       "type": "array",
-      "value": "[reference(resourceId('Microsoft.Resources/deployments', 'devcenter'), '2022-09-01').outputs.poolNames.value]"
+      "value": "[reference(resourceId('Microsoft.Resources/deployments', 'devcenter'), '2022-09-01').outputs.builtinImagePools.value]"
+    },
+    "customizedImagePools": {
+      "type": "array",
+      "value": "[reference(resourceId('Microsoft.Resources/deployments', 'devcenter'), '2022-09-01').outputs.customizedImagePools.value]"
     }
   }
 }
