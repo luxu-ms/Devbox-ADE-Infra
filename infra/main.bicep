@@ -56,6 +56,7 @@ param imageSku string = 'vs-2022-ent-general-win11-m365-gen2'
 @description('Primary location for all resources e.g. eastus')
 param location string = resourceGroup().location
 
+@description('The guid id that generat the different name for image template. Please keep it by default')
 param guidId string = newGuid()
 
 var abbrs = loadJsonContent('./abbreviations.json')

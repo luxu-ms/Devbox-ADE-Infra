@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.17.1.54307",
-      "templateHash": "10389268863520615597"
+      "templateHash": "16161872299621699900"
     }
   },
   "parameters": {
@@ -141,7 +141,10 @@
     },
     "guidId": {
       "type": "string",
-      "defaultValue": "[newGuid()]"
+      "defaultValue": "[newGuid()]",
+      "metadata": {
+        "description": "The guid id that generat the different name for image template. Please keep it by default"
+      }
     }
   },
   "variables": {
@@ -319,7 +322,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.17.1.54307",
-              "templateHash": "14096196524977039166"
+              "templateHash": "13070884376329465364"
             }
           },
           "parameters": {
@@ -368,8 +371,7 @@
                   "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))",
                   "choco install -y python3",
                   "choco install -y nodejs",
-                  "$vscode_extension_dir='C:\\temp\\extensions';New-Item $vscode_extension_dir -ItemType Directory -Force; [Environment]::SetEnvironmentVariable('VSCODE_EXTENSIONS', $vscode_extension_dir, 'Machine')",
-                  "code --install-extension github.copilot"
+                  "choco install -y anaconda3"
                 ]
               }
             ]
@@ -590,7 +592,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.17.1.54307",
-              "templateHash": "16910680669200853444"
+              "templateHash": "6734046373547244102"
             }
           },
           "parameters": {
@@ -682,24 +684,6 @@
                   "name": "win11-vs2022-vscode-openai-pool",
                   "definition": "win11-vs2022-vscode-openai",
                   "administrator": "Enabled"
-                }
-              ],
-              "envMapping": [
-                {
-                  "name": "Dev",
-                  "deploymentTargetId": ""
-                },
-                {
-                  "name": "Test",
-                  "deploymentTargetId": ""
-                },
-                {
-                  "name": "PreProd",
-                  "deploymentTargetId": ""
-                },
-                {
-                  "name": "Prod",
-                  "deploymentTargetId": ""
                 }
               ]
             },
