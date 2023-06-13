@@ -18,14 +18,15 @@ param guidId string = newGuid()
 
 var settings = {
   base: {
-    publisher: 'microsoftvisualstudio'
-    offer: 'visualstudioplustools'
-    sku: 'vs-2022-ent-general-win11-m365-gen2'
+    publisher: 'MicrosoftWindowsDesktop'
+    offer: 'windows-ent-cpc'
+    sku: 'win11-22h2-ent-cpc-m365'
     inlineCommand: [
       'Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString(\'https://community.chocolatey.org/install.ps1\'))'
       'choco install -y openjdk11'
       'choco install -y maven'
       'choco install -y git'
+      'choco install -y vscode'
     ]
   }
 }

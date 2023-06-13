@@ -45,13 +45,13 @@ param imageDefinitionName string = 'OpenAIImage'
 param imageTemplateName string = 'OpenAIImageTemplate'
 
 @description('The name of image offer')
-param imageOffer string = 'visualstudioplustools'
+param imageOffer string = 'windows-ent-cpc'
 
 @description('The name of image publisher')
-param imagePublisher string = 'microsoftvisualstudio'
+param imagePublisher string = 'MicrosoftWindowsDesktop'
 
 @description('The name of image sku')
-param imageSku string = 'vs-2022-ent-general-win11-m365-gen2'
+param imageSku string = 'win11-22h2-ent-cpc-m365'
 
 @description('Primary location for all resources e.g. eastus')
 param location string = resourceGroup().location

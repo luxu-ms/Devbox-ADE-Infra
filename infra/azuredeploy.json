@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.17.1.54307",
-      "templateHash": "16161872299621699900"
+      "templateHash": "14882888516283991373"
     }
   },
   "parameters": {
@@ -113,21 +113,21 @@
     },
     "imageOffer": {
       "type": "string",
-      "defaultValue": "visualstudioplustools",
+      "defaultValue": "windows-ent-cpc",
       "metadata": {
         "description": "The name of image offer"
       }
     },
     "imagePublisher": {
       "type": "string",
-      "defaultValue": "microsoftvisualstudio",
+      "defaultValue": "MicrosoftWindowsDesktop",
       "metadata": {
         "description": "The name of image publisher"
       }
     },
     "imageSku": {
       "type": "string",
-      "defaultValue": "vs-2022-ent-general-win11-m365-gen2",
+      "defaultValue": "win11-22h2-ent-cpc-m365",
       "metadata": {
         "description": "The name of image sku"
       }
