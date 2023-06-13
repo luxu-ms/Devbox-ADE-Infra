@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.17.1.54307",
-      "templateHash": "8287148457098132134"
+      "templateHash": "9161118237750135067"
     }
   },
   "parameters": {
@@ -56,11 +56,9 @@
         "sku": "vs-2022-ent-general-win11-m365-gen2",
         "inlineCommand": [
           "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))",
-          "choco install -y python3",
-          "choco install -y nodejs",
-          "choco install -y anaconda3",
-          "$vscode_extension_dir='C:\\temp\\extensions';New-Item $vscode_extension_dir -ItemType Directory -Force; [Environment]::SetEnvironmentVariable('VSCODE_EXTENSIONS', $vscode_extension_dir, 'Machine')",
-          "code --install-extension github.copilot"
+          "choco install -y openjdk11",
+          "choco install -y maven",
+          "choco install -y git"
         ]
       }
     },
