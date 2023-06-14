@@ -66,9 +66,6 @@ param devboxPoolName string = 'win11-vscode-openai-pool'
 ])
 param devboxStorageSize string = '256gb'
 
-@description('The guid id that generat the different name for image template. Please keep it by default')
-param guidId string = newGuid()
-
 @description('The name of ADE key vault')
 param adeKeyvaultName string = ''
 
@@ -90,6 +87,9 @@ param adeCatalogRepositoryBranch string = 'main'
 
 @description('The root path of catalog repository including ADE templates')
 param adeCatalogItemRootPath string = '/Environments'
+
+@description('The guid id that generat the different name for image template. Please keep it by default')
+param guidId string = newGuid()
 
 @description('Primary location for all resources e.g. eastus')
 param location string = resourceGroup().location

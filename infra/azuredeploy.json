@@ -5,17 +5,10 @@
     "_generator": {
       "name": "bicep",
       "version": "0.17.1.54307",
-      "templateHash": "10190704444598769740"
+      "templateHash": "11999443174214640022"
     }
   },
   "parameters": {
-    "location": {
-      "type": "string",
-      "defaultValue": "[resourceGroup().location]",
-      "metadata": {
-        "description": "Primary location for all resources e.g. eastus"
-      }
-    },
     "devcenterName": {
       "type": "string",
       "defaultValue": "",
@@ -141,11 +134,17 @@
     },
     "devboxDefnitionName": {
       "type": "string",
-      "defaultValue": "win11-vscode-openai"
+      "defaultValue": "win11-vscode-openai",
+      "metadata": {
+        "description": "The name of Dev Box definition"
+      }
     },
     "devboxPoolName": {
       "type": "string",
-      "defaultValue": "win11-vscode-openai-pool"
+      "defaultValue": "win11-vscode-openai-pool",
+      "metadata": {
+        "description": "The name of Dev Box pool"
+      }
     },
     "devboxStorageSize": {
       "type": "string",
@@ -155,13 +154,6 @@
         "512gb",
         "1024gb"
       ]
-    },
-    "guidId": {
-      "type": "string",
-      "defaultValue": "[newGuid()]",
-      "metadata": {
-        "description": "The guid id that generat the different name for image template. Please keep it by default"
-      }
     },
     "adeKeyvaultName": {
       "type": "string",
@@ -183,11 +175,25 @@
         "description": "The personal access token of Github/ADO repo"
       }
     },
+    "adeCatalogName": {
+      "type": "string",
+      "defaultValue": "test-catalog",
+      "metadata": {
+        "description": "The name of catalog"
+      }
+    },
     "adeCatalogRepositoryUrl": {
       "type": "string",
       "defaultValue": "https://github.com/luxu-ms/deployment-environments.git",
       "metadata": {
         "description": "The catalog repository URL of ADE templates"
+      }
+    },
+    "adeCatalogRepositoryBranch": {
+      "type": "string",
+      "defaultValue": "main",
+      "metadata": {
+        "description": "The catalog repository branch of ADE templates"
       }
     },
     "adeCatalogItemRootPath": {
@@ -197,9 +203,19 @@
         "description": "The root path of catalog repository including ADE templates"
       }
     },
-    "adeCatalogName": {
+    "guidId": {
       "type": "string",
-      "defaultValue": "test-catalog"
+      "defaultValue": "[newGuid()]",
+      "metadata": {
+        "description": "The guid id that generat the different name for image template. Please keep it by default"
+      }
+    },
+    "location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]",
+      "metadata": {
+        "description": "Primary location for all resources e.g. eastus"
+      }
     }
   },
   "variables": {
@@ -392,7 +408,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.17.1.54307",
-              "templateHash": "6211523100927218666"
+              "templateHash": "12731075642001662789"
             }
           },
           "parameters": {
@@ -457,7 +473,7 @@
                   "function create_shortcut($rootDirectory,$fileName){$TargetFile=\"C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\";$ShortcutFile=\"C:\\Users\\Public\\Desktop\\$fileName.lnk\";$WScriptObj=New-Object -ComObject (\"WScript.Shell\");$shortcut=$WscriptObj.CreateShortcut($ShortcutFile);$shortcut.WorkingDirectory=\"C:\\Windows\\System32\\WindowsPowerShell\\v1.0\";$shortcut.TargetPath=$TargetFile;$shortcut.Arguments=\" -noexit -ExecutionPolicy Bypass -File $rootDirectory\\$fileName.ps1\";$shortcut.Save();$bytes=[System.IO.File]::ReadAllBytes($ShortcutFile);$bytes[0x15]=$bytes[0x15] -bor 0x20;[System.IO.File]::WriteAllBytes($ShortcutFile, $bytes)}",
                   "$rootDirectory=\"C:\\temp\"",
                   "New-Item $rootDirectory -ItemType Directory -Force",
-                  "[format('Set-Content -Path \"$rootDirectory\\1-run-after-provision.ps1\" -Value \"az login `r`n az account set --subscription {0} `r`n az extension add --name devcenter `r`n Set-Location $rootDirectory `r`n git clone https://github.com/luxu-ms/azure-search-openai-demo.git `r`n Set-Location ''azure-search-openai-demo'' `r`n deploy.ps1 openai101 {1} {2} Dev {3} OpenAISearch {4} \"', subscription().subscriptionId, parameters('projectName'), parameters('devcenterName'), parameters('catalogName'), parameters('principalId'))]",
+                  "[format('Set-Content -Path \"$rootDirectory\\1-run-after-provision.ps1\" -Value \"az login `r`n az account set --subscription {0} `r`n az extension add --name devcenter `r`n Set-Location $rootDirectory `r`n git clone https://github.com/luxu-ms/azure-search-openai-demo.git `r`n Set-Location ''azure-search-openai-demo'' `r`n ./deploy.ps1 openai101 {1} {2} Dev {3} OpenAISearch {4} \"', subscription().subscriptionId, parameters('projectName'), parameters('devcenterName'), parameters('catalogName'), parameters('principalId'))]",
                   "create_shortcut $rootDirectory \"1-run-after-provision\""
                 ]
               }
@@ -660,9 +676,6 @@
           "principalType": {
             "value": "[parameters('userPrincipalType')]"
           },
-          "repositoryUrl": {
-            "value": "[parameters('adeCatalogRepositoryUrl')]"
-          },
           "secretIdentifier": {
             "value": "[reference(resourceId('Microsoft.Resources/deployments', 'keyvaultSecret'), '2022-09-01').outputs.secretIdentifier.value]"
           },
@@ -671,9 +684,6 @@
           },
           "managedIdentityName": {
             "value": "[variables('idName')]"
-          },
-          "catalogItemRootPath": {
-            "value": "[parameters('adeCatalogItemRootPath')]"
           },
           "imageDefinitionName": {
             "value": "[parameters('imageDefinitionName')]"
@@ -690,6 +700,18 @@
           "devboxStorageSize": {
             "value": "[parameters('devboxStorageSize')]"
           },
+          "catalogName": {
+            "value": "[parameters('adeCatalogName')]"
+          },
+          "adeCatalogRepositoryUrl": {
+            "value": "[parameters('adeCatalogRepositoryUrl')]"
+          },
+          "adeCatalogItemRootPath": {
+            "value": "[parameters('adeCatalogItemRootPath')]"
+          },
+          "adeCatalogRepositoryBranch": {
+            "value": "[parameters('adeCatalogRepositoryBranch')]"
+          },
           "guidId": {
             "value": "[parameters('guidId')]"
           }
@@ -701,7 +723,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.17.1.54307",
-              "templateHash": "15947847112455251183"
+              "templateHash": "10797403670708803740"
             }
           },
           "parameters": {
@@ -726,14 +748,13 @@
             "secretIdentifier": {
               "type": "string"
             },
-            "repositoryUrl": {
+            "adeCatalogRepositoryUrl": {
               "type": "string"
             },
-            "repositoryBranch": {
-              "type": "string",
-              "defaultValue": "main"
+            "adeCatalogRepositoryBranch": {
+              "type": "string"
             },
-            "catalogItemRootPath": {
+            "adeCatalogItemRootPath": {
               "type": "string"
             },
             "location": {
@@ -762,8 +783,7 @@
               ]
             },
             "catalogName": {
-              "type": "string",
-              "defaultValue": "test-catalog"
+              "type": "string"
             },
             "devboxDefnitionName": {
               "type": "string"
@@ -987,10 +1007,10 @@
               "name": "[format('{0}/{1}', parameters('devcenterName'), parameters('catalogName'))]",
               "properties": {
                 "gitHub": {
-                  "branch": "[parameters('repositoryBranch')]",
-                  "path": "[parameters('catalogItemRootPath')]",
+                  "branch": "[parameters('adeCatalogRepositoryBranch')]",
+                  "path": "[parameters('adeCatalogItemRootPath')]",
                   "secretIdentifier": "[parameters('secretIdentifier')]",
-                  "uri": "[parameters('repositoryUrl')]"
+                  "uri": "[parameters('adeCatalogRepositoryUrl')]"
                 }
               },
               "dependsOn": [
