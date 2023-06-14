@@ -1,6 +1,6 @@
 # Deploy a Dev Box service with customized iamge
 
-[![Deploy to Azure](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.svg?sanitize=true)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fluxu-ms%2FDevbox-ADE-Infra%2Fcustomized-image%2Finfra%2Fazuredeploy.json)
+[![Deploy to Azure](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.svg?sanitize=true)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fluxu-ms%2FDevbox-ADE-Infra%2Fdevbox-ade-openai%2Finfra%2Fazuredeploy.json)
 
 This template deploys a Dev Box service with customized image.
 
@@ -23,4 +23,4 @@ If you want to add your own software and tools, please fork this repo and change
 ## Add more customized image
 After you use this template to generate the customized image, if you want to generate more other types of image, please use the button below to generate customized image to your existing gallery and image definition.
 
-[![Deploy to Azure](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.svg?sanitize=true)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fluxu-ms%2FDevbox-ADE-Infra%2Fcustomized-image%2Fcustomized-image%2Fcustomized-image.json)
+[![Deploy to Azure](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.svg?sanitize=true)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fluxu-ms%2FDevbox-ADE-Infra%2Fdevbox-ade-openai%2Fcustomized-image%2Fcustomized-image.json)
