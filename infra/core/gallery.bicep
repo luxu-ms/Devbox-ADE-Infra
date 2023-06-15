@@ -22,6 +22,8 @@ var customizedCommand = [{
     'choco install -y python3'
     'choco install -y nodejs'
     'choco install -y anaconda3'
+    '$vscode_extension_dir=\'C:\\temp\\extensions\';New-Item $vscode_extension_dir -ItemType Directory -Force; [Environment]::SetEnvironmentVariable(\'VSCODE_EXTENSIONS\', $vscode_extension_dir, \'Machine\')'
+    '$env:VSCODE_EXTENSIONS=$vscode_extension_dir;code --install-extension github.copilot'
   ]
 }]
 
