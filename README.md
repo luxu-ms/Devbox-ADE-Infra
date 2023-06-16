@@ -34,8 +34,15 @@ When deploying this template you can provide parameters to customize the dev box
 If you want to add your own software and tools, please fork this repo and change the customizedCommand in the core/gallery.bicep
 ![customized-command](assets/customized-command.png)
 
-## Add more customized image
+## Add other customized image for Base, Java, .Net and Data
 
 After you use this template to generate the customized image, if you want to generate more other types of image, please use the button below to generate customized image to your existing gallery and image definition.
+| Image Type | Software and Tools |
+| -- | -- |
+| Base | Git, Azure CLI, VSCode |
+| Java | Git, Azure CLI, VSCode, Maven, OpenJdk11 |
+| .Net | Git, Azure CLI, VSCode，.Net SDK, Visual Studio|
+| Data | Git, Azure CLI, VSCode，|
+
 
 [![Deploy to Azure](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.svg?sanitize=true)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fluxu-ms%2FDevbox-ADE-Infra%2Fcustomized-image%2Fcustomized-image%2Fcustomized-image.json)

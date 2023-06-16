@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.17.1.54307",
-      "templateHash": "8352383699325801901"
+      "templateHash": "6003769002021074780"
     }
   },
   "parameters": {
@@ -13,7 +13,10 @@
       "type": "string",
       "defaultValue": "base",
       "allowedValues": [
-        "base"
+        "base",
+        "java",
+        "dotnet",
+        "data"
       ],
       "metadata": {
         "description": "the type of the customized image"
@@ -56,10 +59,46 @@
         "sku": "win11-22h2-ent-cpc-m365",
         "inlineCommand": [
           "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))",
-          "choco install -y openjdk11",
-          "choco install -y maven",
           "choco install -y git",
+          "choco install -y azure-cli",
           "choco install -y vscode"
+        ]
+      },
+      "java": {
+        "publisher": "MicrosoftWindowsDesktop",
+        "offer": "windows-ent-cpc",
+        "sku": "win11-22h2-ent-cpc-m365",
+        "inlineCommand": [
+          "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))",
+          "choco install -y git",
+          "choco install -y azure-cli",
+          "choco install -y vscode",
+          "choco install -y openjdk11",
+          "choco install -y maven"
+        ]
+      },
+      "dotnet": {
+        "publisher": "MicrosoftWindowsDesktop",
+        "offer": "windows-ent-cpc",
+        "sku": "win11-22h2-ent-cpc-m365",
+        "inlineCommand": [
+          "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))",
+          "choco install -y git",
+          "choco install -y azure-cli",
+          "choco install -y vscode",
+          "choco install -y dotnet-7.0-sdk",
+          "$ProgressPreference = 'SilentlyContinue';$vsInstallerName = 'vs_enterprise.exe';$vsInstallerPath = Join-Path -Path $env:TEMP -ChildPath $vsInstallerName;(new-object net.webclient).DownloadFile('https://aka.ms/vs/17/release/vs_enterprise.exe', $vsInstallerPath); Start-Process -FilePath $vsInstallerPath -ArgumentList '--add', 'Microsoft.VisualStudio.Workload.CoreEditor', '--add', 'Microsoft.VisualStudio.Workload.Azure', '--add', 'Microsoft.VisualStudio.Workload.NetWeb', '--add', 'Microsoft.VisualStudio.Workload.Node', '--add', 'Microsoft.VisualStudio.Workload.Python', '--add', 'Microsoft.VisualStudio.Workload.ManagedDesktop', '--includeRecommended', '--installWhileDownloading', '--quiet', '--norestart', '--force', '--wait', '--nocache' -NoNewWindow -Wait"
+        ]
+      },
+      "data": {
+        "publisher": "MicrosoftWindowsDesktop",
+        "offer": "windows-ent-cpc",
+        "sku": "win11-22h2-ent-cpc-m365",
+        "inlineCommand": [
+          "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))",
+          "choco install -y git",
+          "choco install -y vscode",
+          "choco install -y anaconda3"
         ]
       }
     },

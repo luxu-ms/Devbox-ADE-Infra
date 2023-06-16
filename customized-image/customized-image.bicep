@@ -1,6 +1,9 @@
 @description('the type of the customized image')
 @allowed([
   'base'
+  'java'
+  'dotnet'
+  'data'
 ])
 param personaImage string = 'base'
 
@@ -23,10 +26,53 @@ var settings = {
     sku: 'win11-22h2-ent-cpc-m365'
     inlineCommand: [
       'Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString(\'https://community.chocolatey.org/install.ps1\'))'
+      'choco install -y git'
+      'choco install -y azure-cli'
+      'choco install -y vscode'
+    ]
+  }
+  java: {
+    publisher: 'MicrosoftWindowsDesktop'
+    offer: 'windows-ent-cpc'
+    sku: 'win11-22h2-ent-cpc-m365'
+    inlineCommand: [
+      'Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString(\'https://community.chocolatey.org/install.ps1\'))'
+      'choco install -y git'
+      'choco install -y azure-cli'
+      'choco install -y vscode'
       'choco install -y openjdk11'
       'choco install -y maven'
+      '$vscode_extension_dir="C:\\temp\\extensions";New-Item $vscode_extension_dir -ItemType Directory -Force; [Environment]::SetEnvironmentVariable("VSCODE_EXTENSIONS", $vscode_extension_dir, "Machine")'
+      '$env:VSCODE_EXTENSIONS=$vscode_extension_dir'
+      'Start-Process -FilePath "C:\\Program Files\\Microsoft VS Code\\bin\\code.cmd"  -ArgumentList " --install-extension vscjava.vscode-java-pack"  -Wait -NoNewWindow'
+    ]
+  }
+  dotnet: {
+    publisher: 'MicrosoftWindowsDesktop'
+    offer: 'windows-ent-cpc'
+    sku: 'win11-22h2-ent-cpc-m365'
+    inlineCommand: [
+      'Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString(\'https://community.chocolatey.org/install.ps1\'))'
+      'choco install -y git'
+      'choco install -y azure-cli'
+      'choco install -y vscode'
+      'choco install -y dotnet-7.0-sdk'
+      '$ProgressPreference = \'SilentlyContinue\';$vsInstallerName = \'vs_enterprise.exe\';$vsInstallerPath = Join-Path -Path $env:TEMP -ChildPath $vsInstallerName;(new-object net.webclient).DownloadFile(\'https://aka.ms/vs/17/release/vs_enterprise.exe\', $vsInstallerPath); Start-Process -FilePath $vsInstallerPath -ArgumentList \'--add\', \'Microsoft.VisualStudio.Workload.CoreEditor\', \'--add\', \'Microsoft.VisualStudio.Workload.Azure\', \'--add\', \'Microsoft.VisualStudio.Workload.NetWeb\', \'--add\', \'Microsoft.VisualStudio.Workload.Node\', \'--add\', \'Microsoft.VisualStudio.Workload.Python\', \'--add\', \'Microsoft.VisualStudio.Workload.ManagedDesktop\', \'--includeRecommended\', \'--installWhileDownloading\', \'--quiet\', \'--norestart\', \'--force\', \'--wait\', \'--nocache\' -NoNewWindow -Wait'
+    ]
+  }
+  data: {
+    publisher: 'MicrosoftWindowsDesktop'
+    offer: 'windows-ent-cpc'
+    sku: 'win11-22h2-ent-cpc-m365'
+    inlineCommand: [
+      'Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString(\'https://community.chocolatey.org/install.ps1\'))'
       'choco install -y git'
       'choco install -y vscode'
+      'choco install -y python3'
+      '$vscode_extension_dir="C:\\temp\\extensions";New-Item $vscode_extension_dir -ItemType Directory -Force; [Environment]::SetEnvironmentVariable("VSCODE_EXTENSIONS", $vscode_extension_dir, "Machine")'
+      '$env:VSCODE_EXTENSIONS=$vscode_extension_dir'
+      'Start-Process -FilePath "C:\\Program Files\\Microsoft VS Code\\bin\\code.cmd"  -ArgumentList " --install-extension ms-python.python"  -Wait -NoNewWindow'
+      'Start-Process -FilePath "C:\\Program Files\\Microsoft VS Code\\bin\\code.cmd"  -ArgumentList " --install-extension ms-toolsai.jupyter"  -Wait -NoNewWindow'
     ]
   }
 }
