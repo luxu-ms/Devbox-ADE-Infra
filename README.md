@@ -39,9 +39,9 @@ If you want to add your own software and tools, please fork this repo and change
 After you use this template to generate the customized image, if you want to generate more other types of image, please use the button below to generate customized image to your existing gallery and image definition.
 | Image Type | Software and Tools |
 | -- | -- |
-| Base | Git, Azure CLI, VSCode, VS Extension for GitHub Copilot |
-| Java | Git, Azure CLI, VSCode, Maven, OpenJdk11, VS Extension for Java Pack |
+| Base | Git, Azure CLI, VSCode, VSCode Extension for GitHub Copilot |
+| Java | Git, Azure CLI, VSCode, Maven, OpenJdk11, VSCode Extension for Java Pack |
 | .Net | Git, Azure CLI, VSCode，.Net SDK, Visual Studio |
-| Data | Git, Azure CLI, VSCode，Python3, VS Extension for Python and Jupyter |
+| Data | Git, Azure CLI, VSCode，Python3, VSCode Extension for Python and Jupyter |
 
 [![Deploy to Azure](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.svg?sanitize=true)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fluxu-ms%2FDevbox-ADE-Infra%2Fcustomized-image%2Fcustomized-image%2Fcustomized-image.json)
