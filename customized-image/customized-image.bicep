@@ -29,6 +29,8 @@ var settings = {
       'choco install -y git'
       'choco install -y azure-cli'
       'choco install -y vscode'
+      '$vscode_extension_dir="C:\\temp\\extensions";New-Item $vscode_extension_dir -ItemType Directory -Force; [Environment]::SetEnvironmentVariable("VSCODE_EXTENSIONS", $vscode_extension_dir, "Machine");'
+      '$env:VSCODE_EXTENSIONS=$vscode_extension_dir; Start-Process -FilePath "C:\\Program Files\\Microsoft VS Code\\bin\\code.cmd"  -ArgumentList " --install-extension github.copilot"  -Wait -NoNewWindow'
     ]
   }
   java: {
@@ -42,9 +44,8 @@ var settings = {
       'choco install -y vscode'
       'choco install -y openjdk11'
       'choco install -y maven'
-      '$vscode_extension_dir="C:\\temp\\extensions";New-Item $vscode_extension_dir -ItemType Directory -Force; [Environment]::SetEnvironmentVariable("VSCODE_EXTENSIONS", $vscode_extension_dir, "Machine")'
-      '$env:VSCODE_EXTENSIONS=$vscode_extension_dir'
-      'Start-Process -FilePath "C:\\Program Files\\Microsoft VS Code\\bin\\code.cmd"  -ArgumentList " --install-extension vscjava.vscode-java-pack"  -Wait -NoNewWindow'
+      '$vscode_extension_dir="C:\\temp\\extensions";New-Item $vscode_extension_dir -ItemType Directory -Force; [Environment]::SetEnvironmentVariable("VSCODE_EXTENSIONS", $vscode_extension_dir, "Machine");'
+      '$env:VSCODE_EXTENSIONS=$vscode_extension_dir; Start-Process -FilePath "C:\\Program Files\\Microsoft VS Code\\bin\\code.cmd"  -ArgumentList " --install-extension vscjava.vscode-java-pack"  -Wait -NoNewWindow'
     ]
   }
   dotnet: {
@@ -69,9 +70,9 @@ var settings = {
       'choco install -y git'
       'choco install -y vscode'
       'choco install -y python3'
-      '$vscode_extension_dir="C:\\temp\\extensions";New-Item $vscode_extension_dir -ItemType Directory -Force; [Environment]::SetEnvironmentVariable("VSCODE_EXTENSIONS", $vscode_extension_dir, "Machine")'
-      '$env:VSCODE_EXTENSIONS=$vscode_extension_dir'
-      'Start-Process -FilePath "C:\\Program Files\\Microsoft VS Code\\bin\\code.cmd"  -ArgumentList " --install-extension ms-python.python"  -Wait -NoNewWindow'
+      '$vscode_extension_dir="C:\\temp\\extensions";New-Item $vscode_extension_dir -ItemType Directory -Force; [Environment]::SetEnvironmentVariable("VSCODE_EXTENSIONS", $vscode_extension_dir, "Machine");'
+      '$env:VSCODE_EXTENSIONS=$vscode_extension_dir;'
+      'Start-Process -FilePath "C:\\Program Files\\Microsoft VS Code\\bin\\code.cmd"  -ArgumentList " --install-extension ms-python.python"  -Wait -NoNewWindow;'
       'Start-Process -FilePath "C:\\Program Files\\Microsoft VS Code\\bin\\code.cmd"  -ArgumentList " --install-extension ms-toolsai.jupyter"  -Wait -NoNewWindow'
     ]
   }
