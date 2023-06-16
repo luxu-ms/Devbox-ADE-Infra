@@ -1,5 +1,5 @@
 {
-    "builtinImageDevboxDefinitions": [
+    "definitions": [
         {
             "name": "win11-vs2022-vscode",
             "image": "win11-ent-vs2022",
@@ -10,7 +10,7 @@
             "name": "win11-m365",
             "image": "win11-ent-m365",
             "compute": "8-vcpu-32gb-mem",
-            "storage": "512gb"
+            "storage": "256gb"
         },
         {
             "name": "win11-base",
@@ -19,24 +19,10 @@
             "storage": "256gb"
         }
     ],
-    "customizedImageDevboxdefinitions": [
-        {
-            "name": "win11-vs2022-vscode-openai",
-            "compute": "8-vcpu-32gb-mem",
-            "storage": "512gb"
-        }
-    ],
-    "builtinImagePools": [
+    "pools": [
         {
             "name": "win11-vs2022-vscode-pool",
             "definition": "win11-vs2022-vscode",
-            "administrator": "Enabled"
-        }
-    ],
-    "customizedImagePools": [
-        {
-            "name": "win11-vs2022-vscode-openai-pool",
-            "definition": "win11-vs2022-vscode-openai",
             "administrator": "Enabled"
         }
     ]
