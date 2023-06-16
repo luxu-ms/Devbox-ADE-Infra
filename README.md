@@ -10,7 +10,9 @@ This template deploys a Dev Box service with the minimum number of parameters.
 
 ## How to deploy
 
-Click the "Deploy to Azure" button to deploy.
+Click the "Deploy to Azure" button above to deploy.
+
+![Deploy to Azure](assets/deployment-page.png)
 
 ### Parameters
 
