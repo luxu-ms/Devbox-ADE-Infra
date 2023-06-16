@@ -19,8 +19,3 @@ For **Devcenter Name**, **Project Name**, **Network Connection Name**, **User Id
 ## Customize your own software and tools 
 If you want to add your own software and tools, please fork this repo and change the customizedCommand in the core/gallery.bicep
 ![customized-command](assets/customized-command.png)
-
-## Add more customized image
-After you use this template to generate the customized image, if you want to generate more other types of image, please use the button below to generate customized image to your existing gallery and image definition.
-
-[![Deploy to Azure](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.svg?sanitize=true)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fluxu-ms%2FDevbox-ADE-Infra%2Fdevbox-ade-openai%2Fcustomized-image%2Fcustomized-image.json)
