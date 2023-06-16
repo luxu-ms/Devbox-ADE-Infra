@@ -39,10 +39,10 @@ param userPrincipalType string = 'User'
 param imageGalleryName string = ''
 
 @description('The name of Azure Compute Gallery image definition')
-param imageDefinitionName string = 'OpenAIImage'
+param imageDefinitionName string = 'CustomizedImage'
 
 @description('The name of image template for customized image')
-param imageTemplateName string = 'OpenAIImageTemplate'
+param imageTemplateName string = 'CustomizedImageTemplate'
 
 @description('The name of image offer')
 param imageOffer string = 'windows-ent-cpc'

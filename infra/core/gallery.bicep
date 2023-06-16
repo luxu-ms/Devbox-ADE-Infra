@@ -19,11 +19,9 @@ var customizedCommand = [{
   name: 'Install Choco and other tools'
   inline: [
     'Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString(\'https://community.chocolatey.org/install.ps1\'))'
-    'choco install -y python3'
-    'choco install -y nodejs'
-    'choco install -y anaconda3'
-    '$vscode_extension_dir=\'C:\\temp\\extensions\';New-Item $vscode_extension_dir -ItemType Directory -Force; [Environment]::SetEnvironmentVariable(\'VSCODE_EXTENSIONS\', $vscode_extension_dir, \'Machine\')'
-    '$env:VSCODE_EXTENSIONS=$vscode_extension_dir;code --install-extension github.copilot'
+    'choco install -y vscode'
+    '$vscode_extension_dir="C:\\temp\\extensions";New-Item $vscode_extension_dir -ItemType Directory -Force; [Environment]::SetEnvironmentVariable("VSCODE_EXTENSIONS", $vscode_extension_dir, "Machine")'
+    '$env:VSCODE_EXTENSIONS=$vscode_extension_dir;Start-Process -FilePath "C:\\Program Files\\Microsoft VS Code\\bin\\code.cmd"  -ArgumentList " --install-extension github.copilot"  -Wait -NoNewWindow'
   ]
 }]
 

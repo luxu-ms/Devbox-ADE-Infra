@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.17.1.54307",
-      "templateHash": "14882888516283991373"
+      "templateHash": "383892268232508358"
     }
   },
   "parameters": {
@@ -99,14 +99,14 @@
     },
     "imageDefinitionName": {
       "type": "string",
-      "defaultValue": "OpenAIImage",
+      "defaultValue": "CustomizedImage",
       "metadata": {
         "description": "The name of Azure Compute Gallery image definition"
       }
     },
     "imageTemplateName": {
       "type": "string",
-      "defaultValue": "OpenAIImageTemplate",
+      "defaultValue": "CustomizedImageTemplate",
       "metadata": {
         "description": "The name of image template for customized image"
       }
@@ -322,7 +322,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.17.1.54307",
-              "templateHash": "13070884376329465364"
+              "templateHash": "5878907724264417814"
             }
           },
           "parameters": {
@@ -369,9 +369,9 @@
                 "name": "Install Choco and other tools",
                 "inline": [
                   "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))",
-                  "choco install -y python3",
-                  "choco install -y nodejs",
-                  "choco install -y anaconda3"
+                  "choco install -y vscode",
+                  "$vscode_extension_dir=\"C:\\temp\\extensions\";New-Item $vscode_extension_dir -ItemType Directory -Force; [Environment]::SetEnvironmentVariable(\"VSCODE_EXTENSIONS\", $vscode_extension_dir, \"Machine\")",
+                  "$env:VSCODE_EXTENSIONS=$vscode_extension_dir;Start-Process -FilePath \"C:\\Program Files\\Microsoft VS Code\\bin\\code.cmd\"  -ArgumentList \" --install-extension github.copilot\"  -Wait -NoNewWindow"
                 ]
               }
             ]
