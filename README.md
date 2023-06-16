@@ -40,9 +40,8 @@ After you use this template to generate the customized image, if you want to gen
 | Image Type | Software and Tools |
 | -- | -- |
 | Base | Git, Azure CLI, VSCode |
-| Java | Git, Azure CLI, VSCode, Maven, OpenJdk11 |
-| .Net | Git, Azure CLI, VSCode，.Net SDK, Visual Studio|
-| Data | Git, Azure CLI, VSCode，|
-
+| Java | Git, Azure CLI, VSCode, Maven, OpenJdk11, VS Extension for Java Pack |
+| .Net | Git, Azure CLI, VSCode，.Net SDK, Visual Studio |
+| Data | Git, Azure CLI, VSCode，VS Extension for Python and Jupyter |
 
 [![Deploy to Azure](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.svg?sanitize=true)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fluxu-ms%2FDevbox-ADE-Infra%2Fcustomized-image%2Fcustomized-image%2Fcustomized-image.json)
