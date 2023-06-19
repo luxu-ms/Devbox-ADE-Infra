@@ -131,10 +131,6 @@ module gallery 'core/gallery.bicep' = {
     imageTemplateName: imageTemplateName
     templateIdentityName: '${abbrs.managedIdentityUserAssignedIdentities}tpl-${resourceToken}'
     guidId: guidId
-    catalogName: adeCatalogName
-    devcenterName: dcName
-    principalId: userPrincipalId
-    projectName: prjName
   }
 }
 

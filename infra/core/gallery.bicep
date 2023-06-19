@@ -8,10 +8,6 @@ param templateIdentityName string
 param location string = resourceGroup().location
 param tags object = {}
 param guidId string
-param devcenterName string
-param projectName string
-param catalogName string
-param principalId string
 
 var templateRoleDefinitionName = guid(resourceGroup().id)
 var imageBuildName = take('${imageDefinitionName}-${guidId}-buid',64)
@@ -26,11 +22,10 @@ var customizedCommand = [{
     'choco install -y python3'
     'choco install -y nodejs'
     'choco install -y anaconda3'
-    'function create_shortcut($rootDirectory,$fileName){$TargetFile="C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe";$ShortcutFile="C:\\Users\\Public\\Desktop\\$fileName.lnk";$WScriptObj=New-Object -ComObject ("WScript.Shell");$shortcut=$WscriptObj.CreateShortcut($ShortcutFile);$shortcut.WorkingDirectory="C:\\Windows\\System32\\WindowsPowerShell\\v1.0";$shortcut.TargetPath=$TargetFile;$shortcut.Arguments=" -noexit -ExecutionPolicy Bypass -File $rootDirectory\\$fileName.ps1";$shortcut.Save();$bytes=[System.IO.File]::ReadAllBytes($ShortcutFile);$bytes[0x15]=$bytes[0x15] -bor 0x20;[System.IO.File]::WriteAllBytes($ShortcutFile, $bytes)}'
-    '$rootDirectory="C:\\temp"'
-    'New-Item $rootDirectory -ItemType Directory -Force'
-    'Set-Content -Path "$rootDirectory\\1-run-after-provision.ps1" -Value "az login `r`n az account set --subscription ${subscription().subscriptionId} `r`n az extension add --name devcenter `r`n Set-Location $rootDirectory `r`n git clone https://github.com/luxu-ms/azure-search-openai-demo.git `r`n Set-Location \'azure-search-openai-demo\' `r`n ./deploy.ps1 openai101 ${projectName} ${devcenterName} Dev ${catalogName} OpenAISearch ${principalId} "'
+    'function create_shortcut($rootDirectory,$fileName){$TargetFile="C:/Windows/System32/WindowsPowerShell/v1.0/powershell.exe";$ShortcutFile="C:/Users/Public/Desktop/$fileName.lnk";$WScriptObj=New-Object -ComObject ("WScript.Shell");$shortcut=$WscriptObj.CreateShortcut($ShortcutFile);$shortcut.WorkingDirectory="C:/Windows/System32/WindowsPowerShell/v1.0";$shortcut.TargetPath=$TargetFile;$shortcut.Arguments=" -noexit -ExecutionPolicy Bypass -File $rootDirectory/$fileName.ps1";$shortcut.Save();$bytes=[System.IO.File]::ReadAllBytes($ShortcutFile);$bytes[0x15]=$bytes[0x15] -bor 0x20;[System.IO.File]::WriteAllBytes($ShortcutFile, $bytes)};'
+    '$rootDirectory="C:/temp"; New-Item $rootDirectory -ItemType Directory -Force; Set-Content -Path "$rootDirectory/1-run-after-provision.ps1" -Value " az login `r`n `$subscriptionId=Read-Host \'Please enter subscription id\' `r`n az account set --subscription `$subscriptionId `r`n az extension add --name devcenter `r`n Set-Location $rootDirectory `r`n git clone https://github.com/luxu-ms/azure-search-openai-demo.git `r`n Set-Location \'azure-search-openai-demo\' `r`n ./deploy.ps1";'
     'create_shortcut $rootDirectory "1-run-after-provision"'
+    
   ]
 }]
 

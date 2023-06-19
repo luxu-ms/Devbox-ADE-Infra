@@ -4,8 +4,8 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.17.1.54307",
-      "templateHash": "11999443174214640022"
+      "version": "0.18.4.5664",
+      "templateHash": "14397705664303898023"
     }
   },
   "parameters": {
@@ -275,8 +275,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.17.1.54307",
-              "templateHash": "14669898541231086278"
+              "version": "0.18.4.5664",
+              "templateHash": "16577048260419964039"
             }
           },
           "parameters": {
@@ -387,18 +387,6 @@
           },
           "guidId": {
             "value": "[parameters('guidId')]"
-          },
-          "catalogName": {
-            "value": "[parameters('adeCatalogName')]"
-          },
-          "devcenterName": {
-            "value": "[variables('dcName')]"
-          },
-          "principalId": {
-            "value": "[parameters('userPrincipalId')]"
-          },
-          "projectName": {
-            "value": "[variables('prjName')]"
           }
         },
         "template": {
@@ -407,8 +395,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.17.1.54307",
-              "templateHash": "12731075642001662789"
+              "version": "0.18.4.5664",
+              "templateHash": "17887340874725117449"
             }
           },
           "parameters": {
@@ -443,18 +431,6 @@
             },
             "guidId": {
               "type": "string"
-            },
-            "devcenterName": {
-              "type": "string"
-            },
-            "projectName": {
-              "type": "string"
-            },
-            "catalogName": {
-              "type": "string"
-            },
-            "principalId": {
-              "type": "string"
             }
           },
           "variables": {
@@ -470,10 +446,8 @@
                   "choco install -y python3",
                   "choco install -y nodejs",
                   "choco install -y anaconda3",
-                  "function create_shortcut($rootDirectory,$fileName){$TargetFile=\"C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\";$ShortcutFile=\"C:\\Users\\Public\\Desktop\\$fileName.lnk\";$WScriptObj=New-Object -ComObject (\"WScript.Shell\");$shortcut=$WscriptObj.CreateShortcut($ShortcutFile);$shortcut.WorkingDirectory=\"C:\\Windows\\System32\\WindowsPowerShell\\v1.0\";$shortcut.TargetPath=$TargetFile;$shortcut.Arguments=\" -noexit -ExecutionPolicy Bypass -File $rootDirectory\\$fileName.ps1\";$shortcut.Save();$bytes=[System.IO.File]::ReadAllBytes($ShortcutFile);$bytes[0x15]=$bytes[0x15] -bor 0x20;[System.IO.File]::WriteAllBytes($ShortcutFile, $bytes)}",
-                  "$rootDirectory=\"C:\\temp\"",
-                  "New-Item $rootDirectory -ItemType Directory -Force",
-                  "[format('Set-Content -Path \"$rootDirectory\\1-run-after-provision.ps1\" -Value \"az login `r`n az account set --subscription {0} `r`n az extension add --name devcenter `r`n Set-Location $rootDirectory `r`n git clone https://github.com/luxu-ms/azure-search-openai-demo.git `r`n Set-Location ''azure-search-openai-demo'' `r`n ./deploy.ps1 openai101 {1} {2} Dev {3} OpenAISearch {4} \"', subscription().subscriptionId, parameters('projectName'), parameters('devcenterName'), parameters('catalogName'), parameters('principalId'))]",
+                  "function create_shortcut($rootDirectory,$fileName){$TargetFile=\"C:/Windows/System32/WindowsPowerShell/v1.0/powershell.exe\";$ShortcutFile=\"C:/Users/Public/Desktop/$fileName.lnk\";$WScriptObj=New-Object -ComObject (\"WScript.Shell\");$shortcut=$WscriptObj.CreateShortcut($ShortcutFile);$shortcut.WorkingDirectory=\"C:/Windows/System32/WindowsPowerShell/v1.0\";$shortcut.TargetPath=$TargetFile;$shortcut.Arguments=\" -noexit -ExecutionPolicy Bypass -File $rootDirectory/$fileName.ps1\";$shortcut.Save();$bytes=[System.IO.File]::ReadAllBytes($ShortcutFile);$bytes[0x15]=$bytes[0x15] -bor 0x20;[System.IO.File]::WriteAllBytes($ShortcutFile, $bytes)};",
+                  "$rootDirectory=\"C:/temp\"; New-Item $rootDirectory -ItemType Directory -Force; Set-Content -Path \"$rootDirectory/1-run-after-provision.ps1\" -Value \" az login `r`n `$subscriptionId=Read-Host 'Please enter subscription id' `r`n az account set --subscription `$subscriptionId `r`n az extension add --name devcenter `r`n Set-Location $rootDirectory `r`n git clone https://github.com/luxu-ms/azure-search-openai-demo.git `r`n Set-Location 'azure-search-openai-demo' `r`n ./deploy.ps1\";",
                   "create_shortcut $rootDirectory \"1-run-after-provision\""
                 ]
               }
@@ -722,8 +696,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.17.1.54307",
-              "templateHash": "10797403670708803740"
+              "version": "0.18.4.5664",
+              "templateHash": "17865635365116348910"
             }
           },
           "parameters": {
@@ -1094,8 +1068,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.17.1.54307",
-                      "templateHash": "15641417107950418221"
+                      "version": "0.18.4.5664",
+                      "templateHash": "4243975600296088021"
                     }
                   },
                   "parameters": {
@@ -1190,8 +1164,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.17.1.54307",
-              "templateHash": "15428045515587502988"
+              "version": "0.18.4.5664",
+              "templateHash": "8983320782769177624"
             }
           },
           "parameters": {
@@ -1267,8 +1241,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.17.1.54307",
-              "templateHash": "7554980374654762810"
+              "version": "0.18.4.5664",
+              "templateHash": "6261323163879606917"
             }
           },
           "parameters": {
@@ -1357,8 +1331,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.17.1.54307",
-              "templateHash": "18301876310392488097"
+              "version": "0.18.4.5664",
+              "templateHash": "14465331775981893963"
             }
           },
           "parameters": {
