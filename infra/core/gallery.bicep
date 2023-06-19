@@ -19,8 +19,11 @@ var customizedCommand = [{
   name: 'Install Choco and other tools'
   inline: [
     'Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString(\'https://community.chocolatey.org/install.ps1\'))'
+    'choco install -y git'
+    'choco install -y azure-cli'
     'choco install -y python3'
     'choco install -y nodejs'
+    'choco install -y vscode'
     'choco install -y anaconda3'
     'function create_shortcut($rootDirectory,$fileName){$TargetFile="C:/Windows/System32/WindowsPowerShell/v1.0/powershell.exe";$ShortcutFile="C:/Users/Public/Desktop/$fileName.lnk";$WScriptObj=New-Object -ComObject ("WScript.Shell");$shortcut=$WscriptObj.CreateShortcut($ShortcutFile);$shortcut.WorkingDirectory="C:/Windows/System32/WindowsPowerShell/v1.0";$shortcut.TargetPath=$TargetFile;$shortcut.Arguments=" -noexit -ExecutionPolicy Bypass -File $rootDirectory/$fileName.ps1";$shortcut.Save();$bytes=[System.IO.File]::ReadAllBytes($ShortcutFile);$bytes[0x15]=$bytes[0x15] -bor 0x20;[System.IO.File]::WriteAllBytes($ShortcutFile, $bytes)};'
     '$rootDirectory="C:/temp"; New-Item $rootDirectory -ItemType Directory -Force; Set-Content -Path "$rootDirectory/1-run-after-provision.ps1" -Value " az login `r`n `$subscriptionId=Read-Host \'Please enter subscription id\' `r`n az account set --subscription `$subscriptionId `r`n az extension add --name devcenter `r`n Set-Location $rootDirectory `r`n git clone https://github.com/luxu-ms/azure-search-openai-demo.git `r`n Set-Location \'azure-search-openai-demo\' `r`n ./deploy.ps1";'
