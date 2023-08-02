@@ -4,74 +4,11 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.17.1.54307",
-      "templateHash": "383892268232508358"
+      "version": "0.18.4.5664",
+      "templateHash": "5845846590562365302"
     }
   },
   "parameters": {
-    "devcenterName": {
-      "type": "string",
-      "defaultValue": "",
-      "metadata": {
-        "description": "The name of Dev Center e.g. dc-devbox-test"
-      }
-    },
-    "projectName": {
-      "type": "string",
-      "defaultValue": "",
-      "metadata": {
-        "description": "The name of Dev Center project e.g. dcprj-devbox-test"
-      }
-    },
-    "networkConnectionName": {
-      "type": "string",
-      "defaultValue": "",
-      "metadata": {
-        "description": "The name of Network Connection e.g. con-devbox-test"
-      }
-    },
-    "userIdentityName": {
-      "type": "string",
-      "defaultValue": "",
-      "metadata": {
-        "description": "The name of Dev Center user identity"
-      }
-    },
-    "existingSubnetId": {
-      "type": "string",
-      "defaultValue": "",
-      "metadata": {
-        "description": "The subnet resource id if the user wants to use existing subnet"
-      }
-    },
-    "networkVnetName": {
-      "type": "string",
-      "defaultValue": "",
-      "metadata": {
-        "description": "The name of the Virtual Network e.g. vnet-dcprj-devbox-test-eastus"
-      }
-    },
-    "networkSubnetName": {
-      "type": "string",
-      "defaultValue": "default",
-      "metadata": {
-        "description": "the subnet name of Dev Box e.g. default"
-      }
-    },
-    "networkVnetAddressPrefixes": {
-      "type": "string",
-      "defaultValue": "10.4.0.0/16",
-      "metadata": {
-        "description": "The vnet address prefixes of Dev Box e.g. 10.4.0.0/16"
-      }
-    },
-    "networkSubnetAddressPrefixes": {
-      "type": "string",
-      "defaultValue": "10.4.0.0/24",
-      "metadata": {
-        "description": "The subnet address prefixes of Dev Box e.g. 10.4.0.0/24"
-      }
-    },
     "userPrincipalId": {
       "type": "string",
       "defaultValue": "",
@@ -90,48 +27,6 @@
         "description": "The type of principal id: User or Group"
       }
     },
-    "imageGalleryName": {
-      "type": "string",
-      "defaultValue": "",
-      "metadata": {
-        "description": "The name of Azure Compute Gallery"
-      }
-    },
-    "imageDefinitionName": {
-      "type": "string",
-      "defaultValue": "CustomizedImage",
-      "metadata": {
-        "description": "The name of Azure Compute Gallery image definition"
-      }
-    },
-    "imageTemplateName": {
-      "type": "string",
-      "defaultValue": "CustomizedImageTemplate",
-      "metadata": {
-        "description": "The name of image template for customized image"
-      }
-    },
-    "imageOffer": {
-      "type": "string",
-      "defaultValue": "windows-ent-cpc",
-      "metadata": {
-        "description": "The name of image offer"
-      }
-    },
-    "imagePublisher": {
-      "type": "string",
-      "defaultValue": "MicrosoftWindowsDesktop",
-      "metadata": {
-        "description": "The name of image publisher"
-      }
-    },
-    "imageSku": {
-      "type": "string",
-      "defaultValue": "win11-22h2-ent-cpc-m365",
-      "metadata": {
-        "description": "The name of image sku"
-      }
-    },
     "location": {
       "type": "string",
       "defaultValue": "[resourceGroup().location]",
@@ -144,6 +39,13 @@
       "defaultValue": "[newGuid()]",
       "metadata": {
         "description": "The guid id that generat the different name for image template. Please keep it by default"
+      }
+    },
+    "existingSubnetId": {
+      "type": "string",
+      "defaultValue": "",
+      "metadata": {
+        "description": "The subnet resource id if the user wants to use existing subnet"
       }
     }
   },
@@ -159,11 +61,26 @@
       "computeGalleries": "gal",
       "managedIdentityUserAssignedIdentities": "id-"
     },
+    "suffix": "default",
+    "devcenterName": "[format('devcenter-{0}', variables('suffix'))]",
+    "projectName": "[format('porject-{0}', variables('suffix'))]",
+    "networkConnectionName": "[format('connection--{0}', variables('suffix'))]",
+    "userIdentityName": "[format('user-identitiy-{0}', variables('suffix'))]",
+    "networkVnetName": "[format('vnet-devcenter-{0}', variables('suffix'))]",
+    "networkSubnetName": "default",
+    "networkVnetAddressPrefixes": "10.4.0.0/16",
+    "networkSubnetAddressPrefixes": "10.4.0.0/24",
+    "imageGalleryName": "[format('gallery{0}', variables('suffix'))]",
+    "imageDefinitionName": "CustomizedImage",
+    "imageTemplateName": "CustomizedImageTemplate",
+    "imageOffer": "windows-ent-cpc",
+    "imagePublisher": "MicrosoftWindowsDesktop",
+    "imageSku": "win11-22h2-ent-cpc-m365",
     "abbrs": "[variables('$fxv#0')]",
     "resourceToken": "[toLower(uniqueString(resourceGroup().id, parameters('location')))]",
-    "ncName": "[if(not(empty(parameters('networkConnectionName'))), parameters('networkConnectionName'), format('{0}{1}', variables('abbrs').networkConnections, variables('resourceToken')))]",
-    "galName": "[if(not(empty(parameters('imageGalleryName'))), parameters('imageGalleryName'), format('{0}{1}', variables('abbrs').computeGalleries, variables('resourceToken')))]",
-    "idName": "[if(not(empty(parameters('userIdentityName'))), parameters('userIdentityName'), format('{0}{1}', variables('abbrs').managedIdentityUserAssignedIdentities, variables('resourceToken')))]"
+    "ncName": "[if(not(empty(variables('networkConnectionName'))), variables('networkConnectionName'), format('{0}{1}', variables('abbrs').networkConnections, variables('resourceToken')))]",
+    "galName": "[if(not(empty(variables('imageGalleryName'))), variables('imageGalleryName'), format('{0}{1}', variables('abbrs').computeGalleries, variables('resourceToken')))]",
+    "idName": "[if(not(empty(variables('userIdentityName'))), variables('userIdentityName'), format('{0}{1}', variables('abbrs').managedIdentityUserAssignedIdentities, variables('resourceToken')))]"
   },
   "resources": [
     {
@@ -187,13 +104,13 @@
             "value": "[parameters('location')]"
           },
           "vnetAddressPrefixes": {
-            "value": "[parameters('networkVnetAddressPrefixes')]"
+            "value": "[variables('networkVnetAddressPrefixes')]"
           },
-          "vnetName": "[if(not(empty(parameters('networkVnetName'))), createObject('value', parameters('networkVnetName')), createObject('value', format('{0}{1}', variables('abbrs').networkVirtualNetworks, variables('resourceToken'))))]",
+          "vnetName": "[if(not(empty(variables('networkVnetName'))), createObject('value', variables('networkVnetName')), createObject('value', format('{0}{1}', variables('abbrs').networkVirtualNetworks, variables('resourceToken'))))]",
           "subnetAddressPrefixes": {
-            "value": "[parameters('networkSubnetAddressPrefixes')]"
+            "value": "[variables('networkSubnetAddressPrefixes')]"
           },
-          "subnetName": "[if(not(empty(parameters('networkSubnetName'))), createObject('value', parameters('networkSubnetName')), createObject('value', format('{0}{1}', variables('abbrs').networkVirtualNetworksSubnets, variables('resourceToken'))))]"
+          "subnetName": "[if(not(empty(variables('networkSubnetName'))), createObject('value', variables('networkSubnetName')), createObject('value', format('{0}{1}', variables('abbrs').networkVirtualNetworksSubnets, variables('resourceToken'))))]"
         },
         "template": {
           "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
@@ -201,8 +118,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.17.1.54307",
-              "templateHash": "14669898541231086278"
+              "version": "0.18.4.5664",
+              "templateHash": "16577048260419964039"
             }
           },
           "parameters": {
@@ -294,19 +211,19 @@
             "value": "[parameters('location')]"
           },
           "imageDefinitionName": {
-            "value": "[parameters('imageDefinitionName')]"
+            "value": "[variables('imageDefinitionName')]"
           },
           "imageOffer": {
-            "value": "[parameters('imageOffer')]"
+            "value": "[variables('imageOffer')]"
           },
           "imagePublisher": {
-            "value": "[parameters('imagePublisher')]"
+            "value": "[variables('imagePublisher')]"
           },
           "imageSku": {
-            "value": "[parameters('imageSku')]"
+            "value": "[variables('imageSku')]"
           },
           "imageTemplateName": {
-            "value": "[parameters('imageTemplateName')]"
+            "value": "[variables('imageTemplateName')]"
           },
           "templateIdentityName": {
             "value": "[format('{0}tpl-{1}', variables('abbrs').managedIdentityUserAssignedIdentities, variables('resourceToken'))]"
@@ -321,8 +238,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.17.1.54307",
-              "templateHash": "5878907724264417814"
+              "version": "0.18.4.5664",
+              "templateHash": "13347927982387408692"
             }
           },
           "parameters": {
@@ -369,9 +286,10 @@
                 "name": "Install Choco and other tools",
                 "inline": [
                   "Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))",
+                  "choco install -y git",
+                  "choco install -y azure-cli",
                   "choco install -y vscode",
-                  "$vscode_extension_dir=\"C:\\temp\\extensions\";New-Item $vscode_extension_dir -ItemType Directory -Force; [Environment]::SetEnvironmentVariable(\"VSCODE_EXTENSIONS\", $vscode_extension_dir, \"Machine\")",
-                  "$env:VSCODE_EXTENSIONS=$vscode_extension_dir;Start-Process -FilePath \"C:\\Program Files\\Microsoft VS Code\\bin\\code.cmd\"  -ArgumentList \" --install-extension github.copilot\"  -Wait -NoNewWindow"
+                  "$vscode_extension_dir=\"C:/temp/extensions\"; New-Item $vscode_extension_dir -ItemType Directory -Force; [Environment]::SetEnvironmentVariable(\"VSCODE_EXTENSIONS\", $vscode_extension_dir, \"Machine\"); $env:VSCODE_EXTENSIONS=$vscode_extension_dir; Start-Process -FilePath \"C:/Program Files/Microsoft VS Code/bin/code.cmd\"  -ArgumentList \" --install-extension github.copilot\"  -Wait -NoNewWindow"
                 ]
               }
             ]
@@ -554,12 +472,12 @@
           "location": {
             "value": "[parameters('location')]"
           },
-          "devcenterName": "[if(not(empty(parameters('devcenterName'))), createObject('value', parameters('devcenterName')), createObject('value', format('{0}{1}', variables('abbrs').devcenter, variables('resourceToken'))))]",
+          "devcenterName": "[if(not(empty(variables('devcenterName'))), createObject('value', variables('devcenterName')), createObject('value', format('{0}{1}', variables('abbrs').devcenter, variables('resourceToken'))))]",
           "subnetId": "[if(not(empty(parameters('existingSubnetId'))), createObject('value', parameters('existingSubnetId')), createObject('value', reference(resourceId('Microsoft.Resources/deployments', 'vnet'), '2022-09-01').outputs.subnetId.value))]",
           "networkConnectionName": {
             "value": "[variables('ncName')]"
           },
-          "projectName": "[if(not(empty(parameters('projectName'))), createObject('value', parameters('projectName')), createObject('value', format('{0}{1}', variables('abbrs').devcenterProject, variables('resourceToken'))))]",
+          "projectName": "[if(not(empty(variables('projectName'))), createObject('value', variables('projectName')), createObject('value', format('{0}{1}', variables('abbrs').devcenterProject, variables('resourceToken'))))]",
           "networkingResourceGroupName": {
             "value": "[format('{0}{1}-{2}', variables('abbrs').devcenterNetworkingResourceGroup, variables('ncName'), parameters('location'))]"
           },
@@ -576,10 +494,10 @@
             "value": "[variables('idName')]"
           },
           "imageDefinitionName": {
-            "value": "[parameters('imageDefinitionName')]"
+            "value": "[variables('imageDefinitionName')]"
           },
           "imageTemplateName": {
-            "value": "[parameters('imageTemplateName')]"
+            "value": "[variables('imageTemplateName')]"
           },
           "guidId": {
             "value": "[parameters('guidId')]"
@@ -591,8 +509,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.17.1.54307",
-              "templateHash": "6734046373547244102"
+              "version": "0.18.4.5664",
+              "templateHash": "13033039038311653397"
             }
           },
           "parameters": {

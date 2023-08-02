@@ -1,29 +1,28 @@
+var suffix = 'default'
+
 @description('The name of Dev Center e.g. dc-devbox-test')
-param devcenterName string = ''
+var devcenterName = 'devcenter-${suffix}'
 
 @description('The name of Dev Center project e.g. dcprj-devbox-test')
-param projectName string = ''
+var projectName = 'porject-${suffix}'
 
 @description('The name of Network Connection e.g. con-devbox-test')
-param networkConnectionName string = ''
+var networkConnectionName = 'connection--${suffix}'
 
 @description('The name of Dev Center user identity')
-param userIdentityName string = ''
-
-@description('The subnet resource id if the user wants to use existing subnet')
-param existingSubnetId string = ''
+var userIdentityName = 'user-identitiy-${suffix}'
 
 @description('The name of the Virtual Network e.g. vnet-dcprj-devbox-test-eastus')
-param networkVnetName string = ''
+var networkVnetName = 'vnet-devcenter-${suffix}'
 
 @description('the subnet name of Dev Box e.g. default')
-param networkSubnetName string = 'default'
+var networkSubnetName = 'default'
 
 @description('The vnet address prefixes of Dev Box e.g. 10.4.0.0/16')
-param networkVnetAddressPrefixes string = '10.4.0.0/16'
+var networkVnetAddressPrefixes = '10.4.0.0/16'
 
 @description('The subnet address prefixes of Dev Box e.g. 10.4.0.0/24')
-param networkSubnetAddressPrefixes string = '10.4.0.0/24'
+var networkSubnetAddressPrefixes = '10.4.0.0/24'
 
 @description('The user or group id that will be granted to Devcenter Dev Box User and Deployment Environments User role')
 param userPrincipalId string = ''
@@ -36,28 +35,31 @@ param userPrincipalId string = ''
 param userPrincipalType string = 'User'
 
 @description('The name of Azure Compute Gallery')
-param imageGalleryName string = ''
+var imageGalleryName = 'gallery${suffix}'
 
 @description('The name of Azure Compute Gallery image definition')
-param imageDefinitionName string = 'CustomizedImage'
+var imageDefinitionName = 'CustomizedImage'
 
 @description('The name of image template for customized image')
-param imageTemplateName string = 'CustomizedImageTemplate'
+var imageTemplateName = 'CustomizedImageTemplate'
 
 @description('The name of image offer')
-param imageOffer string = 'windows-ent-cpc'
+var imageOffer = 'windows-ent-cpc'
 
 @description('The name of image publisher')
-param imagePublisher string = 'MicrosoftWindowsDesktop'
+var imagePublisher = 'MicrosoftWindowsDesktop'
 
 @description('The name of image sku')
-param imageSku string = 'win11-22h2-ent-cpc-m365'
+var imageSku = 'win11-22h2-ent-cpc-m365'
 
 @description('Primary location for all resources e.g. eastus')
 param location string = resourceGroup().location
 
 @description('The guid id that generat the different name for image template. Please keep it by default')
 param guidId string = newGuid()
+
+@description('The subnet resource id if the user wants to use existing subnet')
+param existingSubnetId string = ''
 
 var abbrs = loadJsonContent('./abbreviations.json')
 var resourceToken = toLower(uniqueString(resourceGroup().id, location))
