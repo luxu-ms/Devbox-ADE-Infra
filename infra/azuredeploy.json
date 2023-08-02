@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.18.4.5664",
-      "templateHash": "5845846590562365302"
+      "templateHash": "17812202224210510869"
     }
   },
   "parameters": {
@@ -63,8 +63,8 @@
     },
     "suffix": "default",
     "devcenterName": "[format('devcenter-{0}', variables('suffix'))]",
-    "projectName": "[format('porject-{0}', variables('suffix'))]",
-    "networkConnectionName": "[format('connection--{0}', variables('suffix'))]",
+    "projectName": "[format('project-{0}', variables('suffix'))]",
+    "networkConnectionName": "[format('connection-{0}', variables('suffix'))]",
     "userIdentityName": "[format('user-identitiy-{0}', variables('suffix'))]",
     "networkVnetName": "[format('vnet-devcenter-{0}', variables('suffix'))]",
     "networkSubnetName": "default",

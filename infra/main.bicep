@@ -4,10 +4,10 @@ var suffix = 'default'
 var devcenterName = 'devcenter-${suffix}'
 
 @description('The name of Dev Center project e.g. dcprj-devbox-test')
-var projectName = 'porject-${suffix}'
+var projectName = 'project-${suffix}'
 
 @description('The name of Network Connection e.g. con-devbox-test')
-var networkConnectionName = 'connection--${suffix}'
+var networkConnectionName = 'connection-${suffix}'
 
 @description('The name of Dev Center user identity')
 var userIdentityName = 'user-identitiy-${suffix}'
