@@ -13,21 +13,19 @@ This template deploys a Dev Box service with customized image.
 Click the "Deploy to Azure" button to deploy. There will be the deployment page as below:
 ![Deployment Sample](assets/deployment-page.png)
 
+or Run the Powershell script if you do not know how to get user principal id. 
+
 ### Parameters
 
 When deploying this template you can provide parameters to customize the dev box and related resources.
 
 | Parameters | Overview |
 | -- | -- |
-| Devcenter Name | (Optional) The name of the DevCenter Azure resource. |
-| Project Name | (Optional) |
-| Network Connection Name | (Optional) |
-| User Identity Name | (Optional)|
-| Network Vnet Name  | (Optional) |
-| Image Gallery Name | (Optional) |
-| Existing Subnet Id | If you want to use your existing subnet, please input your subnet resource id. The template won't create new Virtual network and subnet if existing subnet id is proided.|
 | User Principal Id | The AAD user id or gorup id that will be granted the role "Devcenter Dev Box User". Please find the user/group's object id under Azure Active Directory. If you don't provide this permission, the developer will not get the permission to access the project in the [Dev Portal](https://devportal.microsoft.com). If it's not provided, mannually you can also go to the project IAM and grant the related permissioin. Please refer to [here](https://learn.microsoft.com/en-us/azure/dev-box/quickstart-configure-dev-box-service?tabs=AzureADJoin#6-provide-access-to-a-dev-box-project). |
 | Uer Principal Type | If you want to grant the permission to AAD group, please select "group" instead of "user" |
+| Location | Keep the vaule as resourceGroup().location. Please change the location if required. e.g. eastus |
+| Guid Id | keep the vaule as newGuid(). Please provide your own new Guid if required. |
+| Existing Subnet Id | If you want to use your existing subnet, please input your subnet resource id. The template won't create new Virtual network and subnet if existing subnet id is proided.|
 
 ## Customize your own software and tools
 
