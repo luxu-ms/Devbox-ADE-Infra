@@ -78,20 +78,20 @@ resource project 'Microsoft.DevCenter/projects@2022-11-11-preview' = {
   }
 }
 
-// resource devboxPool 'Microsoft.DevCenter/projects/pools@2023-04-01' =  {
-//   parent: project
-//   name: devboxPoolName
-//   location: location
-//   properties: {
-//     devBoxDefinitionName: '${customizedCatalogName}\\${customizationNameInDevBoxYaml}' 
-//     networkConnectionName: networkConnection.name
-//     licenseType: 'Windows_Client'
-//     localAdministrator: 'Enabled'
-//   }
-//   dependsOn:[
-//     customizedCatalog
-//   ]
-// }
+resource devboxPool 'Microsoft.DevCenter/projects/pools@2023-06-01-preview' =  {
+  parent: project
+  name: devboxPoolName
+  location: location
+  properties: {
+    devBoxDefinitionName: '${customizedCatalogName}\\${customizationNameInDevBoxYaml}' 
+    networkConnectionName: networkConnection.name
+    licenseType: 'Windows_Client'
+    localAdministrator: 'Enabled'
+  }
+  dependsOn:[
+    customizedCatalog
+  ]
+}
 
 resource devboxRole 'Microsoft.Authorization/roleAssignments@2022-04-01' = if(!empty(principalId)) {
   name: guid(subscription().id, resourceGroup().id, principalId, DEVCENTER_DEVBOX_USER_ROLE)
