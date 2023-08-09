@@ -1,3 +1,16 @@
+@description('The user or group id that will be granted to Devcenter Dev Box User and Deployment Environments User role')
+param userPrincipalId string = ''
+
+@description('The type of principal id: User or Group')
+@allowed([
+  'Group'
+  'User'
+])
+param userPrincipalType string = 'User'
+
+@description('Primary location for all resources e.g. eastus')
+var location = resourceGroup().location
+
 var suffix = 'default'
 
 @description('The name of Dev Center e.g. dc-devbox-test')
@@ -24,16 +37,6 @@ var networkVnetAddressPrefixes = '10.4.0.0/16'
 @description('The subnet address prefixes of Dev Box e.g. 10.4.0.0/24')
 var networkSubnetAddressPrefixes = '10.4.0.0/24'
 
-@description('The user or group id that will be granted to Devcenter Dev Box User and Deployment Environments User role')
-param userPrincipalId string = ''
-
-@description('The type of principal id: User or Group')
-@allowed([
-  'Group'
-  'User'
-])
-param userPrincipalType string = 'User'
-
 @description('The name of Azure Compute Gallery')
 var imageGalleryName = 'gallery${suffix}'
 
@@ -52,22 +55,18 @@ var imagePublisher = 'MicrosoftWindowsDesktop'
 @description('The name of image sku')
 var imageSku = 'win11-22h2-ent-cpc-m365'
 
-@description('Primary location for all resources e.g. eastus')
-param location string = resourceGroup().location
-
 @description('The guid id that generat the different name for image template. Please keep it by default')
-param guidId string = newGuid()
+var guidId = guid(resourceGroup().id, location)
 
 @description('The subnet resource id if the user wants to use existing subnet')
-param existingSubnetId string = ''
+var existingSubnetId = ''
 
 var abbrs = loadJsonContent('./abbreviations.json')
 var resourceToken = toLower(uniqueString(resourceGroup().id, location))
 var ncName = !empty(networkConnectionName) ? networkConnectionName : '${abbrs.networkConnections}${resourceToken}'
-var galName = !empty(imageGalleryName) ? imageGalleryName : '${abbrs.computeGalleries}${resourceToken}'
 var idName = !empty(userIdentityName) ? userIdentityName : '${abbrs.managedIdentityUserAssignedIdentities}${resourceToken}'
 
-module vnet 'core/vnet.bicep' = if(empty(existingSubnetId)) {
+module vnet 'modules/vnet.bicep' = if(empty(existingSubnetId)) {
   name: 'vnet'
   params: {
     location: location
@@ -83,10 +82,10 @@ resource managedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2022-
   location: location
 }
 
-module gallery 'core/gallery.bicep' = {
-  name: galName
+module gallery 'modules/gallery.bicep' = {
+  name: 'gallery'
   params: {
-    galleryName: galName
+    galleryName: !empty(imageGalleryName) ? imageGalleryName : '${abbrs.computeGalleries}${resourceToken}'
     location: location
     imageDefinitionName: imageDefinitionName
     imageOffer: imageOffer
@@ -98,7 +97,7 @@ module gallery 'core/gallery.bicep' = {
   }
 }
 
-module devcenter 'core/devcenter.bicep' = {
+module devcenter 'modules/devcenter.bicep' = {
   name: 'devcenter'
   params: {
     location: location
@@ -113,6 +112,7 @@ module devcenter 'core/devcenter.bicep' = {
     managedIdentityName: idName
     imageDefinitionName: imageDefinitionName
     imageTemplateName: imageTemplateName
+    templateIdentityId: gallery.outputs.templateIdentityId
     guidId: guidId
   }
 }
@@ -122,7 +122,5 @@ output projectName string = devcenter.outputs.projectName
 output networkConnectionName string = devcenter.outputs.networkConnectionName
 output vnetName string = empty(existingSubnetId) ? vnet.outputs.vnetName : ''
 output subnetName string = empty(existingSubnetId) ? vnet.outputs.subnetName : ''
-output builtinImageDevboxDefinitions array = devcenter.outputs.builtinImageDevboxDefinitions
 output customizedImageDevboxDefinitions string = devcenter.outputs.customizedImageDevboxDefinitions
-output builtinPools array = devcenter.outputs.builtinImagePools
 output customizedImagePools array = devcenter.outputs.customizedImagePools

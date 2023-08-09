@@ -1,12 +1,28 @@
+@description('The name of Azure Compute Gallery')
 param galleryName string
+
+@description('The name of Azure Compute Gallery image definition')
 param imageDefinitionName string
+
+@description('The name of image offer')
 param imageOffer string
+
+@description('The name of image publisher')
 param imagePublisher string
+
+@description('The name of image sku')
 param imageSku string
+
+@description('The name of image template for customized image')
 param imageTemplateName string
+
+@description('The name of image template identity')
 param templateIdentityName string
+
+@description('Primary location for all resources')
 param location string = resourceGroup().location
-param tags object = {}
+
+@description('The guid id that generat the different name for image build name')
 param guidId string
 
 var templateRoleDefinitionName = guid(resourceGroup().id)
@@ -29,7 +45,6 @@ var customizedCommand = [{
 resource computeGallery 'Microsoft.Compute/galleries@2022-03-03' = {
   name: galleryName
   location: location
-  tags: tags
 }
 
 resource imageDefinition 'Microsoft.Compute/galleries/images@2022-03-03' = {
@@ -55,12 +70,12 @@ resource imageDefinition 'Microsoft.Compute/galleries/images@2022-03-03' = {
   }
 }
 
-resource templateIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2022-01-31-preview' = {
+resource templateIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2023-01-31' = {
   name: templateIdentityName
   location: location
 }
 
-resource imageTemplate 'Microsoft.VirtualMachineImages/imageTemplates@2022-02-14' = {
+resource imageTemplate 'Microsoft.VirtualMachineImages/imageTemplates@2022-07-01' = {
   name: imageTemplateName
   location: location
   identity: {
@@ -120,6 +135,7 @@ resource templateRoleDefinition 'Microsoft.Authorization/roleDefinitions@2022-04
           'Microsoft.Resources/deploymentScripts/read'
           'Microsoft.Resources/deploymentScripts/write'
           'Microsoft.VirtualMachineImages/imageTemplates/run/action'
+          'Microsoft.VirtualMachineImages/imageTemplates/read'
           'Microsoft.ContainerInstance/containerGroups/read'
           'Microsoft.ContainerInstance/containerGroups/write'
           'Microsoft.ContainerInstance/containerGroups/start/action'
@@ -166,3 +182,4 @@ resource imageTemplateBuild 'Microsoft.Resources/deploymentScripts@2020-10-01' =
 }
 
 output name string = computeGallery.name
+output templateIdentityId string = templateIdentity.id
