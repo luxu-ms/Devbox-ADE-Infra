@@ -25,7 +25,7 @@ var image = {
 }
 
 var compute = {
-  '8-vcpu-32gb-mem': 'general_a_8c32gb_v1'
+  '8-vcpu-32gb-mem': 'general_a_8c32gb_v2'
 }
 
 var storage = {
