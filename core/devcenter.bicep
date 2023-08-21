@@ -70,7 +70,7 @@ resource devboxDefinitions 'Microsoft.DevCenter/devcenters/devboxdefinitions@202
     sku: {
       name: '${compute[definition.compute]}${storage[definition.storage]}ssd_v2'   // e.g. general_i_8c32gb256ssd_v2
     }
-    osStorageType: 'ssd${storage[definition.storage]}gb'   //e.g. ssd_256gb
+    osStorageType: 'ssd_${storage[definition.storage]}gb'   //e.g. ssd_256gb
   }
   dependsOn: [
     attachedNetworks
