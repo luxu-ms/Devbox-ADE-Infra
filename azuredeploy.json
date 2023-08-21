@@ -4,8 +4,8 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.17.1.54307",
-      "templateHash": "8600830494356724845"
+      "version": "0.20.4.51522",
+      "templateHash": "4801292107823810840"
     }
   },
   "parameters": {
@@ -79,8 +79,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.17.1.54307",
-              "templateHash": "14669898541231086278"
+              "version": "0.20.4.51522",
+              "templateHash": "16365875944918873761"
             }
           },
           "parameters": {
@@ -196,8 +196,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.17.1.54307",
-              "templateHash": "12347078464502738949"
+              "version": "0.20.4.51522",
+              "templateHash": "12914452680865454609"
             }
           },
           "parameters": {
@@ -271,12 +271,14 @@
               "win11-ent-vs2022": "microsoftvisualstudio_visualstudioplustools_vs-2022-ent-general-win11-m365-gen2"
             },
             "compute": {
-              "8-vcpu-32gb-mem": "general_a_8c32gb_v1"
+              "8-vcpu-32gb-mem": "general_i_8c32gb",
+              "16-vcpu-64gb-mem": "general_i_16c64gb",
+              "32-vcpu-128gb-mem": "general_i_32c128gb"
             },
             "storage": {
-              "256gb": "ssd_256gb",
-              "512gb": "ssd_512gb",
-              "1024gb": "ssd_1024gb"
+              "256gb": "256",
+              "512gb": "512",
+              "1024gb": "1024"
             }
           },
           "resources": [
@@ -343,9 +345,9 @@
                   "id": "[format('{0}/galleries/default/images/{1}', resourceId('Microsoft.DevCenter/devcenters', parameters('devcenterName')), variables('image')[variables('devceterSettings').definitions[copyIndex()].image])]"
                 },
                 "sku": {
-                  "name": "[variables('compute')[variables('devceterSettings').definitions[copyIndex()].compute]]"
+                  "name": "[format('{0}{1}ssd_v2', variables('compute')[variables('devceterSettings').definitions[copyIndex()].compute], variables('storage')[variables('devceterSettings').definitions[copyIndex()].storage])]"
                 },
-                "osStorageType": "[variables('storage')[variables('devceterSettings').definitions[copyIndex()].storage]]"
+                "osStorageType": "[format('ssd{0}gb', variables('storage')[variables('devceterSettings').definitions[copyIndex()].storage])]"
               },
               "dependsOn": [
                 "[resourceId('Microsoft.DevCenter/devcenters/attachednetworks', parameters('devcenterName'), parameters('networkConnectionName'))]",

@@ -25,13 +25,15 @@ var image = {
 }
 
 var compute = {
-  '8-vcpu-32gb-mem': 'general_a_8c32gb_v2'
+  '8-vcpu-32gb-mem': 'general_i_8c32gb'
+  '16-vcpu-64gb-mem': 'general_i_16c64gb'
+  '32-vcpu-128gb-mem': 'general_i_32c128gb'
 }
 
 var storage = {
-  '256gb': 'ssd_256gb'
-  '512gb': 'ssd_512gb'
-  '1024gb': 'ssd_1024gb'
+  '256gb': '256'
+  '512gb': '512'
+  '1024gb': '1024'
 }
 
 resource devcenter 'Microsoft.DevCenter/devcenters@2023-01-01-preview' = {
@@ -66,9 +68,9 @@ resource devboxDefinitions 'Microsoft.DevCenter/devcenters/devboxdefinitions@202
       id: '${devcenter.id}/galleries/default/images/${image[definition.image]}'
     }
     sku: {
-      name: compute[definition.compute]
+      name: '${compute[definition.compute]}${storage[definition.storage]}ssd_v2'   // e.g. general_i_8c32gb256ssd_v2
     }
-    osStorageType: storage[definition.storage]
+    osStorageType: 'ssd${storage[definition.storage]}gb'   //e.g. ssd_256gb
   }
   dependsOn: [
     attachedNetworks
