@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.20.4.51522",
-      "templateHash": "4801292107823810840"
+      "templateHash": "723690039218429277"
     }
   },
   "parameters": {
@@ -197,7 +197,7 @@
             "_generator": {
               "name": "bicep",
               "version": "0.20.4.51522",
-              "templateHash": "12914452680865454609"
+              "templateHash": "10209123271503177929"
             }
           },
           "parameters": {
@@ -347,7 +347,7 @@
                 "sku": {
                   "name": "[format('{0}{1}ssd_v2', variables('compute')[variables('devceterSettings').definitions[copyIndex()].compute], variables('storage')[variables('devceterSettings').definitions[copyIndex()].storage])]"
                 },
-                "osStorageType": "[format('ssd{0}gb', variables('storage')[variables('devceterSettings').definitions[copyIndex()].storage])]"
+                "osStorageType": "[format('ssd_{0}gb', variables('storage')[variables('devceterSettings').definitions[copyIndex()].storage])]"
               },
               "dependsOn": [
                 "[resourceId('Microsoft.DevCenter/devcenters/attachednetworks', parameters('devcenterName'), parameters('networkConnectionName'))]",
