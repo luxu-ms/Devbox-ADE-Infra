@@ -83,7 +83,7 @@ resource devboxPool 'Microsoft.DevCenter/projects/pools@2023-06-01-preview' =  {
   name: devboxPoolName
   location: location
   properties: {
-    devBoxDefinitionName: '${customizedCatalogName}\\${customizationNameInDevBoxYaml}' 
+    devBoxDefinitionName: '${customizedCatalogName}/${customizationNameInDevBoxYaml}' 
     networkConnectionName: networkConnection.name
     licenseType: 'Windows_Client'
     localAdministrator: 'Enabled'
