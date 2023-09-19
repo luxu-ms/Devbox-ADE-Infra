@@ -1,4 +1,4 @@
-# Deploy a Dev Box service with customized iamge
+# Deploy a Dev Box service with customized image
 
 ## Overview
 
