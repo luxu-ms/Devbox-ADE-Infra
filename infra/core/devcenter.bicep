@@ -44,9 +44,9 @@ var devceterSettings = loadJsonContent('./devcenter-settings.json')
 var queryTemplateProgress = take('${imageDefinitionName}-${guidId}-query',64)
 
 var storage = {
-  '256gb': 'ssd_256gb'
-  '512gb': 'ssd_512gb'
-  '1024gb': 'ssd_1024gb'
+  '256': 'ssd_256gb'
+  '512': 'ssd_512gb'
+  '1024': 'ssd_1024gb'
 }
 
 resource managedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2022-01-31-preview' existing = {
@@ -151,7 +151,7 @@ resource customizedImageDevboxDefinitions 'Microsoft.DevCenter/devcenters/devbox
       id: dcGalleryImage.id
     }
     sku: {
-      name: 'general_a_8c32gb_v1'
+      name: 'general_i_8c32gb${devboxStorageSize}ssd_v2'
     }
     osStorageType: storage[devboxStorageSize]
   }

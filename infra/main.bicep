@@ -60,11 +60,11 @@ param devboxDefnitionName string = 'win11-vscode-openai'
 param devboxPoolName string = 'win11-vscode-openai-pool'
 
 @allowed([
-  '256gb'
-  '512gb'
-  '1024gb'
+  '256'
+  '512'
+  '1024'
 ])
-param devboxStorageSize string = '256gb'
+param devboxStorageSize string = '256'
 
 @description('The name of ADE key vault')
 param adeKeyvaultName string = ''
