@@ -4,8 +4,8 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.18.4.5664",
-      "templateHash": "13534988483133033594"
+      "version": "0.20.4.51522",
+      "templateHash": "25346417282403977"
     }
   },
   "parameters": {
@@ -148,11 +148,11 @@
     },
     "devboxStorageSize": {
       "type": "string",
-      "defaultValue": "256gb",
+      "defaultValue": "256",
       "allowedValues": [
-        "256gb",
-        "512gb",
-        "1024gb"
+        "256",
+        "512",
+        "1024"
       ]
     },
     "adeKeyvaultName": {
@@ -275,8 +275,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.18.4.5664",
-              "templateHash": "16577048260419964039"
+              "version": "0.20.4.51522",
+              "templateHash": "16365875944918873761"
             }
           },
           "parameters": {
@@ -395,8 +395,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.18.4.5664",
-              "templateHash": "15574603461056141940"
+              "version": "0.20.4.51522",
+              "templateHash": "8569232294751484169"
             }
           },
           "parameters": {
@@ -699,8 +699,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.18.4.5664",
-              "templateHash": "17865635365116348910"
+              "version": "0.20.4.51522",
+              "templateHash": "5095375686012593038"
             }
           },
           "parameters": {
@@ -805,9 +805,9 @@
             "devceterSettings": "[variables('$fxv#0')]",
             "queryTemplateProgress": "[take(format('{0}-{1}-query', parameters('imageDefinitionName'), parameters('guidId')), 64)]",
             "storage": {
-              "256gb": "ssd_256gb",
-              "512gb": "ssd_512gb",
-              "1024gb": "ssd_1024gb"
+              "256": "ssd_256gb",
+              "512": "ssd_512gb",
+              "1024": "ssd_1024gb"
             }
           },
           "resources": [
@@ -911,7 +911,7 @@
                   "id": "[resourceId('Microsoft.DevCenter/devcenters/galleries/images', parameters('devcenterName'), parameters('galleryName'), parameters('imageDefinitionName'))]"
                 },
                 "sku": {
-                  "name": "general_a_8c32gb_v1"
+                  "name": "[format('general_i_8c32gb{0}ssd_v2', parameters('devboxStorageSize'))]"
                 },
                 "osStorageType": "[variables('storage')[parameters('devboxStorageSize')]]"
               },
@@ -1071,8 +1071,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.18.4.5664",
-                      "templateHash": "4243975600296088021"
+                      "version": "0.20.4.51522",
+                      "templateHash": "12408789451706587246"
                     }
                   },
                   "parameters": {
@@ -1167,8 +1167,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.18.4.5664",
-              "templateHash": "8983320782769177624"
+              "version": "0.20.4.51522",
+              "templateHash": "16736804640539715109"
             }
           },
           "parameters": {
@@ -1244,8 +1244,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.18.4.5664",
-              "templateHash": "6261323163879606917"
+              "version": "0.20.4.51522",
+              "templateHash": "10289375282404769944"
             }
           },
           "parameters": {
@@ -1334,8 +1334,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.18.4.5664",
-              "templateHash": "14465331775981893963"
+              "version": "0.20.4.51522",
+              "templateHash": "17984077568717030385"
             }
           },
           "parameters": {
