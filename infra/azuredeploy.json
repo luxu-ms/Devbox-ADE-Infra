@@ -4,8 +4,8 @@
   "metadata": {
     "_generator": {
       "name": "bicep",
-      "version": "0.20.4.51522",
-      "templateHash": "10117831584880428894"
+      "version": "0.23.1.45101",
+      "templateHash": "599936439013385424"
     }
   },
   "parameters": {
@@ -241,8 +241,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.20.4.51522",
-              "templateHash": "16365875944918873761"
+              "version": "0.23.1.45101",
+              "templateHash": "10527041903701611431"
             }
           },
           "parameters": {
@@ -392,8 +392,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.20.4.51522",
-              "templateHash": "7100215577394717318"
+              "version": "0.23.1.45101",
+              "templateHash": "12203198604683406782"
             }
           },
           "parameters": {
@@ -541,11 +541,11 @@
             },
             {
               "type": "Microsoft.DevCenter/projects/pools",
-              "apiVersion": "2023-06-01-preview",
+              "apiVersion": "2023-10-01-preview",
               "name": "[format('{0}/{1}', parameters('projectName'), parameters('devboxPoolName'))]",
               "location": "[parameters('location')]",
               "properties": {
-                "devBoxDefinitionName": "[format('{0}\\{1}', parameters('customizedCatalogName'), parameters('customizationNameInDevBoxYaml'))]",
+                "devBoxDefinitionName": "[format('{0}/{1}', parameters('customizedCatalogName'), parameters('customizationNameInDevBoxYaml'))]",
                 "networkConnectionName": "[parameters('networkConnectionName')]",
                 "licenseType": "Windows_Client",
                 "localAdministrator": "Enabled"
@@ -692,8 +692,8 @@
                   "metadata": {
                     "_generator": {
                       "name": "bicep",
-                      "version": "0.20.4.51522",
-                      "templateHash": "12408789451706587246"
+                      "version": "0.23.1.45101",
+                      "templateHash": "6730853705589355865"
                     }
                   },
                   "parameters": {
@@ -783,8 +783,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.20.4.51522",
-              "templateHash": "16736804640539715109"
+              "version": "0.23.1.45101",
+              "templateHash": "8199967153549391705"
             }
           },
           "parameters": {
@@ -860,8 +860,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.20.4.51522",
-              "templateHash": "10289375282404769944"
+              "version": "0.23.1.45101",
+              "templateHash": "17356356021486640000"
             }
           },
           "parameters": {
@@ -950,8 +950,8 @@
           "metadata": {
             "_generator": {
               "name": "bicep",
-              "version": "0.20.4.51522",
-              "templateHash": "17984077568717030385"
+              "version": "0.23.1.45101",
+              "templateHash": "10398318595154754242"
             }
           },
           "parameters": {

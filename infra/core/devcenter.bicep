@@ -78,7 +78,7 @@ resource project 'Microsoft.DevCenter/projects@2022-11-11-preview' = {
   }
 }
 
-resource devboxPool 'Microsoft.DevCenter/projects/pools@2023-06-01-preview' =  {
+resource devboxPool 'Microsoft.DevCenter/projects/pools@2023-10-01-preview' =  {
   parent: project
   name: devboxPoolName
   location: location
