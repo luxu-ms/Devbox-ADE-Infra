@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.23.1.45101",
-      "templateHash": "599936439013385424"
+      "templateHash": "14819661771990790274"
     }
   },
   "parameters": {
@@ -23,53 +23,11 @@
         "description": "The name of Dev Center project e.g. dcprj-devbox-test"
       }
     },
-    "networkConnectionName": {
-      "type": "string",
-      "defaultValue": "",
-      "metadata": {
-        "description": "The name of Network Connection e.g. con-devbox-test"
-      }
-    },
     "userIdentityName": {
       "type": "string",
       "defaultValue": "",
       "metadata": {
         "description": "The name of Dev Center user identity"
-      }
-    },
-    "existingSubnetId": {
-      "type": "string",
-      "defaultValue": "",
-      "metadata": {
-        "description": "The subnet resource id if the user wants to use existing subnet"
-      }
-    },
-    "networkVnetName": {
-      "type": "string",
-      "defaultValue": "",
-      "metadata": {
-        "description": "The name of the Virtual Network e.g. vnet-dcprj-devbox-test-eastus"
-      }
-    },
-    "networkSubnetName": {
-      "type": "string",
-      "defaultValue": "default",
-      "metadata": {
-        "description": "the subnet name of Dev Box e.g. default"
-      }
-    },
-    "networkVnetAddressPrefixes": {
-      "type": "string",
-      "defaultValue": "10.4.0.0/16",
-      "metadata": {
-        "description": "The vnet address prefixes of Dev Box e.g. 10.4.0.0/16"
-      }
-    },
-    "networkSubnetAddressPrefixes": {
-      "type": "string",
-      "defaultValue": "10.4.0.0/24",
-      "metadata": {
-        "description": "The subnet address prefixes of Dev Box e.g. 10.4.0.0/24"
       }
     },
     "userPrincipalId": {
@@ -199,7 +157,6 @@
     },
     "abbrs": "[variables('$fxv#0')]",
     "resourceToken": "[toLower(uniqueString(resourceGroup().id, parameters('location')))]",
-    "ncName": "[if(not(empty(parameters('networkConnectionName'))), parameters('networkConnectionName'), format('{0}{1}', variables('abbrs').networkConnections, variables('resourceToken')))]",
     "kvName": "[if(not(empty(parameters('adeKeyvaultName'))), parameters('adeKeyvaultName'), format('{0}{1}', variables('abbrs').keyvault, variables('resourceToken')))]",
     "idName": "[if(not(empty(parameters('userIdentityName'))), parameters('userIdentityName'), format('{0}{1}', variables('abbrs').managedIdentityUserAssignedIdentities, variables('resourceToken')))]",
     "dcName": "[if(not(empty(parameters('devcenterName'))), parameters('devcenterName'), format('{0}{1}', variables('abbrs').devcenter, variables('resourceToken')))]",
@@ -211,111 +168,6 @@
       "apiVersion": "2022-01-31-preview",
       "name": "[variables('idName')]",
       "location": "[parameters('location')]"
-    },
-    {
-      "condition": "[empty(parameters('existingSubnetId'))]",
-      "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2022-09-01",
-      "name": "vnet",
-      "properties": {
-        "expressionEvaluationOptions": {
-          "scope": "inner"
-        },
-        "mode": "Incremental",
-        "parameters": {
-          "location": {
-            "value": "[parameters('location')]"
-          },
-          "vnetAddressPrefixes": {
-            "value": "[parameters('networkVnetAddressPrefixes')]"
-          },
-          "vnetName": "[if(not(empty(parameters('networkVnetName'))), createObject('value', parameters('networkVnetName')), createObject('value', format('{0}{1}', variables('abbrs').networkVirtualNetworks, variables('resourceToken'))))]",
-          "subnetAddressPrefixes": {
-            "value": "[parameters('networkSubnetAddressPrefixes')]"
-          },
-          "subnetName": "[if(not(empty(parameters('networkSubnetName'))), createObject('value', parameters('networkSubnetName')), createObject('value', format('{0}{1}', variables('abbrs').networkVirtualNetworksSubnets, variables('resourceToken'))))]"
-        },
-        "template": {
-          "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
-          "contentVersion": "1.0.0.0",
-          "metadata": {
-            "_generator": {
-              "name": "bicep",
-              "version": "0.23.1.45101",
-              "templateHash": "10527041903701611431"
-            }
-          },
-          "parameters": {
-            "vnetName": {
-              "type": "string",
-              "metadata": {
-                "description": "The name of the Virtual Network"
-              }
-            },
-            "subnetName": {
-              "type": "string",
-              "metadata": {
-                "description": "the app subnet name of Dev Box"
-              }
-            },
-            "vnetAddressPrefixes": {
-              "type": "string",
-              "metadata": {
-                "description": "The address prefixes of the vnet"
-              }
-            },
-            "subnetAddressPrefixes": {
-              "type": "string",
-              "metadata": {
-                "description": "The subnet address prefixes for Dev Box"
-              }
-            },
-            "location": {
-              "type": "string",
-              "metadata": {
-                "description": "The location of the resource"
-              }
-            }
-          },
-          "resources": [
-            {
-              "type": "Microsoft.Network/virtualNetworks",
-              "apiVersion": "2022-11-01",
-              "name": "[parameters('vnetName')]",
-              "location": "[parameters('location')]",
-              "properties": {
-                "addressSpace": {
-                  "addressPrefixes": [
-                    "[parameters('vnetAddressPrefixes')]"
-                  ]
-                },
-                "subnets": [
-                  {
-                    "name": "[parameters('subnetName')]",
-                    "properties": {
-                      "addressPrefix": "[parameters('subnetAddressPrefixes')]"
-                    }
-                  }
-                ]
-              }
-            }
-          ],
-          "outputs": {
-            "vnetName": {
-              "type": "string",
-              "value": "[parameters('vnetName')]"
-            },
-            "subnetName": {
-              "type": "string",
-              "value": "[parameters('subnetName')]"
-            },
-            "subnetId": {
-              "type": "string",
-              "value": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnetName'))]"
-            }
-          }
-        }
-      }
     },
     {
       "type": "Microsoft.Resources/deployments",
@@ -333,15 +185,8 @@
           "devcenterName": {
             "value": "[variables('dcName')]"
           },
-          "subnetId": "[if(not(empty(parameters('existingSubnetId'))), createObject('value', parameters('existingSubnetId')), createObject('value', reference(resourceId('Microsoft.Resources/deployments', 'vnet'), '2022-09-01').outputs.subnetId.value))]",
-          "networkConnectionName": {
-            "value": "[variables('ncName')]"
-          },
           "projectName": {
             "value": "[variables('prjName')]"
-          },
-          "networkingResourceGroupName": {
-            "value": "[format('{0}{1}-{2}', variables('abbrs').devcenterNetworkingResourceGroup, variables('ncName'), parameters('location'))]"
           },
           "principalId": {
             "value": "[parameters('userPrincipalId')]"
@@ -393,20 +238,11 @@
             "_generator": {
               "name": "bicep",
               "version": "0.23.1.45101",
-              "templateHash": "12203198604683406782"
+              "templateHash": "7714895837255028676"
             }
           },
           "parameters": {
             "devcenterName": {
-              "type": "string"
-            },
-            "networkConnectionName": {
-              "type": "string"
-            },
-            "networkingResourceGroupName": {
-              "type": "string"
-            },
-            "subnetId": {
               "type": "string"
             },
             "projectName": {
@@ -505,29 +341,6 @@
               }
             },
             {
-              "type": "Microsoft.DevCenter/networkConnections",
-              "apiVersion": "2023-01-01-preview",
-              "name": "[parameters('networkConnectionName')]",
-              "location": "[parameters('location')]",
-              "properties": {
-                "domainJoinType": "AzureADJoin",
-                "subnetId": "[parameters('subnetId')]",
-                "networkingResourceGroupName": "[parameters('networkingResourceGroupName')]"
-              }
-            },
-            {
-              "type": "Microsoft.DevCenter/devcenters/attachednetworks",
-              "apiVersion": "2023-01-01-preview",
-              "name": "[format('{0}/{1}', parameters('devcenterName'), parameters('networkConnectionName'))]",
-              "properties": {
-                "networkConnectionId": "[resourceId('Microsoft.DevCenter/networkConnections', parameters('networkConnectionName'))]"
-              },
-              "dependsOn": [
-                "[resourceId('Microsoft.DevCenter/devcenters', parameters('devcenterName'))]",
-                "[resourceId('Microsoft.DevCenter/networkConnections', parameters('networkConnectionName'))]"
-              ]
-            },
-            {
               "type": "Microsoft.DevCenter/projects",
               "apiVersion": "2022-11-11-preview",
               "name": "[parameters('projectName')]",
@@ -546,14 +359,32 @@
               "location": "[parameters('location')]",
               "properties": {
                 "devBoxDefinitionName": "[format('{0}/{1}', parameters('customizedCatalogName'), parameters('customizationNameInDevBoxYaml'))]",
-                "networkConnectionName": "[parameters('networkConnectionName')]",
+                "networkConnectionName": "managedNetwork",
                 "licenseType": "Windows_Client",
-                "localAdministrator": "Enabled"
+                "localAdministrator": "Enabled",
+                "virtualNetworkType": "Managed",
+                "managedVirtualNetworkRegions": [
+                  "[parameters('location')]"
+                ]
               },
               "dependsOn": [
                 "[resourceId('Microsoft.DevCenter/devcenters/catalogs', parameters('devcenterName'), parameters('customizedCatalogName'))]",
-                "[resourceId('Microsoft.DevCenter/networkConnections', parameters('networkConnectionName'))]",
                 "[resourceId('Microsoft.DevCenter/projects', parameters('projectName'))]"
+              ]
+            },
+            {
+              "type": "Microsoft.DevCenter/projects/pools/schedules",
+              "apiVersion": "2023-10-01-preview",
+              "name": "[format('{0}/{1}/{2}', parameters('projectName'), parameters('devboxPoolName'), 'default')]",
+              "properties": {
+                "type": "StopDevBox",
+                "frequency": "Daily",
+                "time": "19:00",
+                "timeZone": "Asia/Singapore",
+                "state": "Enabled"
+              },
+              "dependsOn": [
+                "[resourceId('Microsoft.DevCenter/projects/pools', parameters('projectName'), parameters('devboxPoolName'))]"
               ]
             },
             {
@@ -737,10 +568,6 @@
               "type": "string",
               "value": "[parameters('devcenterName')]"
             },
-            "networkConnectionName": {
-              "type": "string",
-              "value": "[parameters('networkConnectionName')]"
-            },
             "projectName": {
               "type": "string",
               "value": "[parameters('projectName')]"
@@ -753,8 +580,7 @@
         }
       },
       "dependsOn": [
-        "[resourceId('Microsoft.Resources/deployments', 'keyvaultSecret')]",
-        "[resourceId('Microsoft.Resources/deployments', 'vnet')]"
+        "[resourceId('Microsoft.Resources/deployments', 'keyvaultSecret')]"
       ]
     },
     {
@@ -1007,18 +833,6 @@
     "projectName": {
       "type": "string",
       "value": "[reference(resourceId('Microsoft.Resources/deployments', variables('dcName')), '2022-09-01').outputs.projectName.value]"
-    },
-    "networkConnectionName": {
-      "type": "string",
-      "value": "[reference(resourceId('Microsoft.Resources/deployments', variables('dcName')), '2022-09-01').outputs.networkConnectionName.value]"
-    },
-    "vnetName": {
-      "type": "string",
-      "value": "[if(empty(parameters('existingSubnetId')), reference(resourceId('Microsoft.Resources/deployments', 'vnet'), '2022-09-01').outputs.vnetName.value, '')]"
-    },
-    "subnetName": {
-      "type": "string",
-      "value": "[if(empty(parameters('existingSubnetId')), reference(resourceId('Microsoft.Resources/deployments', 'vnet'), '2022-09-01').outputs.subnetName.value, '')]"
     },
     "poolName": {
       "type": "string",
