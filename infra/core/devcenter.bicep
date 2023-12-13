@@ -1,7 +1,4 @@
 param devcenterName string
-param networkConnectionName string
-param networkingResourceGroupName string
-param subnetId string
 param projectName string
 param principalId string
 @secure()
@@ -52,24 +49,6 @@ resource devcenter 'Microsoft.DevCenter/devcenters@2023-01-01-preview' = {
   }
 }
 
-resource networkConnection 'Microsoft.DevCenter/networkConnections@2023-01-01-preview' = {
-  name: networkConnectionName
-  location: location
-  properties: {
-    domainJoinType: 'AzureADJoin'
-    subnetId: subnetId
-    networkingResourceGroupName: networkingResourceGroupName
-  }
-}
-
-resource attachedNetworks 'Microsoft.DevCenter/devcenters/attachednetworks@2023-01-01-preview' = {
-  parent: devcenter
-  name: networkConnection.name
-  properties: {
-    networkConnectionId: networkConnection.id
-  }
-}
-
 resource project 'Microsoft.DevCenter/projects@2022-11-11-preview' = {
   name: projectName
   location: location
@@ -84,13 +63,30 @@ resource devboxPool 'Microsoft.DevCenter/projects/pools@2023-10-01-preview' =  {
   location: location
   properties: {
     devBoxDefinitionName: '${customizedCatalogName}/${customizationNameInDevBoxYaml}' 
-    networkConnectionName: networkConnection.name
+    networkConnectionName: 'managedNetwork'
     licenseType: 'Windows_Client'
     localAdministrator: 'Enabled'
+    virtualNetworkType: 'Managed'
+    managedVirtualNetworkRegions: [
+        location
+    ]
   }
   dependsOn:[
     customizedCatalog
   ]
+}
+
+resource poolSchedule 'Microsoft.DevCenter/projects/pools/schedules@2023-10-01-preview' = {
+  parent: devboxPool
+  name: 'default'
+  properties: {
+    type: 'StopDevBox'
+    frequency: 'Daily'
+    time: '19:00'
+    timeZone: 'Asia/Singapore'
+    state: 'Enabled'
+
+  }
 }
 
 resource devboxRole 'Microsoft.Authorization/roleAssignments@2022-04-01' = if(!empty(principalId)) {
@@ -183,8 +179,6 @@ resource adeRole 'Microsoft.Authorization/roleAssignments@2022-04-01' = if(!empt
 }
 
 output devcenterName string = devcenter.name
-
-output networkConnectionName string = networkConnection.name
 
 output projectName string = project.name
 

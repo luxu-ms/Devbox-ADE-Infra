@@ -1,6 +1,6 @@
 # Deploy Dev Box/ADE for ChatGPT + Enterprise data with Azure OpenAI and Cognitive Search
 
-[![Deploy to Azure](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.svg?sanitize=true)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fluxu-ms%2FDevbox-ADE-Infra%2Fdevbox-ade-openai-customization%2Finfra%2Fazuredeploy.json)
+[![Deploy to Azure](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.svg?sanitize=true)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fluxu-ms%2FDevbox-ADE-Infra%2Fdevbox-ade-openai-customization-hosted%2Finfra%2Fazuredeploy.json)
 
 This template deploys a Dev Box service with customized image.
 

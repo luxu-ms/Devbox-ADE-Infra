@@ -4,26 +4,8 @@ param devcenterName string = ''
 @description('The name of Dev Center project e.g. dcprj-devbox-test')
 param projectName string = ''
 
-@description('The name of Network Connection e.g. con-devbox-test')
-param networkConnectionName string = ''
-
 @description('The name of Dev Center user identity')
 param userIdentityName string = ''
-
-@description('The subnet resource id if the user wants to use existing subnet')
-param existingSubnetId string = ''
-
-@description('The name of the Virtual Network e.g. vnet-dcprj-devbox-test-eastus')
-param networkVnetName string = ''
-
-@description('the subnet name of Dev Box e.g. default')
-param networkSubnetName string = 'default'
-
-@description('The vnet address prefixes of Dev Box e.g. 10.4.0.0/16')
-param networkVnetAddressPrefixes string = '10.4.0.0/16'
-
-@description('The subnet address prefixes of Dev Box e.g. 10.4.0.0/24')
-param networkSubnetAddressPrefixes string = '10.4.0.0/24'
 
 @description('The user or group id that will be granted to Devcenter Dev Box User and Deployment Environments User role')
 param userPrincipalId string = ''
@@ -79,38 +61,22 @@ param location string = resourceGroup().location
 
 var abbrs = loadJsonContent('./abbreviations.json')
 var resourceToken = toLower(uniqueString(resourceGroup().id, location))
-var ncName = !empty(networkConnectionName) ? networkConnectionName : '${abbrs.networkConnections}${resourceToken}'
 var kvName = !empty(adeKeyvaultName) ? adeKeyvaultName : '${abbrs.keyvault}${resourceToken}'
 var idName = !empty(userIdentityName) ? userIdentityName : '${abbrs.managedIdentityUserAssignedIdentities}${resourceToken}'
 var dcName = !empty(devcenterName) ? devcenterName : '${abbrs.devcenter}${resourceToken}'
 var prjName = !empty(projectName) ? projectName : '${abbrs.devcenterProject}${resourceToken}'
-
-module vnet 'core/vnet.bicep' = if(empty(existingSubnetId)) {
-  name: 'vnet'
-  params: {
-    location: location
-    vnetAddressPrefixes: networkVnetAddressPrefixes
-    vnetName: !empty(networkVnetName) ? networkVnetName : '${abbrs.networkVirtualNetworks}${resourceToken}'
-    subnetAddressPrefixes: networkSubnetAddressPrefixes
-    subnetName: !empty(networkSubnetName) ? networkSubnetName : '${abbrs.networkVirtualNetworksSubnets}${resourceToken}'
-  }
-}
 
 resource managedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2022-01-31-preview' = {
   name: idName
   location: location
 }
 
-
 module devcenter 'core/devcenter.bicep' = {
   name: dcName
   params: {
     location: location
     devcenterName: dcName
-    subnetId: !empty(existingSubnetId) ? existingSubnetId : vnet.outputs.subnetId
-    networkConnectionName: ncName
     projectName: prjName
-    networkingResourceGroupName: '${abbrs.devcenterNetworkingResourceGroup}${ncName}-${location}'
     principalId: userPrincipalId
     principalType: userPrincipalType
     secretIdentifier: keyvaultSecret.outputs.secretIdentifier
@@ -156,7 +122,4 @@ module keyvaultAccess 'core/security/keyvault-access.bicep' = {
 
 output devcetnerName string = devcenter.outputs.devcenterName
 output projectName string = devcenter.outputs.projectName
-output networkConnectionName string = devcenter.outputs.networkConnectionName
-output vnetName string = empty(existingSubnetId) ? vnet.outputs.vnetName : ''
-output subnetName string = empty(existingSubnetId) ? vnet.outputs.subnetName : ''
 output poolName string = devcenter.outputs.poolName
